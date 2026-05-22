@@ -38,14 +38,11 @@
             <p class="eyebrow mb-m">Formulário de agendamento</p>
             <h2 class="mb-l" style="font-size: var(--step-3);">Conte um pouco<br>sobre sua família.</h2>
 
-            <form class="form" action="https://formspree.io/f/TODO_FORMSPREE_ID" method="POST" id="visit-form">
-              <input type="hidden" name="_subject" value="Nova visita agendada — Maple Bear Caxias do Sul">
-              <input type="hidden" name="origem" value="site-visite">
-
+            <form class="form" id="visit-form" novalidate>
               <div class="field-row">
                 <div class="field">
                   <label for="nome">Seu nome <span class="req">*</span></label>
-                  <input type="text" name="nome" id="nome" required autocomplete="name">
+                  <input type="text" name="nome" id="nome" required autocomplete="name" maxlength="120">
                 </div>
                 <div class="field">
                   <label for="telefone">WhatsApp <span class="req">*</span></label>
@@ -85,18 +82,86 @@
 
               <div class="field">
                 <label for="mensagem">Algo que gostaria de nos contar?</label>
-                <textarea name="mensagem" id="mensagem" rows="4" placeholder="Conte sobre sua família, o que procura na escola, dúvidas iniciais..."></textarea>
+                <textarea name="mensagem" id="mensagem" rows="4" maxlength="2000" placeholder="Conte sobre sua família, o que procura na escola, dúvidas iniciais..."></textarea>
               </div>
 
-              <button type="submit" class="btn btn-primary" style="justify-self: start;">
-                Enviar pedido de visita <span class="arrow">→</span>
+              <!-- Honeypot anti-bot — não preencher -->
+              <div style="position: absolute; left: -9999px; opacity: 0;" aria-hidden="true">
+                <label>Empresa <input type="text" name="company" tabindex="-1" autocomplete="off"></label>
+              </div>
+
+              <button type="submit" class="btn btn-primary" id="visit-submit" style="justify-self: start;">
+                <span class="label">Enviar pedido de visita</span>
+                <span class="arrow" aria-hidden="true">→</span>
               </button>
+
+              <div id="visit-feedback" role="status" aria-live="polite"></div>
 
               <p class="hint" style="margin-top: var(--space-s);">
                 Vamos responder pelo WhatsApp em até um dia útil para confirmar o melhor horário.
                 Seus dados não são compartilhados — usamos apenas para esse contato.
               </p>
             </form>
+
+            <script>
+              (function () {
+                const form = document.getElementById('visit-form');
+                const submit = document.getElementById('visit-submit');
+                const fb = document.getElementById('visit-feedback');
+                const submitLabel = submit.querySelector('.label');
+
+                function showFeedback(kind, html) {
+                  const bg = kind === 'success' ? 'rgba(90, 109, 77, 0.1)' : kind === 'error' ? 'rgba(184, 17, 46, 0.08)' : 'transparent';
+                  const border = kind === 'success' ? '#5a6d4d' : kind === 'error' ? '#b8112e' : 'transparent';
+                  const color = kind === 'success' ? '#3f4d36' : kind === 'error' ? '#8a0d22' : '#1a1814';
+                  fb.style.cssText = `margin-top: 1rem; padding: 1rem 1.25rem; border-left: 3px solid ${border}; background: ${bg}; color: ${color}; border-radius: 4px; font-family: 'Spectral', Georgia, serif; line-height: 1.5;`;
+                  fb.innerHTML = html;
+                }
+
+                form.addEventListener('submit', async (e) => {
+                  e.preventDefault();
+                  fb.innerHTML = '';
+
+                  const fd = new FormData(form);
+                  const data = {};
+                  fd.forEach((v, k) => data[k] = v);
+
+                  submit.disabled = true;
+                  submitLabel.textContent = 'Enviando...';
+
+                  try {
+                    const r = await fetch('/api/visit-lead', {
+                      method: 'POST',
+                      headers: { 'Content-Type': 'application/json' },
+                      body: JSON.stringify(data)
+                    });
+                    const json = await r.json();
+
+                    if (r.ok && json.ok) {
+                      form.style.display = 'none';
+                      showFeedback('success', `
+                        <strong style="display: block; font-family: 'Fraunces', Georgia, serif; font-size: 1.4rem; font-weight: 400; margin-bottom: 0.5rem;">Recebemos seu pedido. ✦</strong>
+                        Nossa equipe vai te chamar no WhatsApp em até um dia útil para confirmar o melhor horário.
+                        <br><br>
+                        Enquanto isso, sinta-se à vontade para
+                        <a href="/blog/" style="color: inherit; text-decoration: underline;">explorar nosso blog</a>
+                        ou nos chamar diretamente no <a href="https://wa.me/5554997021634" style="color: inherit; text-decoration: underline;">WhatsApp</a>.
+                      `);
+                      if (window.gtag) gtag('event', 'visit_request', { event_category: 'lead', event_label: data.crianca_idade });
+                    } else {
+                      throw new Error((json.errors && json.errors.join(', ')) || json.error || 'erro desconhecido');
+                    }
+                  } catch (err) {
+                    showFeedback('error', `
+                      <strong>Não conseguimos enviar seu pedido agora.</strong><br>
+                      ${err.message || 'Tente novamente em instantes, ou nos chame direto no <a href="https://wa.me/5554997021634" style="color: inherit;">WhatsApp</a>.'}
+                    `);
+                    submit.disabled = false;
+                    submitLabel.textContent = 'Enviar pedido de visita';
+                  }
+                });
+              })();
+            </script>
           </div>
 
           <div class="stack-l">
