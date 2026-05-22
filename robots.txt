@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://maplebearcaxiasdosul.com.br/sitemap.xml

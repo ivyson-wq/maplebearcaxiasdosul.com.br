@@ -1,0 +1,1057 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Blog — Maple Bear Caxias do Sul | Educação Bilíngue Canadense</title>
+<meta name="description" content="Blog da Maple Bear Caxias do Sul: artigos sobre educação bilíngue, metodologia canadense, desenvolvimento infantil e dicas para pais. Conteúdo especializado para famílias.">
+<meta name="keywords" content="educação bilíngue, escola bilíngue Caxias do Sul, metodologia canadense, Maple Bear, desenvolvimento infantil, escola bilingue RS">
+<meta name="theme-color" content="#B71C1C">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://maplebearcaxiasdosul.com.br/blog">
+
+<!-- Open Graph -->
+<meta property="og:type" content="website">
+<meta property="og:title" content="Blog — Maple Bear Caxias do Sul">
+<meta property="og:description" content="Artigos sobre educação bilíngue, metodologia canadense e desenvolvimento infantil.">
+<meta property="og:url" content="https://maplebearcaxiasdosul.com.br/blog">
+<meta property="og:site_name" content="Maple Bear Caxias do Sul">
+<meta property="og:locale" content="pt_BR">
+
+<!-- JSON-LD Structured Data -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Blog",
+  "name": "Blog Maple Bear Caxias do Sul",
+  "description": "Artigos sobre educação bilíngue, metodologia canadense, desenvolvimento infantil e dicas para pais.",
+  "url": "https://maplebearcaxiasdosul.com.br/blog",
+  "publisher": {
+    "@type": "EducationalOrganization",
+    "name": "Maple Bear Caxias do Sul",
+    "address": {
+      "@type": "PostalAddress",
+      "streetAddress": "Rua Jacob Luchesi, 2374",
+      "addressLocality": "Caxias do Sul",
+      "addressRegion": "RS",
+      "postalCode": "95032-000",
+      "addressCountry": "BR"
+    },
+    "telephone": "+55-54-99939-6742",
+    "url": "https://maplebearcaxiasdosul.com.br"
+  },
+  "inLanguage": "pt-BR"
+}
+</script>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Playfair+Display:wght@600;700;800&display=swap" rel="stylesheet">
+<script src="/blog/analytics.js" defer></script>
+<style>
+:root {
+  --red: #B71C1C;
+  --red-dark: #7F1D1D;
+  --red-medium: #C62828;
+  --red-light: #FFEBEE;
+  --red-accent: #E53935;
+  --bg: #FAFBFC;
+  --bg-card: #FFFFFF;
+  --text: #1A1A2E;
+  --text-secondary: #4A5568;
+  --text-muted: #718096;
+  --border: #E8ECF1;
+  --shadow-card: 0 1px 3px rgba(0,0,0,.04), 0 1px 2px rgba(0,0,0,.06);
+  --shadow-hover: 0 10px 40px rgba(183,28,28,.08), 0 4px 12px rgba(0,0,0,.05);
+  --radius: 12px;
+  --max-w: 1240px;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; }
+body { font-family: 'Inter', system-ui, -apple-system, sans-serif; color: var(--text); line-height: 1.6; background: var(--bg); }
+
+/* ── Header ── */
+.header {
+  position: sticky; top: 0; z-index: 100;
+  background: #fff; border-bottom: 1px solid var(--border);
+  height: 72px; display: flex; align-items: center;
+  padding: 0 clamp(20px, 5vw, 48px);
+  transition: box-shadow .3s;
+}
+.header.scrolled { box-shadow: 0 2px 20px rgba(0,0,0,.06); }
+.header-inner { max-width: var(--max-w); margin: 0 auto; width: 100%; display: flex; align-items: center; justify-content: space-between; }
+.logo { display: flex; align-items: center; gap: 12px; text-decoration: none; }
+.logo-img { height: 44px; width: auto; }
+.logo-divider { width: 1px; height: 28px; background: var(--border); }
+.logo-unit { font-size: 13px; font-weight: 600; color: var(--text-secondary); line-height: 1.3; }
+.logo-unit strong { display: block; color: var(--text); font-weight: 700; }
+
+.nav { display: flex; align-items: center; gap: 32px; }
+.nav a { color: var(--text-secondary); text-decoration: none; font-size: 14px; font-weight: 500; transition: color .2s; position: relative; }
+.nav a:hover { color: var(--red); }
+.nav a.active { color: var(--red); font-weight: 600; }
+.nav a.active::after { content: ''; position: absolute; bottom: -24px; left: 0; right: 0; height: 2px; background: var(--red); border-radius: 1px; }
+.nav-cta {
+  background: var(--red); color: #fff !important; padding: 10px 24px;
+  border-radius: 8px; font-weight: 600; font-size: 14px; transition: all .2s;
+  box-shadow: 0 2px 8px rgba(183,28,28,.25);
+}
+.nav-cta:hover { background: var(--red-dark); transform: translateY(-1px); box-shadow: 0 4px 16px rgba(183,28,28,.3); }
+
+/* ── Hero ── */
+.hero {
+  background: linear-gradient(160deg, #7F1D1D 0%, #B71C1C 35%, #C62828 65%, #E53935 100%);
+  padding: 72px 24px 56px; text-align: center; position: relative; overflow: hidden;
+}
+.hero::before {
+  content: ''; position: absolute; inset: 0; opacity: .06;
+  background-image: url("data:image/svg+xml,%3Csvg width='80' height='80' viewBox='0 0 80 80' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M40 10 C40 10 48 25 55 30 C60 33 70 35 70 35 C70 35 60 40 55 45 C50 50 48 65 48 65 C48 65 40 55 40 55 C40 55 32 65 32 65 C32 65 30 50 25 45 C20 40 10 35 10 35 C10 35 20 33 25 30 C32 25 40 10 40 10Z' fill='white'/%3E%3C/svg%3E");
+}
+.hero-inner { position: relative; max-width: 640px; margin: 0 auto; }
+.hero-badge {
+  display: inline-flex; align-items: center; gap: 6px;
+  background: rgba(255,255,255,.12); backdrop-filter: blur(4px);
+  color: rgba(255,255,255,.95); padding: 8px 18px; border-radius: 50px;
+  font-size: 13px; font-weight: 600; margin-bottom: 24px; letter-spacing: .3px;
+  border: 1px solid rgba(255,255,255,.15);
+}
+.hero h1 {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: clamp(2rem, 5vw, 2.8rem); color: #fff;
+  margin-bottom: 16px; line-height: 1.15; font-weight: 700;
+}
+.hero-subtitle { color: rgba(255,255,255,.8); font-size: 16px; line-height: 1.7; max-width: 520px; margin: 0 auto; }
+
+/* ── Filters ── */
+.filters {
+  max-width: var(--max-w); margin: 0 auto; padding: 28px 24px 0;
+  display: flex; gap: 8px; flex-wrap: wrap; align-items: center;
+}
+.filters-label { font-size: 13px; font-weight: 600; color: var(--text-muted); margin-right: 8px; text-transform: uppercase; letter-spacing: .5px; }
+.filter-btn {
+  padding: 7px 18px; border-radius: 50px; border: 1px solid var(--border);
+  background: #fff; color: var(--text-secondary); font-size: 13px; font-weight: 500;
+  cursor: pointer; transition: all .2s; font-family: inherit;
+}
+.filter-btn:hover { border-color: var(--red); color: var(--red); }
+.filter-btn.active { background: var(--red); color: #fff; border-color: var(--red); }
+
+/* ── Blog Grid ── */
+.blog-section { max-width: var(--max-w); margin: 32px auto 0; padding: 0 24px; }
+.blog-grid {
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 28px;
+}
+.blog-card {
+  background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius);
+  overflow: hidden; transition: transform .3s ease, box-shadow .3s ease;
+  display: flex; flex-direction: column;
+}
+.blog-card:hover { transform: translateY(-5px); box-shadow: var(--shadow-hover); }
+.blog-card-img {
+  aspect-ratio: 16/10; overflow: hidden; position: relative;
+  background: linear-gradient(135deg, var(--red-light) 0%, #fce4ec 50%, #f8bbd0 100%);
+  display: flex; align-items: center; justify-content: center;
+}
+.blog-card-img::after {
+  content: '🍁'; font-size: 48px; opacity: .25; position: absolute;
+  top: 50%; left: 50%; transform: translate(-50%,-50%);
+}
+.blog-card-img:has(img) { display: block; }
+.blog-card-img:has(img)::after { display: none; }
+.blog-card-link { text-decoration: none; color: inherit; display: flex; flex-direction: column; height: 100%; }
+.blog-card-img img { width: 100%; height: 100%; object-fit: cover; transition: transform .4s ease; }
+.blog-card:hover .blog-card-img img { transform: scale(1.05); }
+.blog-card-body { padding: 22px 24px 24px; display: flex; flex-direction: column; flex: 1; }
+.blog-card-cat {
+  display: inline-block; width: fit-content;
+  font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .8px;
+  padding: 4px 12px; border-radius: 4px; margin-bottom: 12px;
+  background: var(--red-light); color: var(--red);
+}
+.blog-card-cat[data-cat="metodologia"] { background: #FFF8E1; color: #F57F17; }
+.blog-card-cat[data-cat="familia"] { background: #E8EAF6; color: #283593; }
+.blog-card-cat[data-cat="desenvolvimento"] { background: #F3E5F5; color: #6A1B9A; }
+.blog-card-cat[data-cat="noticias"] { background: #E0F2F1; color: #00695C; }
+.blog-card-title {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: 18px; font-weight: 700; line-height: 1.35; margin-bottom: 10px;
+  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+}
+.blog-card-title a { color: var(--text); text-decoration: none; transition: color .2s; }
+.blog-card-title a:hover { color: var(--red); }
+.blog-card-excerpt {
+  font-size: 14px; color: var(--text-muted); line-height: 1.7; margin-bottom: 16px;
+  display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden;
+  flex: 1;
+}
+.blog-card-meta {
+  display: flex; align-items: center; gap: 12px;
+  font-size: 12px; color: var(--text-muted); padding-top: 16px;
+  border-top: 1px solid var(--border);
+}
+.blog-card-meta .reading-time { margin-left: auto; display: flex; align-items: center; gap: 4px; }
+
+/* ── Empty State ── */
+.empty-state { text-align: center; padding: 80px 24px; max-width: 480px; margin: 0 auto; }
+.empty-icon {
+  width: 72px; height: 72px; border-radius: 50%;
+  background: var(--red-light); display: flex; align-items: center; justify-content: center;
+  margin: 0 auto 24px; font-size: 32px;
+}
+.empty-state h2 { font-family: 'Playfair Display', serif; font-size: 22px; margin-bottom: 10px; }
+.empty-state p { color: var(--text-muted); font-size: 15px; line-height: 1.7; }
+
+/* ── Newsletter ── */
+.newsletter {
+  max-width: var(--max-w); margin: 64px auto 0; padding: 0 24px;
+}
+.newsletter-inner {
+  background: linear-gradient(135deg, #7F1D1D, #B71C1C);
+  border-radius: 16px; padding: 48px; display: flex; align-items: center; gap: 40px;
+  position: relative; overflow: hidden;
+}
+.newsletter-inner::before {
+  content: ''; position: absolute; right: -40px; top: -40px;
+  width: 200px; height: 200px; border-radius: 50%;
+  background: rgba(255,255,255,.05);
+}
+.newsletter-text { flex: 1; position: relative; }
+.newsletter-text h3 { font-family: 'Playfair Display', serif; font-size: 24px; color: #fff; margin-bottom: 8px; }
+.newsletter-text p { color: rgba(255,255,255,.75); font-size: 15px; }
+.newsletter-form { display: flex; gap: 8px; position: relative; }
+.newsletter-form input {
+  padding: 12px 18px; border: 2px solid rgba(255,255,255,.2); border-radius: 8px;
+  background: rgba(255,255,255,.1); color: #fff; font-size: 14px; width: 260px;
+  font-family: inherit; outline: none; transition: border-color .2s;
+}
+.newsletter-form input::placeholder { color: rgba(255,255,255,.5); }
+.newsletter-form input:focus { border-color: rgba(255,255,255,.5); }
+.newsletter-form button {
+  padding: 12px 24px; border: none; border-radius: 8px;
+  background: #fff; color: var(--red); font-weight: 700; font-size: 14px;
+  cursor: pointer; font-family: inherit; transition: transform .2s;
+}
+.newsletter-form button:hover { transform: translateY(-1px); }
+
+/* ── Footer ── */
+.footer { background: var(--red-dark); padding: 56px 24px 32px; margin-top: 80px; }
+.footer-inner { max-width: var(--max-w); margin: 0 auto; display: grid; grid-template-columns: 1.2fr 1fr 1fr; gap: 48px; }
+.footer-brand { }
+.footer-logo { height: 40px; margin-bottom: 16px; filter: brightness(0) invert(1); }
+.footer-brand p { color: rgba(255,255,255,.6); font-size: 14px; line-height: 1.7; max-width: 300px; }
+.footer-col h4 { color: #fff; font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: .8px; margin-bottom: 16px; }
+.footer-col a { display: block; color: rgba(255,255,255,.65); font-size: 14px; text-decoration: none; line-height: 2.2; transition: color .2s; }
+.footer-col a:hover { color: #fff; }
+.footer-social { display: flex; gap: 12px; margin-top: 20px; }
+.footer-social a {
+  width: 36px; height: 36px; border-radius: 8px; background: rgba(255,255,255,.1);
+  display: flex; align-items: center; justify-content: center;
+  color: #fff; font-size: 16px; transition: background .2s;
+}
+.footer-social a:hover { background: rgba(255,255,255,.2); }
+.footer-bottom {
+  max-width: var(--max-w); margin: 32px auto 0; padding-top: 24px;
+  border-top: 1px solid rgba(255,255,255,.1);
+  display: flex; justify-content: space-between; align-items: center;
+}
+.footer-bottom p { color: rgba(255,255,255,.4); font-size: 12px; }
+.footer-bottom a { color: rgba(255,255,255,.5); font-size: 12px; text-decoration: none; }
+
+/* ── Responsive ── */
+@media (max-width: 1024px) { .blog-grid { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 768px) {
+  .nav { display: none; }
+  .blog-grid { grid-template-columns: 1fr; gap: 20px; }
+  .footer-inner { grid-template-columns: 1fr; gap: 32px; }
+  .newsletter-inner { flex-direction: column; padding: 32px 24px; text-align: center; }
+  .newsletter-form { flex-direction: column; }
+  .newsletter-form input { width: 100%; }
+  .header-inner { justify-content: center; }
+}
+@media (max-width: 480px) {
+  .hero { padding: 56px 20px 40px; }
+  .filters { justify-content: flex-start; overflow-x: auto; flex-wrap: nowrap; padding-bottom: 12px; }
+}
+
+/* ── Header scroll effect ── */
+</style>
+</head>
+<body>
+
+<header class="header" id="header">
+  <div class="header-inner">
+    <a href="https://maplebearcaxiasdosul.com.br" class="logo">
+      <img src="/blog/logo-maple-bear.png" alt="Maple Bear" class="logo-img">
+      <div class="logo-divider"></div>
+      <div class="logo-unit"><strong>Caxias do Sul</strong>Blog</div>
+    </a>
+    <nav class="nav">
+      <a href="https://maplebearcaxiasdosul.com.br">A Escola</a>
+      <a href="/blog" class="active">Blog</a>
+      <a href="https://www.instagram.com/maplebearcaxiasdosul/" target="_blank" rel="noopener">Instagram</a>
+      <a href="https://wa.me/5554999396742?text=Ol%C3%A1!%20Gostaria%20de%20agendar%20uma%20visita%20%C3%A0%20Maple%20Bear%20Caxias%20do%20Sul." class="nav-cta" target="_blank" rel="noopener">Agende uma Visita</a>
+    </nav>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="hero-inner">
+    <div class="hero-badge">🍁 Maple Bear Canadian School</div>
+    <h1>Educação Bilíngue que Transforma</h1>
+    <p class="hero-subtitle">Artigos sobre metodologia canadense, desenvolvimento infantil, educação bilíngue e orientações para famílias.</p>
+  </div>
+</section>
+
+<div class="filters">
+  <span class="filters-label">Filtrar:</span>
+  <button class="filter-btn active" data-filter="all">Todos</button>
+  <button class="filter-btn" data-filter="educacao-bilingue">Educação Bilíngue</button>
+  <button class="filter-btn" data-filter="metodologia">Metodologia</button>
+  <button class="filter-btn" data-filter="familia">Família</button>
+  <button class="filter-btn" data-filter="desenvolvimento">Desenvolvimento Infantil</button>
+  <button class="filter-btn" data-filter="noticias">Notícias</button>
+</div>
+
+<section class="blog-section">
+  <div class="blog-grid" id="blog-grid">
+<article class="blog-card" data-category="desenvolvimento">
+  <a href="/blog/neurociencia-bilinguismo-cerebro/" class="blog-card-link">
+    <div class="blog-card-img"><img src="https://images.unsplash.com/photo-1559757148-5c350d0d3c56?w=800&auto=format&fit=crop" alt="Neurociência do Bilinguismo: O Que Acontece no Cérebro da Criança Bilíngue" loading="lazy"></div>
+    <div class="blog-card-body">
+      <span class="blog-card-cat" data-cat="desenvolvimento">DESENVOLVIMENTO INFANTIL</span>
+      <h2 class="blog-card-title">Neurociência do Bilinguismo: O Que Acontece no Cérebro da Criança Bilíngue</h2>
+      <p class="blog-card-excerpt">Descubra o que a neurociência do bilinguismo revela sobre o cérebro bilíngue: plasticidade, funções executivas e por que começar cedo faz toda a diferença.</p>
+      <div class="blog-card-meta">
+        <span>Maple Bear Caxias do Sul</span>
+        <span>·</span>
+        <time>22 de maio de 2026</time>
+        <span class="reading-time">⏱ 12 min</span>
+      </div>
+    </div>
+  </a>
+</article>
+<article class="blog-card" data-category="desenvolvimento">
+  <a href="/blog/vocabulario-ingles-por-idade/" class="blog-card-link">
+    <div class="blog-card-img"><img src="https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=800&auto=format&fit=crop" alt="Vocabulário em Inglês por Idade: O Que Esperar de 3, 6, 10 e 14 Anos" loading="lazy"></div>
+    <div class="blog-card-body">
+      <span class="blog-card-cat" data-cat="desenvolvimento">DESENVOLVIMENTO INFANTIL</span>
+      <h2 class="blog-card-title">Vocabulário em Inglês por Idade: O Que Esperar de 3, 6, 10 e 14 Anos</h2>
+      <p class="blog-card-excerpt">Vocabulário em inglês por idade: descubra os marcos linguísticos esperados aos 3, 6, 10 e 14 anos e como apoiar a evolução do vocabulário bilíngue do seu filho.</p>
+      <div class="blog-card-meta">
+        <span>Maple Bear Caxias do Sul</span>
+        <span>·</span>
+        <time>22 de maio de 2026</time>
+        <span class="reading-time">⏱ 11 min</span>
+      </div>
+    </div>
+  </a>
+</article>
+<article class="blog-card" data-category="saude-infantil">
+  <a href="/blog/ansiedade-infantil-escola-sinais/" class="blog-card-link">
+    <div class="blog-card-img"><img src="https://images.unsplash.com/photo-1503454537195-1dcabb73ffb9?w=800&auto=format&fit=crop" alt="Ansiedade Infantil na Escola: 10 Sinais que Pais Não Devem Ignorar" loading="lazy"></div>
+    <div class="blog-card-body">
+      <span class="blog-card-cat" data-cat="saude-infantil">SAÚDE INFANTIL</span>
+      <h2 class="blog-card-title">Ansiedade Infantil na Escola: 10 Sinais que Pais Não Devem Ignorar</h2>
+      <p class="blog-card-excerpt">Ansiedade infantil na escola: aprenda a identificar os 10 sinais mais comuns, diferenciar preocupação normal de transtorno e saiba quando buscar ajuda profissional.</p>
+      <div class="blog-card-meta">
+        <span>Maple Bear Caxias do Sul</span>
+        <span>·</span>
+        <time>21 de maio de 2026</time>
+        <span class="reading-time">⏱ 11 min</span>
+      </div>
+    </div>
+  </a>
+</article>
+<article class="blog-card" data-category="educacao-bilingue">
+  <a href="/blog/maple-bear-e-boa-vale-a-pena/" class="blog-card-link">
+    <div class="blog-card-img"></div>
+    <div class="blog-card-body">
+      <span class="blog-card-cat" data-cat="educacao-bilingue">EDUCAÇÃO BILÍNGUE</span>
+      <h2 class="blog-card-title">Maple Bear É Boa? Uma Análise Detalhada da Metodologia e Depoimentos Reais</h2>
+      <p class="blog-card-excerpt">Descubra se a Maple Bear é boa para a educação do seu filho. Analisamos a metodologia canadense, resultados de aprendizagem e depoimentos de pais sobre a qualidade e diferenciais da escola bilíngue.</p>
+      <div class="blog-card-meta">
+        <span>Maple Bear Caxias do Sul</span>
+        <span>·</span>
+        <time>21 de maio de 2026</time>
+        <span class="reading-time">⏱ 12 min</span>
+      </div>
+    </div>
+  </a>
+</article>
+<article class="blog-card" data-category="educacao-bilingue">
+  <a href="/blog/melhores-escolas-bilingues-caxias-do-sul/" class="blog-card-link">
+    <div class="blog-card-img"><img src="https://brgorknbrjlfwvrrlwxj.supabase.co/storage/v1/object/sign/insta-publisher-assets/companies/1a430ce0-832b-4887-8d41-f541f76d9f8d/blog/melhores-escolas-bilingues-caxias-do-sul/cover.webp?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV82YzE5NGEyNS00M2I3LTQ3YjgtOTkzNi0xYzIxYWU3ZTFiZWYiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJpbnN0YS1wdWJsaXNoZXItYXNzZXRzL2NvbXBhbmllcy8xYTQzMGNlMC04MzJiLTQ4ODctOGQ0MS1mNTQxZjc2ZDlmOGQvYmxvZy9tZWxob3Jlcy1lc2NvbGFzLWJpbGluZ3Vlcy1jYXhpYXMtZG8tc3VsL2NvdmVyLndlYnAiLCJpYXQiOjE3NzkzODUxMjQsImV4cCI6MTgxMDkyMTEyNH0.maPnllr5Qxf6XlKnOo6wZukgZr9sCK_fXzg78Ulmwiw" alt="Melhores Escolas Bilíngues em Caxias do Sul: Um Guia Completo para 2026" loading="lazy"></div>
+    <div class="blog-card-body">
+      <span class="blog-card-cat" data-cat="educacao-bilingue">EDUCAÇÃO BILÍNGUE</span>
+      <h2 class="blog-card-title">Melhores Escolas Bilíngues em Caxias do Sul: Um Guia Completo para 2026</h2>
+      <p class="blog-card-excerpt">Descubra as melhores escolas bilíngues em Caxias do Sul para 2026. Compare metodologias, currículos e diferenciais para escolher a educação ideal para seu filho.</p>
+      <div class="blog-card-meta">
+        <span>Maple Bear Caxias do Sul</span>
+        <span>·</span>
+        <time>21 de maio de 2026</time>
+        <span class="reading-time">⏱ 7 min</span>
+      </div>
+    </div>
+  </a>
+</article>
+<article class="blog-card" data-category="educacao-bilingue">
+  <a href="/blog/escola-bilingue-ou-curso-de-ingles-qual-escolher/" class="blog-card-link">
+    <div class="blog-card-img"></div>
+    <div class="blog-card-body">
+      <span class="blog-card-cat" data-cat="educacao-bilingue">EDUCAÇÃO BILÍNGUE</span>
+      <h2 class="blog-card-title">Escola Bilíngue ou Curso de Inglês: Guia Completo para a Melhor Escolha em 2026</h2>
+      <p class="blog-card-excerpt">Decidindo entre escola bilíngue ou curso de inglês para seu filho em 2026? Compare as diferenças, vantagens e desvantagens para fazer a escolha certa em Caxias do Sul.</p>
+      <div class="blog-card-meta">
+        <span>Maple Bear Caxias do Sul</span>
+        <span>·</span>
+        <time>21 de maio de 2026</time>
+        <span class="reading-time">⏱ 11 min</span>
+      </div>
+    </div>
+  </a>
+</article>
+<article class="blog-card" data-category="educacao-bilingue">
+  <a href="/blog/escola-bilingue-caxias-matricula-2026/" class="blog-card-link">
+    <div class="blog-card-img"></div>
+    <div class="blog-card-body">
+      <span class="blog-card-cat" data-cat="educacao-bilingue">EDUCAÇÃO BILÍNGUE</span>
+      <h2 class="blog-card-title">Matrículas Abertas Maple Bear 2026: Guia Completo para Escolher Escola Bilíngue em Caxias</h2>
+      <p class="blog-card-excerpt">Matrículas abertas 2026 na Maple Bear Caxias! Descubra o que considerar ao escolher uma escola bilíngue em Caxias do Sul para seu filho. Conheça a metodologia canadense.</p>
+      <div class="blog-card-meta">
+        <span>Maple Bear Caxias do Sul</span>
+        <span>·</span>
+        <time>21 de maio de 2026</time>
+        <span class="reading-time">⏱ 8 min</span>
+      </div>
+    </div>
+  </a>
+</article>
+<article class="blog-card" data-category="educacao-bilingue">
+  <a href="/blog/escola-bilingue-educacao-infantil-necessaria/" class="blog-card-link">
+    <div class="blog-card-img"></div>
+    <div class="blog-card-body">
+      <span class="blog-card-cat" data-cat="educacao-bilingue">EDUCAÇÃO BILÍNGUE</span>
+      <h2 class="blog-card-title">Escola Bilíngue na Educação Infantil: Por Que Começar o Inglês Cedo é Essencial?</h2>
+      <p class="blog-card-excerpt">Desvende os benefícios de uma escola bilíngue na educação infantil para o desenvolvimento cognitivo e socioemocional. Conheça a metodologia Maple Bear Caxias do Sul.</p>
+      <div class="blog-card-meta">
+        <span>Maple Bear Caxias do Sul</span>
+        <span>·</span>
+        <time>21 de maio de 2026</time>
+        <span class="reading-time">⏱ 9 min</span>
+      </div>
+    </div>
+  </a>
+</article>
+
+<article class="blog-card" data-category="educacao-bilingue">
+  <a href="/blog/maple-bear-caxias-infraestrutura/" class="blog-card-link">
+    <div class="blog-card-img"></div>
+    <div class="blog-card-body">
+      <span class="blog-card-cat" data-cat="educacao-bilingue">EDUCAÇÃO BILÍNGUE</span>
+      <h2 class="blog-card-title">Maple Bear Caxias do Sul: Uma Imersão na Infraestrutura de Padrão Canadense</h2>
+      <p class="blog-card-excerpt">Explore a infraestrutura de ponta da Maple Bear Caxias do Sul, projetada para a educação bilíngue canadense, com espaços modernos e recursos que inspiram aprendizado e desenvolvimento.</p>
+      <div class="blog-card-meta">
+        <span>Maple Bear Caxias do Sul</span>
+        <span>·</span>
+        <time>21 de maio de 2026</time>
+        <span class="reading-time">⏱ 7 min</span>
+      </div>
+    </div>
+  </a>
+</article>
+<article class="blog-card" data-category="educacao-bilingue">
+  <a href="/blog/segundo-idioma-antes-dos-5-anos/" class="blog-card-link">
+    <div class="blog-card-img"></div>
+    <div class="blog-card-body">
+      <span class="blog-card-cat" data-cat="educacao-bilingue">EDUCAÇÃO BILÍNGUE</span>
+      <h2 class="blog-card-title">Por Que Aprender um Segundo Idioma Antes dos 5 Anos Muda Tudo: A Janela de Oportunidade</h2>
+      <p class="blog-card-excerpt">Descubra por que a primeira infância é a melhor época para aprender um segundo idioma. Entenda a janela de oportunidade e os benefícios para o desenvolvimento cognitivo e socioemocional.</p>
+      <div class="blog-card-meta">
+        <span>Maple Bear Caxias do Sul</span>
+        <span>·</span>
+        <time>21 de maio de 2026</time>
+        <span class="reading-time">⏱ 9 min</span>
+      </div>
+    </div>
+  </a>
+</article>
+<article class="blog-card" data-category="educacao-bilingue">
+  <a href="/blog/quanto-custa-escola-bilingue-2026/" class="blog-card-link">
+    <div class="blog-card-img"></div>
+    <div class="blog-card-body">
+      <span class="blog-card-cat" data-cat="educacao-bilingue">EDUCAÇÃO BILÍNGUE</span>
+      <h2 class="blog-card-title">Quanto Custa uma Escola Bilíngue em 2026? Guia Completo de Preços e Vantagens na Maple Bear Caxias do Sul</h2>
+      <p class="blog-card-excerpt">Descubra quanto custa uma escola bilíngue em 2026, o que está incluso e o valor do investimento na educação Maple Bear em Caxias do Sul. Guia de preços e benefícios.</p>
+      <div class="blog-card-meta">
+        <span>Maple Bear Caxias do Sul</span>
+        <span>·</span>
+        <time>21 de maio de 2026</time>
+        <span class="reading-time">⏱ 11 min</span>
+      </div>
+    </div>
+  </a>
+</article>
+<article class="blog-card" data-category="pedagogia">
+  <a href="/blog/metodologias-ativas-canadense/" class="blog-card-link">
+    <div class="blog-card-img"><img src="https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=800&auto=format&fit=crop" alt="Metodologias Ativas na Escola: Como o Método Canadense Aplica Project-Based Learning" loading="lazy"></div>
+    <div class="blog-card-body">
+      <span class="blog-card-cat" data-cat="pedagogia">PEDAGOGIA</span>
+      <h2 class="blog-card-title">Metodologias Ativas na Escola: Como o Método Canadense Aplica Project-Based Learning</h2>
+      <p class="blog-card-excerpt">Entenda o que são metodologias ativas e como o método canadense usa o Project-Based Learning para que seu filho aprenda fazendo, criando e colaborando de verdade.</p>
+      <div class="blog-card-meta">
+        <span>Maple Bear Caxias do Sul</span>
+        <span>·</span>
+        <time>21 de maio de 2026</time>
+        <span class="reading-time">⏱ 12 min</span>
+      </div>
+    </div>
+  </a>
+</article>
+<article class="blog-card" data-category="matricula">
+  <a href="/blog/matricula-escola-bilingue-documentacao/" class="blog-card-link">
+    <div class="blog-card-img"><img src="https://images.unsplash.com/photo-1580582932707-520aed937b7b?w=800&auto=format&fit=crop" alt="Matrícula em Escola Bilíngue: Documentação, Prazos e Como Funciona em Caxias" loading="lazy"></div>
+    <div class="blog-card-body">
+      <span class="blog-card-cat" data-cat="matricula">MATRÍCULA</span>
+      <h2 class="blog-card-title">Matrícula em Escola Bilíngue: Documentação, Prazos e Como Funciona em Caxias</h2>
+      <p class="blog-card-excerpt">Tudo sobre matrícula em escola bilíngue: quais documentos levar, prazos para 2026, diferença entre pré-matrícula e matrícula formal, e como funciona na Maple Bear.</p>
+      <div class="blog-card-meta">
+        <span>Maple Bear Caxias do Sul</span>
+        <span>·</span>
+        <time>21 de maio de 2026</time>
+        <span class="reading-time">⏱ 10 min</span>
+      </div>
+    </div>
+  </a>
+</article>
+<article class="blog-card" data-category="pedagogia">
+  <a href="/blog/habilidades-socioemocionais-bncc/" class="blog-card-link">
+    <div class="blog-card-img"><img src="https://images.unsplash.com/photo-1516627145497-ae6968895b74?w=800&auto=format&fit=crop" alt="Habilidades Socioemocionais na BNCC: O Que Toda Família Precisa Entender" loading="lazy"></div>
+    <div class="blog-card-body">
+      <span class="blog-card-cat" data-cat="pedagogia">PEDAGOGIA</span>
+      <h2 class="blog-card-title">Habilidades Socioemocionais na BNCC: O Que Toda Família Precisa Entender</h2>
+      <p class="blog-card-excerpt">Entenda o que são habilidades socioemocionais na BNCC, por que elas importam para o futuro do seu filho e o que você pode fazer em casa para apoiar esse desenvolvimento.</p>
+      <div class="blog-card-meta">
+        <span>Maple Bear Caxias do Sul</span>
+        <span>·</span>
+        <time>20 de maio de 2026</time>
+        <span class="reading-time">⏱ 12 min</span>
+      </div>
+    </div>
+  </a>
+</article>
+<article class="blog-card" data-category="seguranca-infantil">
+  <a href="/blog/bullying-escola-bilingue-prevencao/" class="blog-card-link">
+    <div class="blog-card-img"><img src="https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=800&auto=format&fit=crop" alt="Bullying na Escola Bilíngue: Como a Maple Bear Caxias do Sul Previne e Acolhe" loading="lazy"></div>
+    <div class="blog-card-body">
+      <span class="blog-card-cat" data-cat="seguranca-infantil">SEGURANÇA INFANTIL</span>
+      <h2 class="blog-card-title">Bullying na Escola Bilíngue: Como a Maple Bear Caxias do Sul Previne e Acolhe</h2>
+      <p class="blog-card-excerpt">Entenda o que é bullying, conheça a Lei 13.185/2015, identifique sinais de alerta no comportamento do seu filho e veja como a Maple Bear cuida do clima escolar.</p>
+      <div class="blog-card-meta">
+        <span>Maple Bear Caxias do Sul</span>
+        <span>·</span>
+        <time>20 de maio de 2026</time>
+        <span class="reading-time">⏱ 11 min</span>
+      </div>
+    </div>
+  </a>
+</article>
+<article class="blog-card" data-category="etapas-escolares">
+  <a href="/blog/fundamental-1-escola-bilingue/" class="blog-card-link">
+    <div class="blog-card-img"><img src="https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=800&auto=format&fit=crop" alt="Fundamental I em Escola Bilíngue: O Que Esperar dos 6 aos 10 Anos" loading="lazy"></div>
+    <div class="blog-card-body">
+      <span class="blog-card-cat" data-cat="etapas-escolares">ETAPAS ESCOLARES</span>
+      <h2 class="blog-card-title">Fundamental I em Escola Bilíngue: O Que Esperar dos 6 aos 10 Anos</h2>
+      <p class="blog-card-excerpt">Tudo sobre o Fundamental I bilíngue: o que seu filho aprende do 1º ao 5º ano, como o inglês evolui, como a BNCC é aplicada e dicas para apoiar em casa.</p>
+      <div class="blog-card-meta">
+        <span>Maple Bear Caxias do Sul</span>
+        <span>·</span>
+        <time>20 de maio de 2026</time>
+        <span class="reading-time">⏱ 11 min</span>
+      </div>
+    </div>
+  </a>
+</article>
+<article class="blog-card" data-category="certificacoes">
+  <a href="/blog/cambridge-young-learners-exam/" class="blog-card-link">
+    <div class="blog-card-img"><img src="https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=800&auto=format&fit=crop" alt="Cambridge Young Learners: O Que É, Como Funciona e Por Que Sua Escola Faz" loading="lazy"></div>
+    <div class="blog-card-body">
+      <span class="blog-card-cat" data-cat="noticias">CERTIFICAÇÕES</span>
+      <h2 class="blog-card-title">Cambridge Young Learners: O Que É, Como Funciona e Por Que Sua Escola Faz</h2>
+      <p class="blog-card-excerpt">Entenda os 3 níveis do Cambridge Young Learners (Starters, Movers, Flyers), como funciona o exame, por que não existe reprovação e o que isso representa para o desenvolvimento do seu filho.</p>
+      <div class="blog-card-meta">
+        <span>Maple Bear Caxias do Sul</span>
+        <span>·</span>
+        <time>19 de maio de 2026</time>
+        <span class="reading-time">⏱ 11 min</span>
+      </div>
+    </div>
+  </a>
+</article>
+<article class="blog-card" data-category="tecnologia">
+  <a href="/blog/screen-time-bilingue-criancas/" class="blog-card-link">
+    <div class="blog-card-img"><img src="https://images.unsplash.com/photo-1611532736597-de2d4265fba3?w=800&auto=format&fit=crop" alt="Screen Time e Educação Bilíngue: O Equilíbrio Saudável Entre Telas e Aprendizado" loading="lazy"></div>
+    <div class="blog-card-body">
+      <span class="blog-card-cat" data-cat="noticias">TECNOLOGIA</span>
+      <h2 class="blog-card-title">Screen Time e Educação Bilíngue: O Equilíbrio Saudável Entre Telas e Aprendizado</h2>
+      <p class="blog-card-excerpt">Descubra como equilibrar o tempo de tela e o aprendizado de inglês. O que a AAP recomenda por faixa etária e como transformar as telas em aliadas do bilinguismo do seu filho.</p>
+      <div class="blog-card-meta">
+        <span>Maple Bear Caxias do Sul</span>
+        <span>·</span>
+        <time>19 de maio de 2026</time>
+        <span class="reading-time">⏱ 11 min</span>
+      </div>
+    </div>
+  </a>
+</article>
+<article class="blog-card" data-category="familia">
+  <a href="/blog/escolha-escola-particular-checklist/" class="blog-card-link">
+    <div class="blog-card-img"><img src="https://images.unsplash.com/photo-1580582932707-520aed937b7b?w=800&auto=format&fit=crop" alt="Como Escolher a Escola Particular Ideal: Checklist com 22 Critérios" loading="lazy"></div>
+    <div class="blog-card-body">
+      <span class="blog-card-cat" data-cat="familia">DICAS PARA PAIS</span>
+      <h2 class="blog-card-title">Como Escolher a Escola Particular Ideal: Checklist com 22 Critérios</h2>
+      <p class="blog-card-excerpt">Como escolher escola particular para seu filho? Use nosso checklist com 22 critérios para avaliar proposta pedagógica, professores, segurança e muito mais.</p>
+      <div class="blog-card-meta">
+        <span>Maple Bear Caxias do Sul</span>
+        <span>·</span>
+        <time>19 de maio de 2026</time>
+        <span class="reading-time">⏱ 13 min</span>
+      </div>
+    </div>
+  </a>
+</article>
+<article class="blog-card" data-category="desenvolvimento">
+  <a href="/blog/ed-infantil-bilingue-1-5-a-5-anos/" class="blog-card-link">
+    <div class="blog-card-img"><img src="https://images.unsplash.com/photo-1587654780291-39c9404d746b?w=800&auto=format&fit=crop" alt="Educação Infantil Bilíngue: O Guia Completo para a Fase dos 1,5 aos 5 Anos" loading="lazy"></div>
+    <div class="blog-card-body">
+      <span class="blog-card-cat" data-cat="desenvolvimento">ETAPAS ESCOLARES</span>
+      <h2 class="blog-card-title">Educação Infantil Bilíngue: O Guia Completo para a Fase dos 1,5 aos 5 Anos</h2>
+      <p class="blog-card-excerpt">Educação infantil bilíngue dos 1,5 aos 5 anos: o que acontece em cada fase, do berçário à pré-escola, e como saber se a escola está entregando qualidade.</p>
+      <div class="blog-card-meta">
+        <span>Maple Bear Caxias do Sul</span>
+        <span>·</span>
+        <time>18 de maio de 2026</time>
+        <span class="reading-time">⏱ 12 min</span>
+      </div>
+    </div>
+  </a>
+</article>
+<article class="blog-card" data-category="familia">
+  <a href="/blog/leitura-infantil-bilingue-livros/" class="blog-card-link">
+    <div class="blog-card-img"><img src="https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8?w=800&auto=format&fit=crop" alt="Leitura Infantil Bilíngue: 30 Livros Essenciais por Faixa Etária (PT + EN)" loading="lazy"></div>
+    <div class="blog-card-body">
+      <span class="blog-card-cat" data-cat="familia">DICAS PARA PAIS</span>
+      <h2 class="blog-card-title">Leitura Infantil Bilíngue: 30 Livros Essenciais por Faixa Etária (PT + EN)</h2>
+      <p class="blog-card-excerpt">Descubra 30 livros de leitura infantil bilíngue por faixa etária — do maternal ao Fundamental II. Guia completo para incentivar a leitura em PT e EN.</p>
+      <div class="blog-card-meta">
+        <span>Maple Bear Caxias do Sul</span>
+        <span>·</span>
+        <time>18 de maio de 2026</time>
+        <span class="reading-time">⏱ 12 min</span>
+      </div>
+    </div>
+  </a>
+</article>
+<article class="blog-card" data-category="familia">
+  <a href="/blog/primeiro-dia-escola-bilingue-pais/" class="blog-card-link">
+    <div class="blog-card-img"><img src="https://images.unsplash.com/photo-1503676382389-4809596d5290?w=800&auto=format&fit=crop" alt="Primeiro Dia na Escola Bilíngue: Como Preparar Seu Filho (e Você) Para a Adaptação" loading="lazy"></div>
+    <div class="blog-card-body">
+      <span class="blog-card-cat" data-cat="familia">DICAS PARA PAIS</span>
+      <h2 class="blog-card-title">Primeiro Dia na Escola Bilíngue: Como Preparar Seu Filho (e Você) Para a Adaptação</h2>
+      <p class="blog-card-excerpt">Tudo sobre o primeiro dia na escola bilíngue: como preparar seu filho, lidar com a ansiedade, o que esperar da adaptação e quando pedir ajuda.</p>
+      <div class="blog-card-meta">
+        <span>Maple Bear Caxias do Sul</span>
+        <span>·</span>
+        <time>18 de maio de 2026</time>
+        <span class="reading-time">⏱ 11 min</span>
+      </div>
+    </div>
+  </a>
+</article>
+<article class="blog-card" data-category="familia">
+  <a href="/blog/ingles-em-casa-rotina-familia/" class="blog-card-link">
+    <div class="blog-card-img"><img src="https://images.unsplash.com/photo-1484820540004-14229fe36ca4?w=800&auto=format&fit=crop" alt="Inglês em Casa: 12 Rotinas Práticas para Famílias Que Não Falam o Idioma" loading="lazy"></div>
+    <div class="blog-card-body">
+      <span class="blog-card-cat" data-cat="familia">DICAS PARA PAIS</span>
+      <h2 class="blog-card-title">Inglês em Casa: 12 Rotinas Práticas para Famílias Que Não Falam o Idioma</h2>
+      <p class="blog-card-excerpt">Descubra 12 rotinas práticas de inglês em casa para crianças. Funciona mesmo para famílias que não falam o idioma. Dicas simples e eficazes para o dia a dia.</p>
+      <div class="blog-card-meta">
+        <span>Maple Bear Caxias do Sul</span>
+        <span>·</span>
+        <time>17 de maio de 2026</time>
+        <span class="reading-time">⏱ 12 min</span>
+      </div>
+    </div>
+  </a>
+</article>
+<article class="blog-card" data-category="desenvolvimento">
+  <a href="/blog/alfabetizacao-bilingue-fases/" class="blog-card-link">
+    <div class="blog-card-img"><img src="https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=800&auto=format&fit=crop" alt="Alfabetização Bilíngue: As 5 Fases que Toda Família Deve Conhecer" loading="lazy"></div>
+    <div class="blog-card-body">
+      <span class="blog-card-cat" data-cat="desenvolvimento">DESENVOLVIMENTO INFANTIL</span>
+      <h2 class="blog-card-title">Alfabetização Bilíngue: As 5 Fases que Toda Família Deve Conhecer</h2>
+      <p class="blog-card-excerpt">Entenda as 5 fases da alfabetização bilíngue e como seu filho aprende a ler em português e inglês ao mesmo tempo. Guia completo para pais.</p>
+      <div class="blog-card-meta">
+        <span>Maple Bear Caxias do Sul</span>
+        <span>·</span>
+        <time>17 de maio de 2026</time>
+        <span class="reading-time">⏱ 11 min</span>
+      </div>
+    </div>
+  </a>
+</article>
+<article class="blog-card" data-category="educacao-bilingue">
+  <a href="/blog/como-saber-se-meu-filho-esta-aprendendo-ingles-de-verdade/" class="blog-card-link">
+    <div class="blog-card-img"><img src="https://brgorknbrjlfwvrrlwxj.supabase.co/storage/v1/object/sign/insta-publisher-assets/companies/1a430ce0-832b-4887-8d41-f541f76d9f8d/blog/como-saber-se-meu-filho-esta-aprendendo-ingles-de-verdade/cover.jpg?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV82YzE5NGEyNS00M2I3LTQ3YjgtOTkzNi0xYzIxYWU3ZTFiZWYiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJpbnN0YS1wdWJsaXNoZXItYXNzZXRzL2NvbXBhbmllcy8xYTQzMGNlMC04MzJiLTQ4ODctOGQ0MS1mNTQxZjc2ZDlmOGQvYmxvZy9jb21vLXNhYmVyLXNlLW1ldS1maWxoby1lc3RhLWFwcmVuZGVuZG8taW5nbGVzLWRlLXZlcmRhZGUvY292ZXIuanBnIiwiaWF0IjoxNzc3OTgxODc2LCJleHAiOjE4MDk1MTc4NzZ9.daJjujy597ZbasvLH2T8-Jgxs3XO3Q2wt4a7TawYAYs" alt="Como Saber Se Meu Filho Está Aprendendo Inglês de Verdade na Escola Bilíngue?" loading="lazy"></div>
+    <div class="blog-card-body">
+      <span class="blog-card-cat" data-cat="educacao-bilingue">EDUCAÇÃO BILÍNGUE</span>
+      <h2 class="blog-card-title">Como Saber Se Meu Filho Está Aprendendo Inglês de Verdade na Escola Bilíngue?</h2>
+      <p class="blog-card-excerpt">Descubra como saber se seu filho está aprendendo inglês na escola bilíngue: sinais claros, fases do desenvolvimento e como acompanhar a evolução em casa.</p>
+      <div class="blog-card-meta">
+        <span>Maple Bear Caxias do Sul</span>
+        <span>·</span>
+        <time>4 de maio de 2026</time>
+        <span class="reading-time">⏱ 11 min</span>
+      </div>
+    </div>
+  </a>
+</article>
+<article class="blog-card" data-category="educacao-bilingue">
+  <a href="/blog/desenvolvimento-socioemocional-bilingue/" class="blog-card-link">
+    <div class="blog-card-img"><img src="https://brgorknbrjlfwvrrlwxj.supabase.co/storage/v1/object/sign/insta-publisher-assets/companies/1a430ce0-832b-4887-8d41-f541f76d9f8d/blog/desenvolvimento-socioemocional-bilingue/cover.jpg?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV82YzE5NGEyNS00M2I3LTQ3YjgtOTkzNi0xYzIxYWU3ZTFiZWYiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJpbnN0YS1wdWJsaXNoZXItYXNzZXRzL2NvbXBhbmllcy8xYTQzMGNlMC04MzJiLTQ4ODctOGQ0MS1mNTQxZjc2ZDlmOGQvYmxvZy9kZXNlbnZvbHZpbWVudG8tc29jaW9lbW9jaW9uYWwtYmlsaW5ndWUvY292ZXIuanBnIiwiaWF0IjoxNzc3OTgyMzI3LCJleHAiOjE4MDk1MTgzMjd9.JAuPq0ARuXcBZvtduvhTjYExnyLEPc9kIuyCt1gXtpI" alt="Desenvolvimento Socioemocional Bilíngue: Como a Educação Bilíngue Forma Crianças Mais Completas" loading="lazy"></div>
+    <div class="blog-card-body">
+      <span class="blog-card-cat" data-cat="educacao-bilingue">EDUCAÇÃO BILÍNGUE</span>
+      <h2 class="blog-card-title">Desenvolvimento Socioemocional Bilíngue: Como a Educação Bilíngue Forma Crianças Mais Completas</h2>
+      <p class="blog-card-excerpt">Descubra como o desenvolvimento socioemocional bilíngue transforma crianças em indivíduos mais empáticos, resilientes e preparados para o futuro. Saiba mais!</p>
+      <div class="blog-card-meta">
+        <span>Maple Bear Caxias do Sul</span>
+        <span>·</span>
+        <time>4 de maio de 2026</time>
+        <span class="reading-time">⏱ 13 min</span>
+      </div>
+    </div>
+  </a>
+</article>
+<article class="blog-card" data-category="educacao-bilingue">
+  <a href="/blog/adaptacao-escola-bilingue-dicas-pais/" class="blog-card-link">
+    <div class="blog-card-img"><img src="https://brgorknbrjlfwvrrlwxj.supabase.co/storage/v1/object/sign/insta-publisher-assets/companies/1a430ce0-832b-4887-8d41-f541f76d9f8d/blog/adaptacao-escola-bilingue-dicas-pais/cover.jpg?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV82YzE5NGEyNS00M2I3LTQ3YjgtOTkzNi0xYzIxYWU3ZTFiZWYiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJpbnN0YS1wdWJsaXNoZXItYXNzZXRzL2NvbXBhbmllcy8xYTQzMGNlMC04MzJiLTQ4ODctOGQ0MS1mNTQxZjc2ZDlmOGQvYmxvZy9hZGFwdGFjYW8tZXNjb2xhLWJpbGluZ3VlLWRpY2FzLXBhaXMvY292ZXIuanBnIiwiaWF0IjoxNzc3OTgyNDI3LCJleHAiOjE4MDk1MTg0Mjd9.o2QIti7pexTRFXH1hcRDfEYfGKhSgDyjkeex3L9mprM" alt="Adaptação na Escola Bilíngue: 8 Dicas Essenciais para Pais" loading="lazy"></div>
+    <div class="blog-card-body">
+      <span class="blog-card-cat" data-cat="educacao-bilingue">EDUCAÇÃO BILÍNGUE</span>
+      <h2 class="blog-card-title">Adaptação na Escola Bilíngue: 8 Dicas Essenciais para Pais</h2>
+      <p class="blog-card-excerpt">Descubra 8 dicas práticas para facilitar a adaptação na escola bilíngue e ajudar seu filho a se desenvolver com confiança, segurança e muito aprendizado.</p>
+      <div class="blog-card-meta">
+        <span>Maple Bear Caxias do Sul</span>
+        <span>·</span>
+        <time>4 de maio de 2026</time>
+        <span class="reading-time">⏱ 12 min</span>
+      </div>
+    </div>
+  </a>
+</article>
+<article class="blog-card" data-category="educacao-bilingue">
+  <a href="/blog/pensamento-critico-criancas-como-desenvolver/" class="blog-card-link">
+    <div class="blog-card-img"><img src="https://brgorknbrjlfwvrrlwxj.supabase.co/storage/v1/object/sign/insta-publisher-assets/companies/1a430ce0-832b-4887-8d41-f541f76d9f8d/blog/pensamento-critico-criancas-como-desenvolver/cover.jpg?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV82YzE5NGEyNS00M2I3LTQ3YjgtOTkzNi0xYzIxYWU3ZTFiZWYiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJpbnN0YS1wdWJsaXNoZXItYXNzZXRzL2NvbXBhbmllcy8xYTQzMGNlMC04MzJiLTQ4ODctOGQ0MS1mNTQxZjc2ZDlmOGQvYmxvZy9wZW5zYW1lbnRvLWNyaXRpY28tY3JpYW5jYXMtY29tby1kZXNlbnZvbHZlci9jb3Zlci5qcGciLCJpYXQiOjE3Nzc5ODI0OTEsImV4cCI6MTgwOTUxODQ5MX0.OCwWmrv3NSztfrVV60V-EHr8ZX7XERBZ2xd1O-n19VA" alt="Pensamento Crítico em Crianças: Como a Escola Desenvolve Essa Habilidade Essencial" loading="lazy"></div>
+    <div class="blog-card-body">
+      <span class="blog-card-cat" data-cat="educacao-bilingue">EDUCAÇÃO BILÍNGUE</span>
+      <h2 class="blog-card-title">Pensamento Crítico em Crianças: Como a Escola Desenvolve Essa Habilidade Essencial</h2>
+      <p class="blog-card-excerpt">Entenda como o pensamento crítico em crianças é desenvolvido na escola e por que essa habilidade é fundamental para o futuro. Conheça a metodologia canadense.</p>
+      <div class="blog-card-meta">
+        <span>Maple Bear Caxias do Sul</span>
+        <span>·</span>
+        <time>4 de maio de 2026</time>
+        <span class="reading-time">⏱ 13 min</span>
+      </div>
+    </div>
+  </a>
+</article>
+<article class="blog-card" data-category="educacao-bilingue">
+  <a href="/blog/imersao-ingles-vs-aulas-ingles/" class="blog-card-link">
+    <div class="blog-card-img"><img src="https://brgorknbrjlfwvrrlwxj.supabase.co/storage/v1/object/sign/insta-publisher-assets/companies/1a430ce0-832b-4887-8d41-f541f76d9f8d/blog/imersao-ingles-vs-aulas-ingles/cover.jpg?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV82YzE5NGEyNS00M2I3LTQ3YjgtOTkzNi0xYzIxYWU3ZTFiZWYiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJpbnN0YS1wdWJsaXNoZXItYXNzZXRzL2NvbXBhbmllcy8xYTQzMGNlMC04MzJiLTQ4ODctOGQ0MS1mNTQxZjc2ZDlmOGQvYmxvZy9pbWVyc2FvLWluZ2xlcy12cy1hdWxhcy1pbmdsZXMvY292ZXIuanBnIiwiaWF0IjoxNzc3OTgyNTY4LCJleHAiOjE4MDk1MTg1Njh9.pmXyv_q26-5ccae4R0iyjDKlr62b2cCWEjjx7hTMj4M" alt="Imersão em Inglês na Escola vs Aulas de Inglês: Qual a Diferença Real para o Seu Filho?" loading="lazy"></div>
+    <div class="blog-card-body">
+      <span class="blog-card-cat" data-cat="educacao-bilingue">EDUCAÇÃO BILÍNGUE</span>
+      <h2 class="blog-card-title">Imersão em Inglês na Escola vs Aulas de Inglês: Qual a Diferença Real para o Seu Filho?</h2>
+      <p class="blog-card-excerpt">Entenda a diferença entre imersão em inglês na escola e aulas tradicionais de inglês e descubra qual abordagem realmente prepara seu filho para o futuro.</p>
+      <div class="blog-card-meta">
+        <span>Maple Bear Caxias do Sul</span>
+        <span>·</span>
+        <time>4 de maio de 2026</time>
+        <span class="reading-time">⏱ 12 min</span>
+      </div>
+    </div>
+  </a>
+</article>
+<article class="blog-card" data-category="educacao-bilingue">
+  <a href="/blog/idade-certa-escola-bilingue/" class="blog-card-link">
+    <div class="blog-card-img"><img src="https://brgorknbrjlfwvrrlwxj.supabase.co/storage/v1/object/sign/insta-publisher-assets/companies/1a430ce0-832b-4887-8d41-f541f76d9f8d/blog/idade-certa-escola-bilingue/cover.jpg?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV82YzE5NGEyNS00M2I3LTQ3YjgtOTkzNi0xYzIxYWU3ZTFiZWYiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJpbnN0YS1wdWJsaXNoZXItYXNzZXRzL2NvbXBhbmllcy8xYTQzMGNlMC04MzJiLTQ4ODctOGQ0MS1mNTQxZjc2ZDlmOGQvYmxvZy9pZGFkZS1jZXJ0YS1lc2NvbGEtYmlsaW5ndWUvY292ZXIuanBnIiwiaWF0IjoxNzc3OTgyNjMxLCJleHAiOjE4MDk1MTg2MzF9.VxS8M_O9nZnLJItyljRr52VlSkWy8_43m9eoGqLyX3A" alt="Qual a Idade Certa para Colocar Meu Filho em Escola Bilíngue?" loading="lazy"></div>
+    <div class="blog-card-body">
+      <span class="blog-card-cat" data-cat="educacao-bilingue">EDUCAÇÃO BILÍNGUE</span>
+      <h2 class="blog-card-title">Qual a Idade Certa para Colocar Meu Filho em Escola Bilíngue?</h2>
+      <p class="blog-card-excerpt">Descubra qual é a idade certa para escola bilíngue, como funciona o aprendizado infantil e por que começar cedo faz toda a diferença no desenvolvimento do seu filho.</p>
+      <div class="blog-card-meta">
+        <span>Maple Bear Caxias do Sul</span>
+        <span>·</span>
+        <time>4 de maio de 2026</time>
+        <span class="reading-time">⏱ 11 min</span>
+      </div>
+    </div>
+  </a>
+</article>
+<article class="blog-card" data-category="educacao-bilingue">
+  <a href="/blog/metodologia-canadense-maple-bear/" class="blog-card-link">
+    <div class="blog-card-img"><img src="https://brgorknbrjlfwvrrlwxj.supabase.co/storage/v1/object/sign/insta-publisher-assets/companies/1a430ce0-832b-4887-8d41-f541f76d9f8d/blog/metodologia-canadense-maple-bear/cover.jpg?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV82YzE5NGEyNS00M2I3LTQ3YjgtOTkzNi0xYzIxYWU3ZTFiZWYiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJpbnN0YS1wdWJsaXNoZXItYXNzZXRzL2NvbXBhbmllcy8xYTQzMGNlMC04MzJiLTQ4ODctOGQ0MS1mNTQxZjc2ZDlmOGQvYmxvZy9tZXRvZG9sb2dpYS1jYW5hZGVuc2UtbWFwbGUtYmVhci9jb3Zlci5qcGciLCJpYXQiOjE3Nzc5ODI2OTIsImV4cCI6MTgwOTUxODY5Mn0.vg1wfMpv4WDyukwr7n1ZII4iBrZb9HD5sh5-O1-tk_c" alt="Metodologia Canadense na Escola: Como Funciona o Ensino na Maple Bear Caxias do Sul" loading="lazy"></div>
+    <div class="blog-card-body">
+      <span class="blog-card-cat" data-cat="educacao-bilingue">EDUCAÇÃO BILÍNGUE</span>
+      <h2 class="blog-card-title">Metodologia Canadense na Escola: Como Funciona o Ensino na Maple Bear Caxias do Sul</h2>
+      <p class="blog-card-excerpt">Entenda como a metodologia canadense escola Maple Bear transforma a educação bilíngue em Caxias do Sul com imersão, pensamento crítico e desenvolvimento integral.</p>
+      <div class="blog-card-meta">
+        <span>Maple Bear Caxias do Sul</span>
+        <span>·</span>
+        <time>4 de maio de 2026</time>
+        <span class="reading-time">⏱ 12 min</span>
+      </div>
+    </div>
+  </a>
+</article>
+<article class="blog-card" data-category="educacao-bilingue">
+  <a href="/blog/escola-bilingue-caxias-do-sul/" class="blog-card-link">
+    <div class="blog-card-img"><img src="https://brgorknbrjlfwvrrlwxj.supabase.co/storage/v1/object/sign/insta-publisher-assets/companies/1a430ce0-832b-4887-8d41-f541f76d9f8d/blog/escola-bilingue-caxias-do-sul/cover.jpg?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV82YzE5NGEyNS00M2I3LTQ3YjgtOTkzNi0xYzIxYWU3ZTFiZWYiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJpbnN0YS1wdWJsaXNoZXItYXNzZXRzL2NvbXBhbmllcy8xYTQzMGNlMC04MzJiLTQ4ODctOGQ0MS1mNTQxZjc2ZDlmOGQvYmxvZy9lc2NvbGEtYmlsaW5ndWUtY2F4aWFzLWRvLXN1bC9jb3Zlci5qcGciLCJpYXQiOjE3Nzc5ODI3NTIsImV4cCI6MTgwOTUxODc1Mn0.zHzc9kURlnt4SICX2LQ9ecrhyNnMQZGsql9Ush3NzhU" alt="Escola Bilíngue em Caxias do Sul: Guia Completo para Pais em 2026" loading="lazy"></div>
+    <div class="blog-card-body">
+      <span class="blog-card-cat" data-cat="educacao-bilingue">EDUCAÇÃO BILÍNGUE</span>
+      <h2 class="blog-card-title">Escola Bilíngue em Caxias do Sul: Guia Completo para Pais em 2026</h2>
+      <p class="blog-card-excerpt">Guia completo sobre escola bilíngue em Caxias do Sul: metodologia, faixas etárias, benefícios e como escolher a melhor opção para seu filho em 2026.</p>
+      <div class="blog-card-meta">
+        <span>Maple Bear Caxias do Sul</span>
+        <span>·</span>
+        <time>4 de maio de 2026</time>
+        <span class="reading-time">⏱ 14 min</span>
+      </div>
+    </div>
+  </a>
+</article>
+<article class="blog-card" data-category="educacao-bilingue">
+  <a href="/blog/educacao-bilingue-beneficios-criancas/" class="blog-card-link">
+    <div class="blog-card-img"><img src="https://brgorknbrjlfwvrrlwxj.supabase.co/storage/v1/object/sign/insta-publisher-assets/companies/1a430ce0-832b-4887-8d41-f541f76d9f8d/blog/educacao-bilingue-beneficios-criancas/cover.jpg?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV82YzE5NGEyNS00M2I3LTQ3YjgtOTkzNi0xYzIxYWU3ZTFiZWYiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJpbnN0YS1wdWJsaXNoZXItYXNzZXRzL2NvbXBhbmllcy8xYTQzMGNlMC04MzJiLTQ4ODctOGQ0MS1mNTQxZjc2ZDlmOGQvYmxvZy9lZHVjYWNhby1iaWxpbmd1ZS1iZW5lZmljaW9zLWNyaWFuY2FzL2NvdmVyLmpwZyIsImlhdCI6MTc3Nzk4MjgyOCwiZXhwIjoxODA5NTE4ODI4fQ.ex2b4tgorJtdEn6q_MXf6R7Mcp9ume1VkbTzcdQpR20" alt="Educação Bilíngue: 12 Benefícios Comprovados para Crianças e Por Que Começar Cedo" loading="lazy"></div>
+    <div class="blog-card-body">
+      <span class="blog-card-cat" data-cat="educacao-bilingue">EDUCAÇÃO BILÍNGUE</span>
+      <h2 class="blog-card-title">Educação Bilíngue: 12 Benefícios Comprovados para Crianças e Por Que Começar Cedo</h2>
+      <p class="blog-card-excerpt">Descubra os 12 benefícios comprovados da educação bilíngue para crianças. Saiba como a imersão precoce no inglês transforma o desenvolvimento cognitivo e social.</p>
+      <div class="blog-card-meta">
+        <span>Maple Bear Caxias do Sul</span>
+        <span>·</span>
+        <time>4 de maio de 2026</time>
+        <span class="reading-time">⏱ 12 min</span>
+      </div>
+    </div>
+  </a>
+</article>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  </div>
+
+  <div class="empty-state" id="empty-state" style="display:none">
+    <div class="empty-icon">📝</div>
+    <h2>Em breve, novos artigos</h2>
+    <p>Estamos preparando conteúdo especializado sobre educação bilíngue e metodologia canadense para você. Volte em breve!</p>
+  </div>
+</section>
+
+<section class="newsletter">
+  <div class="newsletter-inner">
+    <div class="newsletter-text">
+      <h3>Receba nossos artigos</h3>
+      <p>Cadastre-se e receba conteúdo sobre educação bilíngue diretamente no seu e-mail.</p>
+    </div>
+    <form class="newsletter-form" onsubmit="return false;">
+      <input type="email" placeholder="Seu melhor e-mail" required>
+      <button type="submit">Inscrever-se</button>
+    </form>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="footer-inner">
+    <div class="footer-brand">
+      <img src="/blog/logo-maple-bear.png" alt="Maple Bear" class="footer-logo">
+      <p>Educação bilíngue canadense de excelência em Caxias do Sul. Formando cidadãos globais desde a primeira infância.</p>
+      <div class="footer-social">
+        <a href="https://www.instagram.com/maplebearcaxiasdosul/" target="_blank" rel="noopener" aria-label="Instagram">📷</a>
+        <a href="https://wa.me/5554999396742" target="_blank" rel="noopener" aria-label="WhatsApp">💬</a>
+        <a href="https://www.facebook.com/maplebearcaxiasdosul" target="_blank" rel="noopener" aria-label="Facebook">📘</a>
+      </div>
+    </div>
+    <div class="footer-col">
+      <h4>A Escola</h4>
+      <a href="https://maplebearcaxiasdosul.com.br">Página Inicial</a>
+      <a href="/blog">Blog</a>
+      <a href="https://wa.me/5554999396742?text=Gostaria de agendar uma visita">Agende uma Visita</a>
+      <a href="https://wa.me/5554999396742?text=Gostaria de informações sobre matrículas">Matrículas</a>
+    </div>
+    <div class="footer-col">
+      <h4>Contato</h4>
+      <a href="tel:+5554999396742">(54) 9 9939-6742</a>
+      <a href="https://wa.me/5554999396742">WhatsApp</a>
+      <a>Rua Jacob Luchesi, 2374</a>
+      <a>Santa Catarina — Caxias do Sul/RS</a>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p>&copy; 2026 Maple Bear Caxias do Sul. Todos os direitos reservados.</p>
+    <a href="https://maplebear.com.br" target="_blank" rel="noopener">maplebear.com.br</a>
+  </div>
+</footer>
+
+<script>
+// Header scroll effect
+const header = document.getElementById('header');
+window.addEventListener('scroll', () => {
+  header.classList.toggle('scrolled', window.scrollY > 10);
+});
+
+// Category filter
+document.querySelectorAll('.filter-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    const filter = btn.dataset.filter;
+    document.querySelectorAll('.blog-card').forEach(card => {
+      if (filter === 'all' || card.dataset.category === filter) {
+        card.style.display = '';
+      } else {
+        card.style.display = 'none';
+      }
+    });
+    // Toggle empty state
+    const visible = document.querySelectorAll('.blog-card:not([style*="display: none"])');
+    const empty = document.getElementById('empty-state');
+    if (empty) empty.style.display = visible.length === 0 ? '' : 'none';
+  });
+});
+
+// Hide empty state if there are cards
+if (document.querySelectorAll('.blog-card').length > 0) {
+  const e = document.getElementById('empty-state');
+  if (e) e.style.display = 'none';
+}
+</script>
+
+</body>
+<!-- v1777983568582 --></html>
