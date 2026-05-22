@@ -2,7 +2,6 @@
   "buildCommand": null,
   "outputDirectory": ".",
   "cleanUrls": true,
-  "trailingSlash": true,
   "redirects": [
     {
       "source": "/:path*",
