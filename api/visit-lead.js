@@ -41,6 +41,7 @@ function escapeHtml(str) {
 const ALLOWED_ORIGINS_LEAD = new Set([
   'site-visite',
   'lead-magnet-22-perguntas',
+  'lead-magnet-ingles-em-casa',
   'lead-magnet-checklist',
   'newsletter',
   'open-day',
@@ -56,13 +57,18 @@ function validate(body) {
   const mensagem = String(body.mensagem || '').trim();
   const origem = ALLOWED_ORIGINS_LEAD.has(String(body.origem || '')) ? body.origem : 'site-visite';
   const isMagnet = origem.startsWith('lead-magnet') || origem === 'newsletter';
+  // Lead magnets podem pedir WhatsApp como primário; body.canal indica preferência ('whatsapp' | 'email')
+  const canal = body.canal === 'email' ? 'email' : 'whatsapp';
+  const phoneDigits = telefone.replace(/\D/g, '');
 
   if (nome.length < 2 || nome.length > 120) errs.push('nome inválido');
-  // Lead magnet: aceita apenas email; visita: exige telefone
   if (isMagnet) {
-    if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) errs.push('email inválido');
+    if (canal === 'whatsapp') {
+      if (phoneDigits.length < 10 || phoneDigits.length > 13) errs.push('WhatsApp inválido');
+    } else {
+      if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) errs.push('email inválido');
+    }
   } else {
-    const phoneDigits = telefone.replace(/\D/g, '');
     if (phoneDigits.length < 10 || phoneDigits.length > 13) errs.push('telefone inválido');
     if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) errs.push('email inválido');
     if (!idade) errs.push('idade obrigatória');
