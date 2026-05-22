@@ -57,8 +57,8 @@ function validate(body) {
   const mensagem = String(body.mensagem || '').trim();
   const origem = ALLOWED_ORIGINS_LEAD.has(String(body.origem || '')) ? body.origem : 'site-visite';
   const isMagnet = origem.startsWith('lead-magnet') || origem === 'newsletter';
-  // Lead magnets podem pedir WhatsApp como primário; body.canal indica preferência ('whatsapp' | 'email')
-  const canal = body.canal === 'email' ? 'email' : 'whatsapp';
+  // Lead magnets: WhatsApp obrigatório por padrão; email só se explicitamente solicitado
+  const canal = isMagnet ? (body.canal === 'email' ? 'email' : 'whatsapp') : 'whatsapp';
   const phoneDigits = telefone.replace(/\D/g, '');
 
   if (nome.length < 2 || nome.length > 120) errs.push('nome inválido');
