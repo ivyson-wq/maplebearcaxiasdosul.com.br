@@ -1,0 +1,39 @@
+<!-- Chinook placeholder — silhueta estilizada até chegar o oficial.
+     Substituir por imagem PNG oficial Maple Bear quando disponível. -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 240" aria-label="Chinook mascote Maple Bear (placeholder)">
+  <!-- Corpo do urso polar — silhueta amigável -->
+  <g fill="#faf6ee" stroke="#1a1814" stroke-width="2.5" stroke-linejoin="round">
+    <!-- Cabeça -->
+    <ellipse cx="100" cy="75" rx="58" ry="55"/>
+    <!-- Orelhas -->
+    <circle cx="58" cy="38" r="18"/>
+    <circle cx="142" cy="38" r="18"/>
+    <!-- Orelhas internas (rosa pálido) -->
+    <circle cx="58" cy="38" r="10" fill="#f3d4cf" stroke="none"/>
+    <circle cx="142" cy="38" r="10" fill="#f3d4cf" stroke="none"/>
+    <!-- Corpo -->
+    <path d="M50 110 Q40 145 50 195 Q60 220 100 220 Q140 220 150 195 Q160 145 150 110 Z"/>
+    <!-- Patas dianteiras -->
+    <ellipse cx="65" cy="200" rx="22" ry="14"/>
+    <ellipse cx="135" cy="200" rx="22" ry="14"/>
+  </g>
+
+  <!-- Cara: olhos, focinho, sorriso -->
+  <g fill="#1a1814">
+    <circle cx="78" cy="70" r="5"/>
+    <circle cx="122" cy="70" r="5"/>
+    <!-- Brilho nos olhos -->
+    <circle cx="80" cy="68" r="1.5" fill="#faf6ee"/>
+    <circle cx="124" cy="68" r="1.5" fill="#faf6ee"/>
+  </g>
+  <!-- Focinho -->
+  <ellipse cx="100" cy="92" rx="14" ry="11" fill="#f3d4cf" stroke="#1a1814" stroke-width="2"/>
+  <ellipse cx="100" cy="88" rx="4" ry="3" fill="#1a1814"/>
+  <!-- Sorriso -->
+  <path d="M88 100 Q100 110 112 100" fill="none" stroke="#1a1814" stroke-width="2.5" stroke-linecap="round"/>
+
+  <!-- Folha de bordo no peito (red) -->
+  <g transform="translate(100 155) scale(0.32)" fill="#DE3712">
+    <path d="M0 -50 L8 -12 L38 -25 L22 0 L62 -10 L30 5 L80 15 L25 18 L60 55 L18 42 L36 78 L8 60 L0 100 L-8 60 L-36 78 L-18 42 L-60 55 L-25 18 L-80 15 L-30 5 L-62 -10 L-22 0 L-38 -25 L-8 -12 Z"/>
+  </g>
+</svg>
