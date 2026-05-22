@@ -1,0 +1,62 @@
+<!-- Layout base para todos os emails da sequência drip Maple Bear Caxias.
+     Compatível com Gmail, Outlook, Apple Mail (table-based + inline CSS). -->
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{subject}}</title>
+</head>
+<body style="margin: 0; padding: 0; background: #F6E9E1; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif; color: #1a1a1a;">
+  <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="background: #F6E9E1; padding: 32px 16px;">
+    <tr>
+      <td align="center">
+        <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="600" style="max-width: 600px; background: #ffffff; border-radius: 8px; overflow: hidden; box-shadow: 0 8px 30px rgba(0,0,0,0.06);">
+
+          <!-- Tricolor bar topo -->
+          <tr>
+            <td>
+              <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
+                <tr style="height: 5px;">
+                  <td style="background: #FF1C25;"></td>
+                  <td style="background: #CC1216;"></td>
+                  <td style="background: #AA0413;"></td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+
+          <!-- Header -->
+          <tr>
+            <td style="padding: 32px 40px 16px;">
+              <img src="https://maplebearcaxiasdosul.com.br/assets/brand/logo-lockup-compact.png" alt="Maple Bear Canadian School" height="56" style="display: block; height: 56px;">
+            </td>
+          </tr>
+
+          <!-- Body -->
+          <tr>
+            <td style="padding: 16px 40px 40px;">
+              {{body}}
+            </td>
+          </tr>
+
+          <!-- Footer -->
+          <tr>
+            <td style="background: #1a1a1a; padding: 28px 40px; color: #F6E9E1;">
+              <p style="margin: 0 0 8px; font-family: Georgia, serif; font-size: 18px; font-weight: 400; line-height: 1.2;">Muito além do <em style="color: #FF1C25; font-style: italic;">bilíngue.</em></p>
+              <p style="margin: 16px 0 4px; font-size: 13px; color: rgba(246, 233, 225, 0.8); line-height: 1.5;">
+                <strong>Maple Bear Caxias do Sul</strong><br>
+                Rua Jacob Luchesi, 2374 · Caxias do Sul/RS · CEP 95032-000<br>
+                WhatsApp: <a href="https://wa.me/5554997021634" style="color: #FF1C25; text-decoration: none;">(54) 9 9702-1634</a> · <a href="mailto:contato@maplebearcaxiasdosul.com.br" style="color: #FF1C25; text-decoration: none;">contato@maplebearcaxiasdosul.com.br</a>
+              </p>
+              <p style="margin: 16px 0 0; font-size: 11px; color: rgba(246, 233, 225, 0.5); line-height: 1.5;">
+                Você está recebendo este e-mail porque baixou um material ou agendou uma visita em maplebearcaxiasdosul.com.br. Se preferir não receber, <a href="{{unsubscribe_url}}" style="color: rgba(246, 233, 225, 0.8); text-decoration: underline;">descadastre-se aqui</a>.
+              </p>
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+</body>
+</html>
