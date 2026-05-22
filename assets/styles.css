@@ -1444,6 +1444,75 @@ strong, b { font-weight: 580; }
 }
 
 /* ============================================================
+   Cookie banner LGPD
+   ============================================================ */
+.cookie-banner {
+  position: fixed;
+  bottom: 1rem;
+  left: 1rem;
+  right: 1rem;
+  max-width: 48rem;
+  margin: 0 auto;
+  background: var(--ink);
+  color: var(--paper);
+  border-radius: var(--radius-m);
+  padding: var(--space-m) var(--space-l);
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: var(--space-m);
+  align-items: center;
+  z-index: 80;
+  box-shadow: 0 16px 40px -8px rgba(0, 0, 0, 0.35);
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 380ms var(--easing-soft), transform 380ms var(--easing-soft);
+}
+.cookie-banner.is-visible { opacity: 1; transform: none; }
+.cookie-text {
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  line-height: 1.5;
+  color: rgba(246, 233, 225, 0.92);
+}
+.cookie-text strong { color: var(--paper); }
+.cookie-text a { color: var(--red-bright); text-decoration: underline; }
+.cookie-text a:hover { color: var(--paper); }
+.cookie-actions {
+  display: flex;
+  gap: 0.6rem;
+  align-items: center;
+  flex-shrink: 0;
+}
+.cookie-btn {
+  font-family: var(--font-ui);
+  font-size: 0.88rem;
+  font-weight: 600;
+  padding: 0.6rem 1.1rem;
+  border-radius: 999px;
+  cursor: pointer;
+  border: 1.5px solid transparent;
+  transition: all var(--duration) var(--easing);
+  white-space: nowrap;
+}
+.cookie-btn-primary { background: var(--red); color: var(--paper); }
+.cookie-btn-primary:hover { background: var(--red-bright); }
+.cookie-btn-secondary {
+  background: transparent;
+  color: var(--paper);
+  border-color: rgba(246, 233, 225, 0.4);
+}
+.cookie-btn-secondary:hover { border-color: var(--paper); background: rgba(246, 233, 225, 0.08); }
+@media (max-width: 640px) {
+  .cookie-banner {
+    grid-template-columns: 1fr;
+    bottom: 0.5rem; left: 0.5rem; right: 0.5rem;
+    padding: var(--space-s) var(--space-m);
+  }
+  .cookie-actions { justify-content: stretch; }
+  .cookie-btn { flex: 1; text-align: center; }
+}
+
+/* ============================================================
    Reduce motion
    ============================================================ */
 @media (prefers-reduced-motion: reduce) {

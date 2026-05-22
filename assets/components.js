@@ -1,6 +1,56 @@
 (function () {
   'use strict';
 
+  /* Cookie banner LGPD — exibido até o usuário aceitar/rejeitar */
+  const COOKIE_KEY = 'mb_cookie_consent_v1';
+  const consent = (() => { try { return localStorage.getItem(COOKIE_KEY); } catch { return null; } })();
+
+  if (!consent && document.body) {
+    const banner = document.createElement('div');
+    banner.className = 'cookie-banner';
+    banner.setAttribute('role', 'dialog');
+    banner.setAttribute('aria-label', 'Aviso de cookies');
+    banner.innerHTML = `
+      <div class="cookie-text">
+        <strong>Usamos cookies</strong> para entender como o site é utilizado e melhorar sua experiência.
+        Saiba mais na <a href="/privacidade/">Política de Privacidade</a>.
+      </div>
+      <div class="cookie-actions">
+        <button type="button" class="cookie-btn cookie-btn-secondary" data-consent="rejected">Rejeitar</button>
+        <button type="button" class="cookie-btn cookie-btn-primary" data-consent="accepted">Aceitar todos</button>
+      </div>
+    `;
+    document.body.appendChild(banner);
+    requestAnimationFrame(() => banner.classList.add('is-visible'));
+
+    banner.addEventListener('click', (e) => {
+      const target = e.target.closest('[data-consent]');
+      if (!target) return;
+      const value = target.getAttribute('data-consent');
+      try { localStorage.setItem(COOKIE_KEY, value); } catch {}
+      banner.classList.remove('is-visible');
+      setTimeout(() => banner.remove(), 350);
+      if (value === 'rejected' && window.gtag) {
+        // Anonymize further — remover cookies GA
+        document.cookie.split(';').forEach(c => {
+          const name = c.split('=')[0].trim();
+          if (name.startsWith('_ga') || name.startsWith('_gid')) {
+            document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/; domain=.${location.hostname.replace(/^www\./, '')}`;
+          }
+        });
+      }
+    });
+  }
+
+  /* Garante link de Privacidade no footer (idempotente) */
+  document.querySelectorAll('.site-footer .footer-grid > div:last-child').forEach((col) => {
+    if (col.querySelector('a[href="/privacidade/"]')) return;
+    const link = document.createElement('a');
+    link.href = '/privacidade/';
+    link.textContent = 'Privacidade · LGPD';
+    col.appendChild(link);
+  });
+
   /* Header — scroll state */
   const header = document.querySelector('.site-header');
   if (header) {
