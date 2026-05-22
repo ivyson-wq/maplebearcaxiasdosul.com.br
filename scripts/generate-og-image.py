@@ -36,20 +36,21 @@ def font(size, bold=False):
 img = Image.new("RGBA", (W, H), CREAM)
 draw = ImageDraw.Draw(img)
 
-# Logo Maple Bear horizontal — topo esquerdo
-logo = Image.open(BRAND / "logo-horizontal.png").convert("RGBA")
-logo_w = 320
+# Lockup oficial Maple Bear (Chinook + Shield Elementary) — topo esquerdo
+logo = Image.open(BRAND / "logo-lockup-compact.png").convert("RGBA")
+logo_w = 380
 ratio = logo_w / logo.width
 logo_h = int(logo.height * ratio)
 logo = logo.resize((logo_w, logo_h), Image.LANCZOS)
-img.paste(logo, (60, 50), logo)
+img.paste(logo, (60, 40), logo)
 
 # Divisor + "Caxias do Sul"
-draw.rectangle([(60 + logo_w + 20, 50 + 15), (60 + logo_w + 22, 50 + logo_h - 15)], fill=INK)
-caxias_font = font(26, bold=True)
-draw.text((60 + logo_w + 38, 50 + 18), "CAXIAS DO SUL", font=caxias_font, fill=INK)
+divider_x = 60 + logo_w + 28
+draw.rectangle([(divider_x, 40 + 25), (divider_x + 2, 40 + logo_h - 25)], fill=INK)
+caxias_font = font(28, bold=True)
+draw.text((divider_x + 22, 40 + logo_h // 2 - 30), "CAXIAS DO SUL", font=caxias_font, fill=INK)
 sub_font = font(18)
-draw.text((60 + logo_w + 38, 50 + 50), "Canadian School", font=sub_font, fill=INK_SOFT)
+draw.text((divider_x + 22, 40 + logo_h // 2 + 8), "Canadian School", font=sub_font, fill=INK_SOFT)
 
 # Slogan principal — "Muito além do bilíngue."
 # Lockup oficial: "Maple Bear:" preto + "Muito além do bilíngue." vermelho highlighter
