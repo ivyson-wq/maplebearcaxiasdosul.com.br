@@ -82,23 +82,32 @@ async function sendEmail({ to, subject, html, replyTo }) {
 
 async function createLumiedLead(lead) {
   const url = process.env.LUMIED_API_URL;
-  const token = process.env.LUMIED_API_TOKEN;
-  const escolaId = process.env.LUMIED_ESCOLA_ID;
-  if (!url || !token || !escolaId) {
-    return { skipped: true, reason: 'LUMIED_* envs ausentes' };
-  }
+  const slug = process.env.LUMIED_ESCOLA_SLUG || 'maplebearcaxias';
+  const anonKey = process.env.LUMIED_ANON_KEY;
+  if (!url) return { skipped: true, reason: 'LUMIED_API_URL ausente' };
+
+  // crm_captura_publica é a action pública existente no Lumied
+  // (api/handlers/public.ts:1942): rate-limit por IP, honeypot, valida campos
+  const headers = {
+    'Content-Type': 'application/json'
+  };
+  if (anonKey) headers['Authorization'] = `Bearer ${anonKey}`;
 
   const r = await fetch(url, {
     method: 'POST',
-    headers: {
-      'Authorization': `Bearer ${token}`,
-      'Content-Type': 'application/json'
-    },
+    headers,
     body: JSON.stringify({
-      action: 'lead_create_public',
-      escola_id: escolaId,
+      action: 'crm_captura_publica',
+      escola_slug: slug,
+      nome_responsavel: lead.nome,
+      telefone: lead.telefone,
+      email: lead.email || undefined,
+      serie_interesse: lead.idade,
       origem: 'site-visite',
-      ...lead
+      observacoes: [
+        lead.periodo ? `Período preferido: ${lead.periodo}` : null,
+        lead.mensagem ? `Mensagem:\n${lead.mensagem}` : null
+      ].filter(Boolean).join('\n\n') || undefined
     })
   });
   const text = await r.text();
@@ -172,12 +181,30 @@ export default async function handler(req) {
     createLumiedLead(data)
   ]);
 
-  const ok_email = emailRes.status === 'fulfilled' && (emailRes.value.ok || emailRes.value.skipped);
-  const ok_lumied = lumiedRes.status === 'fulfilled' && (lumiedRes.value.ok || lumiedRes.value.skipped);
+  const emailOk = emailRes.status === 'fulfilled' && emailRes.value.ok === true;
+  const lumiedOk = lumiedRes.status === 'fulfilled' && lumiedRes.value.ok === true;
+  const emailSkipped = emailRes.status === 'fulfilled' && emailRes.value.skipped === true;
+  const lumiedSkipped = lumiedRes.status === 'fulfilled' && lumiedRes.value.skipped === true;
 
-  if (!ok_email && !ok_lumied) {
-    return jsonResponse({ ok: false, error: 'falha ao notificar equipe' }, { status: 502 }, origin);
+  // Sucesso se ao menos um canal real recebeu o lead.
+  // Se ambos skipped (sem env) ou ambos falharam: 502.
+  if (!emailOk && !lumiedOk) {
+    console.error('visit-lead: nenhum canal recebeu o lead', {
+      emailRes: emailRes.status === 'fulfilled' ? emailRes.value : { error: String(emailRes.reason) },
+      lumiedRes: lumiedRes.status === 'fulfilled' ? lumiedRes.value : { error: String(lumiedRes.reason) }
+    });
+    return jsonResponse({
+      ok: false,
+      error: 'falha ao notificar equipe',
+      detail: { emailSkipped, lumiedSkipped }
+    }, { status: 502 }, origin);
   }
 
-  return jsonResponse({ ok: true, email: ok_email, lumied: ok_lumied }, { status: 200 }, origin);
+  return jsonResponse({
+    ok: true,
+    channels: {
+      email: emailOk ? 'sent' : emailSkipped ? 'skipped' : 'failed',
+      lumied: lumiedOk ? 'created' : lumiedSkipped ? 'skipped' : 'failed'
+    }
+  }, { status: 200 }, origin);
 }
