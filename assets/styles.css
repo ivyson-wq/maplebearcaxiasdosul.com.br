@@ -1448,6 +1448,85 @@ strong, b { font-weight: 580; }
 }
 
 /* ============================================================
+   Top sticky bar — matrículas 2027
+   ============================================================ */
+.top-bar {
+  position: relative;
+  z-index: 60;
+  background: linear-gradient(90deg, var(--red) 0%, var(--red-bright) 50%, var(--red-deep) 100%);
+  color: var(--paper);
+  font-family: var(--font-ui);
+  font-size: 0.88rem;
+  font-weight: 500;
+  letter-spacing: -0.005em;
+  overflow: hidden;
+}
+.top-bar-inner {
+  width: var(--container-wide);
+  margin-inline: auto;
+  padding: 0.55rem var(--space-m);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+.top-bar-icon {
+  display: inline-flex;
+  width: 18px; height: 18px;
+  background: var(--paper);
+  border-radius: 50%;
+  color: var(--red);
+  font-weight: 800;
+  font-size: 0.7rem;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.top-bar-text {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.top-bar-text strong { font-weight: 700; }
+.top-bar-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  color: var(--paper);
+  text-decoration: none;
+  font-weight: 700;
+  padding: 0.25rem 0.65rem;
+  border: 1.5px solid rgba(246, 233, 225, 0.4);
+  border-radius: 999px;
+  transition: all var(--duration) var(--easing);
+  white-space: nowrap;
+  font-size: 0.82rem;
+}
+.top-bar-cta:hover {
+  background: var(--paper);
+  color: var(--red-deep);
+  border-color: var(--paper);
+}
+.top-bar-dismiss {
+  background: transparent;
+  border: 0;
+  color: rgba(246, 233, 225, 0.7);
+  cursor: pointer;
+  padding: 0.25rem;
+  margin-left: 0.5rem;
+  font-size: 1.1rem;
+  line-height: 1;
+  transition: color var(--duration);
+}
+.top-bar-dismiss:hover { color: var(--paper); }
+
+@media (max-width: 640px) {
+  .top-bar-inner { padding: 0.5rem 0.85rem; gap: 0.65rem; font-size: 0.78rem; }
+  .top-bar-text small { display: none; }
+}
+
+/* ============================================================
    Cookie banner LGPD
    ============================================================ */
 .cookie-banner {

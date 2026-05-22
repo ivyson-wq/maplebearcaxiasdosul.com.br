@@ -1,6 +1,47 @@
 (function () {
   'use strict';
 
+  /* Top bar — Matrículas 2027 (injetado em todas as páginas) */
+  const DISMISS_KEY = 'mb_topbar_dismissed_v1';
+  const wasDismissed = (() => { try { return sessionStorage.getItem(DISMISS_KEY); } catch { return null; } })();
+
+  if (!wasDismissed && document.body && !document.querySelector('.top-bar')) {
+    const bar = document.createElement('div');
+    bar.className = 'top-bar';
+    bar.setAttribute('role', 'region');
+    bar.setAttribute('aria-label', 'Matrículas 2027');
+    bar.innerHTML = `
+      <div class="top-bar-inner">
+        <span class="top-bar-icon" aria-hidden="true">✦</span>
+        <span class="top-bar-text">
+          <strong>Matrículas 2027 abertas</strong>
+          <small style="opacity: 0.85;">· Bear Care ao Year 4 · vagas limitadas</small>
+        </span>
+        <a href="/visite/" class="top-bar-cta">
+          Agendar visita <span aria-hidden="true">→</span>
+        </a>
+        <button type="button" class="top-bar-dismiss" aria-label="Fechar aviso">×</button>
+      </div>
+    `;
+    document.body.insertBefore(bar, document.body.firstChild);
+
+    bar.querySelector('.top-bar-dismiss').addEventListener('click', () => {
+      try { sessionStorage.setItem(DISMISS_KEY, '1'); } catch {}
+      bar.style.maxHeight = bar.offsetHeight + 'px';
+      requestAnimationFrame(() => {
+        bar.style.transition = 'max-height 280ms var(--easing-soft), opacity 280ms';
+        bar.style.overflow = 'hidden';
+        bar.style.maxHeight = '0';
+        bar.style.opacity = '0';
+      });
+      setTimeout(() => bar.remove(), 320);
+    });
+
+    bar.querySelector('.top-bar-cta').addEventListener('click', () => {
+      if (window.gtag) gtag('event', 'topbar_cta_click', { event_category: 'engagement', event_label: 'matriculas_2027' });
+    });
+  }
+
   /* Cookie banner LGPD — exibido até o usuário aceitar/rejeitar */
   const COOKIE_KEY = 'mb_cookie_consent_v1';
   const consent = (() => { try { return localStorage.getItem(COOKIE_KEY); } catch { return null; } })();

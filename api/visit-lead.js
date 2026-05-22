@@ -38,6 +38,14 @@ function escapeHtml(str) {
     .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
 }
 
+const ALLOWED_ORIGINS_LEAD = new Set([
+  'site-visite',
+  'lead-magnet-22-perguntas',
+  'lead-magnet-checklist',
+  'newsletter',
+  'open-day',
+]);
+
 function validate(body) {
   const errs = [];
   const nome = String(body.nome || '').trim();
@@ -46,15 +54,22 @@ function validate(body) {
   const idade = String(body.crianca_idade || '').trim();
   const periodo = String(body.melhor_periodo || '').trim();
   const mensagem = String(body.mensagem || '').trim();
+  const origem = ALLOWED_ORIGINS_LEAD.has(String(body.origem || '')) ? body.origem : 'site-visite';
+  const isMagnet = origem.startsWith('lead-magnet') || origem === 'newsletter';
 
   if (nome.length < 2 || nome.length > 120) errs.push('nome inválido');
-  const phoneDigits = telefone.replace(/\D/g, '');
-  if (phoneDigits.length < 10 || phoneDigits.length > 13) errs.push('telefone inválido');
-  if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) errs.push('email inválido');
-  if (!idade) errs.push('idade obrigatória');
+  // Lead magnet: aceita apenas email; visita: exige telefone
+  if (isMagnet) {
+    if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) errs.push('email inválido');
+  } else {
+    const phoneDigits = telefone.replace(/\D/g, '');
+    if (phoneDigits.length < 10 || phoneDigits.length > 13) errs.push('telefone inválido');
+    if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) errs.push('email inválido');
+    if (!idade) errs.push('idade obrigatória');
+  }
   if (mensagem.length > 2000) errs.push('mensagem muito longa');
 
-  return { ok: errs.length === 0, errs, data: { nome, telefone, email, idade, periodo, mensagem } };
+  return { ok: errs.length === 0, errs, data: { nome, telefone, email, idade, periodo, mensagem, origem } };
 }
 
 async function sendEmail({ to, subject, html, replyTo }) {
@@ -102,8 +117,8 @@ async function createLumiedLead(lead) {
       nome_responsavel: lead.nome,
       telefone: lead.telefone,
       email: lead.email || undefined,
-      serie_interesse: lead.idade,
-      origem: 'site-visite',
+      serie_interesse: lead.idade || undefined,
+      origem: lead.origem,
       observacoes: [
         lead.periodo ? `Período preferido: ${lead.periodo}` : null,
         lead.mensagem ? `Mensagem:\n${lead.mensagem}` : null
@@ -158,6 +173,7 @@ export default async function handler(req) {
           ${data.email ? `<tr><td style="padding: 8px 0; color: #7a7268;">E-mail</td><td style="padding: 8px 0;"><a href="mailto:${escapeHtml(data.email)}" style="color: #b8112e;">${escapeHtml(data.email)}</a></td></tr>` : ''}
           <tr><td style="padding: 8px 0; color: #7a7268;">Filho(a)</td><td style="padding: 8px 0;">${escapeHtml(data.idade)}</td></tr>
           ${data.periodo ? `<tr><td style="padding: 8px 0; color: #7a7268;">Período</td><td style="padding: 8px 0;">${escapeHtml(data.periodo)}</td></tr>` : ''}
+          <tr><td style="padding: 8px 0; color: #7a7268;">Origem</td><td style="padding: 8px 0; font-size: 13px; color: #b8112e;">${escapeHtml(data.origem)}</td></tr>
         </table>
         ${data.mensagem ? `
         <div style="margin-top: 16px; padding-top: 16px; border-top: 1px solid #e4dac3;">
@@ -174,7 +190,9 @@ export default async function handler(req) {
   const [emailRes, lumiedRes] = await Promise.allSettled([
     sendEmail({
       to,
-      subject: `[Visita] ${data.nome} — filho(a) ${data.idade}`,
+      subject: data.origem.startsWith('lead-magnet')
+        ? `[Lead magnet] ${data.nome} — ${data.origem}`
+        : `[Visita] ${data.nome} — filho(a) ${data.idade}`,
       html,
       replyTo: data.email || undefined
     }),
