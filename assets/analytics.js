@@ -26,10 +26,8 @@
     gtag('config', GA_ID, {
       anonymize_ip: true,
       send_page_view: true,
-      transport_type: 'beacon',
-      custom_map: { dimension1: 'school' }
+      transport_type: 'beacon'
     });
-    gtag('set', { school: 'caxias-do-sul' });
   }
 
   // ── Meta Pixel ────────────────────────────────────────────────────
@@ -49,8 +47,7 @@
     if (window.gtag) {
       gtag('event', 'generate_lead', {
         method: data.canal || 'whatsapp',
-        origem: data.origem || 'unknown',
-        school: 'caxias-do-sul'
+        origem: data.origem || 'unknown'
       });
     }
     if (window.fbq) {
