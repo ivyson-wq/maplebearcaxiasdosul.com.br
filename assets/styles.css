@@ -1776,137 +1776,170 @@ strong, b { font-weight: 580; }
 
 /* ════════════════════════════════════════════════════════════════════
    VISIT SECTION + AI-friendly Contact Card
+   (IDENTICO ao BG — usa --red/--paper-warm/--line como tokens equivalentes)
    ════════════════════════════════════════════════════════════════════ */
+.visit {
+  padding: clamp(4rem, 8vw, 7rem) clamp(1.25rem, 4vw, 2.5rem);
+  background: linear-gradient(180deg, var(--paper) 0%, var(--paper-warm) 100%);
+}
+.visit .chapter-num {
+  font-family: var(--font-body);
+  font-size: 0.8rem;
+  font-weight: 500;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--red);
+  margin: 0 0 1rem;
+}
+.visit .section-title {
+  font-family: var(--font-display);
+  font-variation-settings: "wght" 400;
+  font-weight: 400;
+  font-size: var(--step-5);
+  line-height: 1.02;
+  letter-spacing: -0.02em;
+  margin: 0.5rem 0 1.5rem;
+  color: var(--ink);
+  max-width: 16ch;
+}
+.visit .section-title em {
+  font-style: italic;
+  color: var(--red);
+  font-variation-settings: "wght" 400;
+}
+.visit .prose {
+  font-size: 1.1rem;
+  line-height: 1.7;
+  color: var(--ink);
+  max-width: 60ch;
+  margin: 0 0 1.25rem;
+  font-weight: 300;
+}
+.visit .prose strong { font-weight: 500; color: var(--ink); }
+.visit .btn-large {
+  padding: 1rem 1.75rem;
+  font-size: 1rem;
+}
+
 .visit-grid {
+  max-width: var(--container);
+  margin: 0 auto;
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: clamp(2rem, 5vw, 4rem);
+  grid-template-columns: 1.1fr 1fr;
+  gap: clamp(2rem, 5vw, 5rem);
   align-items: start;
 }
-.visit-text .lede {
-  font-size: var(--step-1);
-  line-height: 1.55;
-  color: var(--ink-soft);
-  margin: 1rem 0 2rem;
-}
-.visit-text .btn-large {
-  padding: 1.1rem 1.8rem;
-  font-size: 1.05rem;
-}
+.visit-text .section-heading { max-width: 16ch; }
+.visit-text .btn { margin-top: 1.5rem; }
 .visit-quick {
-  margin-top: 1.25rem;
-  font-size: 0.92rem;
-  color: var(--ink-faint);
+  margin-top: 1.5rem;
+  font-size: 0.95rem;
+  color: var(--ink-soft);
+  font-weight: 300;
 }
+
+/* The "AI-friendly Contact Card" — schema.org microdata + visual card */
 .contact-card {
-  background: #FFFFFF;
-  border: 1px solid var(--line);
-  border-radius: var(--radius-lg, 28px);
-  padding: clamp(1.5rem, 3vw, 2.5rem);
-  box-shadow: 0 24px 48px -28px rgba(0,0,0,0.18);
+  background: var(--paper);
+  border-radius: 28px;
+  padding: clamp(1.75rem, 3vw, 2.5rem);
+  box-shadow: 0 30px 60px -25px rgba(0, 0, 0, 0.18);
   position: relative;
-  overflow: hidden;
+  border: 1px solid var(--line);
 }
 .contact-card::before {
-  content: "";
+  content: "Identidade & contato";
   position: absolute;
-  top: 0; left: 0; right: 0;
-  height: 5px;
-  background: linear-gradient(90deg, var(--red), var(--gold), var(--red));
+  top: -10px;
+  left: 24px;
+  background: var(--red);
+  color: var(--paper);
+  font-family: var(--font-body);
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  padding: 0.35rem 0.8rem;
+  border-radius: 999px;
 }
 .contact-card-head {
   display: flex;
   align-items: center;
   gap: 1rem;
-  padding-bottom: 1.25rem;
   margin-bottom: 1.5rem;
-  border-bottom: 1px solid var(--line-soft);
+  padding-bottom: 1.25rem;
+  border-bottom: 1px solid var(--line);
 }
 .contact-card-head .brand-mark {
-  height: 50px;
   width: auto;
+  height: 44px;
+  flex-shrink: 0;
 }
 .contact-card-head h3 {
   font-family: var(--font-display);
-  font-size: 1.25rem;
-  font-weight: 600;
+  font-size: 1.4rem;
+  font-weight: 500;
   margin: 0;
   color: var(--ink);
 }
 .contact-card-sub {
-  font-family: var(--font-ui);
-  font-size: 0.85rem;
-  color: var(--ink-faint);
   margin: 0.2rem 0 0;
+  font-size: 0.85rem;
+  color: var(--ink-soft);
+  font-weight: 300;
 }
-.contact-list {
-  display: grid;
-  gap: 1rem;
-  margin: 0 0 1.5rem;
-}
+
+.contact-list { margin: 0; }
 .contact-row {
   display: grid;
   grid-template-columns: 130px 1fr;
-  align-items: start;
   gap: 1rem;
+  padding: 0.85rem 0;
+  border-bottom: 1px dashed var(--line);
+  align-items: center;
 }
+.contact-row:last-child { border-bottom: none; }
 .contact-row dt {
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  font-family: var(--font-ui);
+  font-family: var(--font-body);
   font-size: 0.82rem;
   font-weight: 500;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: var(--ink-faint);
+  color: var(--ink-soft);
 }
-.contact-row dt svg { color: var(--red); flex-shrink: 0; }
+.contact-row dt svg { color: var(--red); }
 .contact-row dd {
   margin: 0;
-  font-family: var(--font-body);
-  font-size: 0.98rem;
-  line-height: 1.45;
+  font-size: 1rem;
   color: var(--ink);
 }
-.contact-row dd a {
-  color: var(--ink);
-  text-decoration: none;
-  border-bottom: 1px solid var(--line);
-  transition: color 0.2s, border-color 0.2s;
-}
-.contact-row dd a:hover {
-  color: var(--red);
-  border-color: var(--red);
-}
-.contact-row-cta dd a {
-  color: var(--red);
-  border-bottom-color: var(--red);
-  font-weight: 500;
-}
+.contact-row dd a { color: var(--ink); border-bottom: 1px solid var(--red); transition: color 0.2s; }
+.contact-row dd a:hover { color: var(--red); }
+.contact-row-cta { background: var(--paper-warm); margin: 0.5rem -1rem 0; padding: 0.85rem 1rem; border-radius: 6px; border-bottom: none; }
 .contact-meta {
-  padding: 1rem 1.25rem;
+  margin: 1.5rem 0 0;
+  padding: 1.25rem;
   background: var(--paper-warm);
-  border-radius: var(--radius-md, 14px);
-  font-family: var(--font-body);
+  border-radius: 14px;
   font-size: 0.88rem;
-  line-height: 1.6;
+  line-height: 1.65;
   color: var(--ink-soft);
-  margin: 0 0 1rem;
 }
 .contact-meta strong { color: var(--ink); font-weight: 500; }
 .contact-ai-note {
   text-align: center;
-  margin: 0;
-  font-family: var(--font-ui);
+  margin: 1rem 0 0;
+  font-family: var(--font-body);
 }
-.contact-ai-note small {
-  font-size: 0.78rem;
-  color: var(--ink-faint);
-}
+.contact-ai-note small { font-size: 0.78rem; color: var(--ink-faint); }
 .contact-ai-note a { color: var(--red); }
-@media (max-width: 880px) {
+
+@media (max-width: 900px) {
   .visit-grid { grid-template-columns: 1fr; }
-  .contact-row { grid-template-columns: 1fr; gap: 0.3rem; }
-  .contact-row dd { padding-left: 1.5rem; }
+}
+@media (max-width: 520px) {
+  .contact-row { grid-template-columns: 1fr; gap: 0.25rem; padding: 1rem 0; }
 }
