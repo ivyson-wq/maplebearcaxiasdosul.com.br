@@ -9,7 +9,7 @@
   'use strict';
 
   var GA_ID = 'G-7KN8ZP8NMF';
-  var PIXEL_ID = ''; // PREENCHER quando criar Pixel Caxias no Meta Business
+  var PIXEL_ID = '1653706552580782'; // Meta Pixel Maple Bear Caxias do Sul
 
   // ── Google Analytics 4 ────────────────────────────────────────────
   if (GA_ID) {
