@@ -78,11 +78,34 @@
   var anchor = document.getElementById('newsletter-form');
   if (anchor) anchor.addEventListener('submit', handleSubmit);
 
+  // Procura o elemento de feedback dentro do form OU como irmão (newsletter-fb
+  // costuma ficar fora do <form> no markup atual).
+  function findFeedback(form) {
+    return form.querySelector('.exit-popup-fb, .newsletter-fb')
+      || (form.parentNode && form.parentNode.querySelector('.exit-popup-fb, .newsletter-fb'))
+      || null;
+  }
+
+  function showFeedbackBox(fb, kind, lines) {
+    if (!fb) return;
+    fb.textContent = '';
+    fb.style.cssText = 'margin-top:1rem;padding:0.9rem 1.1rem;border-left:3px solid '
+      + (kind === 'success' ? 'var(--red, #b8112e)' : '#c00')
+      + ';background:' + (kind === 'success' ? 'rgba(184,17,46,0.08)' : 'rgba(204,0,0,0.06)')
+      + ';color:' + (kind === 'success' ? '#1a1814' : '#8a0d22')
+      + ';border-radius:4px;line-height:1.5;font-size:0.95rem;';
+    lines.forEach(function (line, i) {
+      if (i > 0) fb.appendChild(el('br'));
+      if (typeof line === 'string') fb.appendChild(document.createTextNode(line));
+      else fb.appendChild(line);
+    });
+  }
+
   async function handleSubmit(e) {
     e.preventDefault();
     var form = e.target;
     var btn = form.querySelector('button[type="submit"]');
-    var fb = form.querySelector('.exit-popup-fb, .newsletter-fb');
+    var fb = findFeedback(form);
     var origem = form.getAttribute('data-origem') || 'newsletter';
 
     var data = { origem: origem, canal: 'whatsapp' };
@@ -103,24 +126,19 @@
       if (r.ok && json.ok) {
         if (window.trackLead) window.trackLead({ canal: 'form', origem: origem });
         form.style.display = 'none';
-        if (fb) {
-          fb.textContent = '';
-          var ok = el('strong', { text: 'Recebido! 🍁' });
-          ok.style.color = 'var(--red)';
-          fb.appendChild(ok);
-          fb.appendChild(el('br'));
-          fb.appendChild(document.createTextNode('Nossa coordenação vai falar contigo no WhatsApp em breve.'));
-        }
+        var ok = el('strong', { text: 'Recebemos seu pedido. 🍁' });
+        ok.style.color = 'var(--red, #b8112e)';
+        showFeedbackBox(fb, 'success', [
+          ok,
+          'Vamos te chamar no WhatsApp em até um dia útil para conversar sem compromisso.'
+        ]);
       } else { throw new Error(json.error || 'Erro'); }
     } catch (err) {
       btn.disabled = false;
       btn.textContent = oldText;
-      if (fb) {
-        fb.textContent = '';
-        var errSpan = el('span', { text: 'Erro ao enviar. Tente o WhatsApp direto.' });
-        errSpan.style.color = '#c00';
-        fb.appendChild(errSpan);
-      }
+      showFeedbackBox(fb, 'error', [
+        'Não conseguimos enviar agora. Tente novamente ou nos chame direto no WhatsApp.'
+      ]);
     }
   }
 
