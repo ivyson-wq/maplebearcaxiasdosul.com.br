@@ -1,6 +1,13 @@
 (function () {
   'use strict';
 
+  /* Service Worker registration (PWA) */
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('/sw.js').catch(() => {});
+    });
+  }
+
   /* Top bar — Matrículas 2027 (injetado em todas as páginas) */
   const DISMISS_KEY = 'mb_topbar_dismissed_v1';
   const wasDismissed = (() => { try { return sessionStorage.getItem(DISMISS_KEY); } catch { return null; } })();

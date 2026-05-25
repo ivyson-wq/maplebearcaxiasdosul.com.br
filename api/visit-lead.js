@@ -7,7 +7,9 @@ export const config = { runtime: 'edge' };
 const ALLOWED_ORIGINS = [
   'https://maplebearcaxiasdosul.com.br',
   'https://www.maplebearcaxiasdosul.com.br',
-  'https://maplebearcaxiasdosul.vercel.app'
+  'https://maplebearcaxiasdosul.vercel.app',
+  'https://maplebearbg.com.br',
+  'https://www.maplebearbg.com.br'
 ];
 
 function corsHeaders(origin) {
@@ -40,11 +42,15 @@ function escapeHtml(str) {
 
 const ALLOWED_ORIGINS_LEAD = new Set([
   'site-visite',
+  'site-visite-bg',
   'lead-magnet-22-perguntas',
   'lead-magnet-ingles-em-casa',
   'lead-magnet-checklist',
   'newsletter',
+  'newsletter-bg',
   'open-day',
+  'exit-intent',
+  'exit-intent-bg',
 ]);
 
 function validate(body) {

@@ -24,7 +24,8 @@
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,250..600;1,9..144,250..600&family=Spectral:ital,wght@0,300..600;1,300..600&family=Inter:wght@400;500;600;700&family=Caveat:wght@500;600;700&display=swap">
 
   <link rel="stylesheet" href="/assets/styles.css">
-  
+  <link rel="manifest" href="/manifest.json">
+
   <meta property="og:image" content="https://maplebearcaxiasdosul.com.br/assets/og-image.png">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
@@ -78,20 +79,125 @@
       "Year 4 — Ensino Fundamental I (9 anos, a partir de 2027)"
     ],
     "sameAs": [
-      "https://www.maplebear.com.br/"
+      "https://www.maplebear.com.br/",
+      "https://wa.me/5554997021634"
+    ]
+  }
+  </script>
+
+  <!-- JSON-LD: LocalBusiness (Google Maps + local search) -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "LocalBusiness",
+    "@id": "https://maplebearcaxiasdosul.com.br/#business",
+    "name": "Maple Bear Caxias do Sul",
+    "image": "https://maplebearcaxiasdosul.com.br/assets/og-image.png",
+    "url": "https://maplebearcaxiasdosul.com.br/",
+    "telephone": "+55-54-99702-1634",
+    "email": "contato@maplebearcaxiasdosul.com.br",
+    "priceRange": "$$$",
+    "address": {
+      "@type": "PostalAddress",
+      "streetAddress": "Rua Jacob Luchesi, 2374",
+      "addressLocality": "Caxias do Sul",
+      "addressRegion": "RS",
+      "postalCode": "95032-000",
+      "addressCountry": "BR"
+    },
+    "areaServed": [
+      { "@type": "City", "name": "Caxias do Sul" },
+      { "@type": "City", "name": "Farroupilha" },
+      { "@type": "City", "name": "Bento Gonçalves" },
+      { "@type": "City", "name": "Flores da Cunha" }
+    ],
+    "openingHoursSpecification": {
+      "@type": "OpeningHoursSpecification",
+      "dayOfWeek": ["Monday","Tuesday","Wednesday","Thursday","Friday"],
+      "opens": "07:30", "closes": "19:00"
+    }
+  }
+  </script>
+
+  <!-- JSON-LD: FAQPage (rich snippet em busca) -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "O que é a Maple Bear Caxias do Sul?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Escola bilíngue canadense em Caxias do Sul, RS, parte da rede Maple Bear Canadian Schools (presente em mais de 30 países, 1.100+ escolas no Brasil). Atende do Bear Care (18 meses) ao Year 3 do Ensino Fundamental, com expansão anual programada até o Fundamental II."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Quais idades a Maple Bear Caxias atende?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Atende crianças de 18 meses (Bear Care) até 8 anos (Year 3 do Fundamental I) em 2026. A escola adiciona um novo nível a cada ano letivo — Year 4 em 2027, Year 5 em 2028, etc., até completar Fundamental I e iniciar Fundamental II."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Como funciona a imersão em inglês?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Imersão real: o dia letivo acontece em ambiente bilíngue desde 18 meses. Inglês não é matéria isolada — é o meio natural de aprendizagem em qualquer nível. Currículo canadense Maple Bear alinhado à BNCC brasileira."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Como agendar uma visita?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Pelo WhatsApp +55 54 99702-1634 ou em /visite/. Atendimento de segunda a sexta, das 7:30 às 19h. Visitas guiadas com a coordenação pedagógica, sem compromisso."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Onde fica a Maple Bear Caxias do Sul?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Rua Jacob Luchesi, 2374 — Caxias do Sul, RS — CEP 95032-000. Atende também famílias de Farroupilha, Flores da Cunha e Bento Gonçalves."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "O que é o Duplo Diploma Maple Bear?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Certificação que valida o percurso bilíngue da criança em duas línguas — português e inglês — reconhecida no Brasil e no Canadá. Emitida ao final do percurso na Maple Bear."
+        }
+      }
+    ]
+  }
+  </script>
+
+  <!-- JSON-LD: BreadcrumbList -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "Início", "item": "https://maplebearcaxiasdosul.com.br/" }
     ]
   }
   </script>
 
   <script src="/assets/analytics.js" defer></script>
   <script src="/assets/components.js" defer></script>
+  <script src="/assets/lead-capture.js" defer></script>
 </head>
 <body>
 
   <header class="site-header">
     <div class="container">
       <a href="/" class="brand" aria-label="Maple Bear Caxias do Sul — início">
-        <img src="/assets/brand/logo-lockup-compact.png" alt="Maple Bear Canadian School · Canadian Elementary School" class="brand-logo">
+        <img src="/assets/brand/logo-lockup-compact.png" alt="Maple Bear Canadian School · Canadian Elementary School" class="brand-logo" loading="lazy" decoding="async">
         <span class="brand-divider" aria-hidden="true"></span>
         <span class="brand-text">
           <strong>Caxias do Sul</strong>
@@ -129,7 +235,7 @@
         <div style="display: flex; gap: var(--space-s); flex-wrap: wrap; align-items: center;" data-reveal>
           <a href="https://www.maplebear.com.br/" target="_blank" rel="noopener" class="mb-seal" aria-label="Parte da rede Maple Bear Canadian Schools">
             <span class="mb-seal-mark" aria-hidden="true">
-              <img src="/assets/brand/maple-leaf.png" alt="">
+              <img src="/assets/brand/maple-leaf.png" alt="" loading="lazy" decoding="async">
             </span>
             <span class="mb-seal-text">
               <strong>Maple Bear Canadian Schools</strong>
@@ -137,7 +243,7 @@
             </span>
           </a>
           <span class="mb-duplo" aria-label="Duplo Diploma — Brasil e Canadá">
-            <img src="/assets/brand/selo-duplo-diploma.png" alt="">
+            <img src="/assets/brand/selo-duplo-diploma.png" alt="" loading="lazy" decoding="async">
             <span class="mb-duplo-text">
               <strong>Duplo Diploma</strong>
               <small>Brasil e Canadá</small>
@@ -520,7 +626,7 @@
           <meta itemprop="logo" content="https://maplebearcaxiasdosul.com.br/assets/brand/logo-lockup-compact.png">
 
           <header class="contact-card-head">
-            <img class="brand-mark" src="/assets/brand/logo-lockup-compact.png" alt="Maple Bear" width="140" height="60">
+            <img class="brand-mark" src="/assets/brand/logo-lockup-compact.png" alt="Maple Bear" width="140" height="60" loading="lazy" decoding="async">
             <div>
               <h3 id="contact-card-title-cx">Maple Bear Caxias do Sul</h3>
               <p class="contact-card-sub">Escola Bilíngue Canadense · Caxias do Sul, RS</p>
@@ -598,6 +704,22 @@
             <strong>Rede:</strong> Maple Bear Canadian Schools · 30+ países · 1.100+ escolas no Brasil
           </p>
         </aside>
+      </div>
+    </section>
+
+    <!-- ================================== NEWSLETTER -->
+    <section class="newsletter-block" aria-labelledby="newsletter-title-cx">
+      <div class="newsletter-inner">
+        <h2 id="newsletter-title-cx">Receba nosso guia <em>"22 perguntas pra fazer numa escola bilíngue"</em></h2>
+        <p>Material gratuito da coordenação pedagógica Maple Bear Caxias do Sul. Entregue no seu WhatsApp em até 1h.</p>
+        <form id="newsletter-form" data-origem="newsletter" novalidate>
+          <input type="text" name="nome" placeholder="Seu nome" required autocomplete="name" aria-label="Nome">
+          <input type="tel" name="telefone" placeholder="WhatsApp com DDD" required autocomplete="tel" inputmode="numeric" aria-label="WhatsApp">
+          <input type="text" name="company" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px">
+          <button type="submit">Receber o guia</button>
+        </form>
+        <p class="newsletter-fb" role="status" aria-live="polite"></p>
+        <p class="newsletter-hint">Sem spam. Veja nossa <a href="/privacidade/" style="color: var(--red-bright);">política de privacidade</a>.</p>
       </div>
     </section>
 
