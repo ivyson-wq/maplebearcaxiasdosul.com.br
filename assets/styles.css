@@ -2202,3 +2202,94 @@ strong, b { font-weight: 580; }
 .exit-popup-form button:hover { background: var(--red-deep); }
 .exit-popup-form button:disabled { opacity: 0.6; cursor: wait; }
 .exit-popup-fb { margin: 0.75rem 0 0; font-size: 0.9rem; }
+
+/* ════════════════════════════════════════════════════════════════════
+   GALLERY — "Vida na Maple Bear" (masonry-like grid)
+   ════════════════════════════════════════════════════════════════════ */
+.gallery {
+  padding: clamp(4rem, 8vw, 7rem) clamp(1.25rem, 4vw, 2.5rem);
+  background: var(--paper-warm);
+  position: relative;
+}
+.gallery-head {
+  max-width: 720px;
+  margin: 0 auto clamp(2.5rem, 5vw, 4rem);
+  text-align: center;
+}
+.gallery-head .chapter-num {
+  font-family: var(--font-ui);
+  font-size: 0.8rem;
+  font-weight: 500;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--red);
+  margin: 0 0 0.5rem;
+}
+.gallery-head .handwritten {
+  font-family: var(--font-script);
+  font-size: clamp(1.4rem, 2vw, 1.8rem);
+  color: var(--red);
+  display: inline-block;
+  transform: rotate(-2deg);
+  margin-bottom: 0.5rem;
+}
+.gallery-head .section-heading { max-width: 22ch; margin: 0.5rem auto 1rem; }
+.gallery-head .lede { max-width: 52ch; margin: 0 auto; }
+
+.gallery-grid {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: clamp(0.75rem, 1.5vw, 1.25rem);
+  max-width: 1180px;
+  margin-inline: auto;
+  grid-auto-flow: dense;
+}
+.gallery-item {
+  position: relative;
+  border-radius: 18px;
+  overflow: hidden;
+  background: #FFFFFF;
+  box-shadow: 0 14px 28px -20px rgba(0,0,0,0.18);
+  transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1.2), box-shadow 0.4s;
+  aspect-ratio: 1 / 1;
+}
+.gallery-item-tall { aspect-ratio: 1 / 1.4; grid-row: span 2; }
+.gallery-item:hover {
+  transform: translateY(-4px) scale(1.01);
+  box-shadow: 0 28px 56px -22px rgba(0,0,0,0.28);
+}
+.gallery-item img, .gallery-item picture {
+  width: 100%; height: 100%;
+  display: block;
+  object-fit: cover;
+  transition: transform 0.6s ease;
+}
+.gallery-item:hover img { transform: scale(1.04); }
+.gallery-item figcaption {
+  position: absolute;
+  inset: auto 0 0 0;
+  padding: clamp(0.85rem, 1.5vw, 1.25rem) 1rem 1rem;
+  background: linear-gradient(180deg, transparent 0%, rgba(0,0,0,0.75) 75%);
+  color: #FFFFFF;
+  font-family: var(--font-ui);
+  font-size: 0.82rem;
+  font-weight: 500;
+  line-height: 1.35;
+  opacity: 0;
+  transform: translateY(8px);
+  transition: opacity 0.3s, transform 0.3s;
+}
+.gallery-item:hover figcaption, .gallery-item:focus-within figcaption {
+  opacity: 1; transform: translateY(0);
+}
+@media (max-width: 900px) {
+  .gallery-grid { grid-template-columns: repeat(3, 1fr); }
+  .gallery-item-tall { grid-row: span 1; aspect-ratio: 1/1; }
+}
+@media (max-width: 600px) {
+  .gallery-grid { grid-template-columns: repeat(2, 1fr); }
+  .gallery-item figcaption { opacity: 1; transform: translateY(0); font-size: 0.75rem; }
+}
