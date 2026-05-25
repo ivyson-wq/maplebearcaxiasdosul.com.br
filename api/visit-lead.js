@@ -62,7 +62,12 @@ function validate(body) {
   const periodo = String(body.melhor_periodo || '').trim();
   const mensagem = String(body.mensagem || '').trim();
   const origem = ALLOWED_ORIGINS_LEAD.has(String(body.origem || '')) ? body.origem : 'site-visite';
-  const isMagnet = origem.startsWith('lead-magnet') || origem === 'newsletter';
+  // "Light leads" = não pedem idade/período. Newsletter, exit-intent e lead magnets
+  // capturam só nome+WhatsApp pra não friccionar conversão.
+  const isLight = origem.startsWith('lead-magnet')
+    || origem === 'newsletter' || origem === 'newsletter-bg'
+    || origem === 'exit-intent' || origem === 'exit-intent-bg';
+  const isMagnet = isLight;
   // Lead magnets: WhatsApp obrigatório por padrão; email só se explicitamente solicitado
   const canal = isMagnet ? (body.canal === 'email' ? 'email' : 'whatsapp') : 'whatsapp';
   const phoneDigits = telefone.replace(/\D/g, '');
