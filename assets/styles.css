@@ -1639,7 +1639,10 @@ strong, b { font-weight: 580; }
     radial-gradient(ellipse at 15% 20%, rgba(204,18,22,0.04) 0, transparent 55%),
     radial-gradient(ellipse at 85% 80%, rgba(184,136,74,0.08) 0, transparent 55%),
     var(--paper);
+  position: relative;
+  overflow: hidden;
 }
+.promise > .container { position: relative; z-index: 1; }
 .promise-head {
   max-width: 720px;
   margin: 0 auto clamp(3rem, 6vw, 5rem);
@@ -1942,4 +1945,82 @@ strong, b { font-weight: 580; }
 }
 @media (max-width: 520px) {
   .contact-row { grid-template-columns: 1fr; gap: 0.25rem; padding: 1rem 0; }
+}
+
+/* ════════════════════════════════════════════════════════════════════
+   LUDIC ELEMENTS — handwritten accents, peek-a-boo Chinooks, bouncy hover
+   (sincronizado com BG)
+   ════════════════════════════════════════════════════════════════════ */
+:root {
+  --font-script: 'Caveat', cursive;
+}
+.handwritten {
+  font-family: var(--font-script);
+  font-weight: 600;
+  font-size: clamp(1.5rem, 2.2vw, 2rem);
+  color: var(--red);
+  display: inline-block;
+  transform: rotate(-3deg);
+  margin-bottom: 0.6rem;
+  line-height: 1.1;
+}
+.handwritten::before { content: "↳ "; opacity: 0.5; }
+
+.falling-leaves {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+  z-index: 0;
+}
+.falling-leaves .leaf-drop {
+  position: absolute;
+  width: 30px; height: 30px;
+  color: var(--red);
+  opacity: 0.18;
+  animation: leaf-fall 22s linear infinite;
+  filter: drop-shadow(0 2px 4px rgba(204,18,22,0.15));
+}
+.falling-leaves .leaf-drop:nth-child(1) { left: 10%; animation-delay: 0s; animation-duration: 26s; }
+.falling-leaves .leaf-drop:nth-child(2) { left: 28%; animation-delay: -8s; animation-duration: 32s; width: 22px; height: 22px; opacity: 0.14; }
+.falling-leaves .leaf-drop:nth-child(3) { left: 48%; animation-delay: -14s; animation-duration: 28s; width: 34px; height: 34px; opacity: 0.22; }
+.falling-leaves .leaf-drop:nth-child(4) { left: 67%; animation-delay: -4s; animation-duration: 30s; width: 20px; height: 20px; opacity: 0.16; }
+.falling-leaves .leaf-drop:nth-child(5) { left: 85%; animation-delay: -18s; animation-duration: 24s; width: 26px; height: 26px; opacity: 0.20; }
+@keyframes leaf-fall {
+  0%   { transform: translateY(-10vh) rotate(0deg); }
+  100% { transform: translateY(110vh) rotate(360deg); }
+}
+
+.chinook-peek {
+  position: absolute;
+  width: 95px;
+  height: auto;
+  pointer-events: none;
+  z-index: 2;
+  filter: drop-shadow(0 8px 14px rgba(0,0,0,0.10));
+  animation: peek-wave 6s ease-in-out infinite;
+  transform-origin: center bottom;
+}
+.chinook-peek.peek-tr { top: 24px; right: -25px; --peek-rot: 15deg; }
+.chinook-peek.peek-bl { bottom: -20px; left: -15px; --peek-rot: -12deg; }
+@keyframes peek-wave {
+  0%, 100% { transform: rotate(var(--peek-rot, 0deg)) translateY(0); }
+  50%      { transform: rotate(calc(var(--peek-rot, 0deg) + 4deg)) translateY(-4px); }
+}
+
+.promise .promise-pillar {
+  transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1.4), box-shadow 0.4s;
+}
+.promise .promise-pillar:hover {
+  transform: translateY(-8px) scale(1.02) rotate(-0.5deg);
+}
+.promise .promise-pillar:nth-child(2):hover { transform: translateY(-8px) scale(1.02) rotate(0.5deg); }
+.promise .promise-pillar:nth-child(3):hover { transform: translateY(-8px) scale(1.02) rotate(-0.5deg); }
+
+.promise .promise-mascot {
+  transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1.6);
+}
+.promise .promise-pillar:hover .promise-mascot {
+  transform: scale(1.15) rotate(-5deg);
+  animation: none;
 }
