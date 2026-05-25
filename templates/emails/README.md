@@ -20,11 +20,11 @@ Sequência automatizada de emails enviada quando um lead entra pelo site
 [Site] /api/visit-lead → cria lead no Lumied (crm_leads, crm_lead_cadencias)
                        → chama crm-drip-send NA HORA (D+0 imediato)
 
-[Lumied] pg_cron "crm-cadencias-process"  (*/15 11-22 UTC = 8-19 BRT, todo dia)
+[Lumied] pg_cron "crm-cadencias-process"  (0 11,20 UTC = 8h e 17h BRT, todo dia)
         → encontra leads cujo próximo passo "venceu"
         → incrementa passo_atual / cria snooze (visível pra operador)
 
-[Lumied] pg_cron "crm-drip-send-process"  (5,20,35,50 11-22 UTC, todo dia)
+[Lumied] pg_cron "crm-drip-send-process"  (5 11,20 UTC = 8:05 e 17:05 BRT, todo dia)
         → edge function crm-drip-send
         → encontra leads na cadência com passo pendente
         → renderiza template (fetch do site) + envia via Resend
@@ -33,8 +33,11 @@ Sequência automatizada de emails enviada quando um lead entra pelo site
 
 **Latência típica:**
 - D+0 → segundos (trigger imediato do `/api/visit-lead`)
-- D+1 … D+30 → no máximo 15min após o horário programado (8-19h BRT)
-- Fora do horário comercial: dispara no primeiro tick do dia seguinte às 8h
+- D+1 … D+30 → no máximo ~9h após o vencimento (entre os 2 ticks diários)
+
+**Por que 2x/dia em vez de 15min:** cadência tem passos em DIAS, não em minutos.
+Com D+0 já instantâneo, rodar 4x/h só desperdiça ciclos. 2x/dia = ~120 ticks/mês
+(0,012% do free tier), cobre manhã e fim do dia, suficiente pra todos os passos.
 
 ## Templates
 
@@ -68,8 +71,8 @@ Cada `step-X-*.html` é um email standalone com:
    SELECT jobname, schedule FROM cron.job
    WHERE jobname IN ('crm-cadencias-process','crm-drip-send-process');
    -- esperado:
-   -- crm-cadencias-process  | */15 11-22 * * *
-   -- crm-drip-send-process  | 5,20,35,50 11-22 * * *
+   -- crm-cadencias-process  | 0 11,20 * * *
+   -- crm-drip-send-process  | 5 11,20 * * *
    ```
 3. Setar env vars no Vercel da Caxias (visit-lead.js já consome):
    ```
