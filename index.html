@@ -24,6 +24,7 @@
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,250..600;1,9..144,250..600&family=Spectral:ital,wght@0,300..600;1,300..600&family=Inter:wght@400;500;600;700&family=Caveat:wght@500;600;700&display=swap">
 
   <link rel="stylesheet" href="/assets/styles.css">
+  <link rel="stylesheet" href="/assets/instagram-gallery.css">
   <link rel="manifest" href="/manifest.json">
 
   <meta property="og:image" content="https://maplebearcaxiasdosul.com.br/assets/og-image.png">
@@ -80,7 +81,8 @@
     ],
     "sameAs": [
       "https://www.maplebear.com.br/",
-      "https://wa.me/5554997021634"
+      "https://wa.me/5554997021634",
+      "https://www.instagram.com/maplebear.caxiasdosul/"
     ]
   }
   </script>
@@ -191,6 +193,15 @@
   <script src="/assets/analytics.js" defer></script>
   <script src="/assets/components.js" defer></script>
   <script src="/assets/lead-capture.js" defer></script>
+  <script>
+    // Config IG: unidade Caxias, link público pro perfil
+    window.MB_INSTAGRAM_CONFIG = {
+      unit: 'caxias',
+      cacheKey: 'mb_ig_feed_caxias_v1',
+      igHandleUrl: 'https://www.instagram.com/maplebear.caxiasdosul/'
+    };
+  </script>
+  <script src="/assets/instagram-gallery.js" defer></script>
 </head>
 <body>
 
@@ -291,6 +302,9 @@
         </div>
       </div>
     </section>
+
+    <!-- ================================== HERO VIDEO (Instagram) -->
+    <div class="ig-hero-video" id="ig-hero-video" data-ig-section aria-label="Vídeo do Instagram"></div>
 
     <!-- ================================== EM POUCOS NÚMEROS -->
     <section class="section-tight" style="background: var(--paper-warm);">
@@ -647,6 +661,23 @@
       </div>
     </section>
 
+    <!-- ================================== INSTAGRAM LIVE FEED -->
+    <section class="ig-section" id="ig-instagram-section" data-ig-section aria-labelledby="ig-title">
+      <div class="ig-section__inner">
+        <header class="ig-section__head">
+          <p class="ig-section__eyebrow">↳ ao vivo do nosso Instagram</p>
+          <span class="ig-section__handwritten">o que acontece hoje</span>
+          <h2 id="ig-title" class="ig-section__title">A escola em <em>tempo real</em>.</h2>
+          <p class="ig-section__lede">
+            Cada dia tem história. Aqui você vê os bastidores, os projetos, as celebrações
+            e o crescimento das crianças — direto do nosso Instagram, atualizado automaticamente.
+          </p>
+          <span class="ig-stats" id="ig-stats"></span>
+        </header>
+        <div class="ig-gallery" id="ig-gallery"></div>
+      </div>
+    </section>
+
     <!-- ================================== VISIT + AI-friendly Contact Card (ESTRUTURA IDENTICA AO BG) -->
     <section class="visit" id="visite" aria-labelledby="visit-title-cx">
       <div class="visit-grid">
@@ -811,6 +842,7 @@
           <h4>Contato</h4>
           <a href="https://wa.me/5554997021634" target="_blank" rel="noopener">WhatsApp</a>
           <a href="mailto:contato@maplebearcaxiasdosul.com.br">E-mail</a>
+          <a href="https://www.instagram.com/maplebear.caxiasdosul/" target="_blank" rel="noopener">Instagram</a>
           <a href="/privacidade/">Privacidade · LGPD</a>
         </div>
       </div>
