@@ -40,6 +40,12 @@ function escapeHtml(str) {
     .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
 }
 
+function formatBrDate(iso) {
+  if (!iso) return '';
+  const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(iso);
+  return m ? `${m[3]}/${m[2]}/${m[1]}` : iso;
+}
+
 const ALLOWED_ORIGINS_LEAD = new Set([
   'site-visite',
   'site-visite-bg',
@@ -53,16 +59,58 @@ const ALLOWED_ORIGINS_LEAD = new Set([
   'exit-intent-bg',
 ]);
 
+// Calcula idade descritiva a partir de data ISO (YYYY-MM-DD).
+// Retorna ex: "3 anos e 4 meses", "18 meses", "9 meses".
+function formatAge(isoDate) {
+  if (!isoDate) return '';
+  const d = new Date(isoDate);
+  if (isNaN(d.getTime())) return '';
+  const now = new Date();
+  let months = (now.getFullYear() - d.getFullYear()) * 12 + (now.getMonth() - d.getMonth());
+  if (now.getDate() < d.getDate()) months--;
+  if (months < 0) return '';
+  if (months < 24) return `${months} meses`;
+  const years = Math.floor(months / 12);
+  const rem = months % 12;
+  return rem === 0 ? `${years} anos` : `${years} anos e ${rem} ${rem === 1 ? 'mês' : 'meses'}`;
+}
+
+// Mapeia idade descritiva pro intervalo Maple Bear pra usar como serie_interesse no Lumied.
+function ageToBracket(months) {
+  if (months == null) return '';
+  if (months < 24) return '1 a 2 anos (Bear Care / Toddler)';
+  if (months < 36) return '2 anos (Toddler)';
+  if (months < 48) return '3 anos (Nursery)';
+  if (months < 60) return '4 anos (Junior Kindergarten)';
+  if (months < 72) return '5 anos (Senior Kindergarten)';
+  if (months < 132) return '6 a 10 anos (Fundamental I)';
+  return '11 a 14 anos (Fundamental II)';
+}
+
+function monthsSince(isoDate) {
+  if (!isoDate) return null;
+  const d = new Date(isoDate);
+  if (isNaN(d.getTime())) return null;
+  const now = new Date();
+  let m = (now.getFullYear() - d.getFullYear()) * 12 + (now.getMonth() - d.getMonth());
+  if (now.getDate() < d.getDate()) m--;
+  return m < 0 ? null : m;
+}
+
 function validate(body) {
   const errs = [];
   const nome = String(body.nome || '').trim();
   const telefone = String(body.telefone || '').trim();
   const email = String(body.email || '').trim();
-  const idade = String(body.crianca_idade || '').trim();
+  // Backward compat: aceita data_nascimento (novo) ou crianca_idade (legado)
+  const dataNasc = String(body.data_nascimento || '').trim();
+  const months = dataNasc ? monthsSince(dataNasc) : null;
+  const idadeDescricao = dataNasc ? formatAge(dataNasc) : String(body.crianca_idade || '').trim();
+  const idadeBracket = dataNasc ? ageToBracket(months) : String(body.crianca_idade || '').trim();
   const periodo = String(body.melhor_periodo || '').trim();
   const mensagem = String(body.mensagem || '').trim();
   const origem = ALLOWED_ORIGINS_LEAD.has(String(body.origem || '')) ? body.origem : 'site-visite';
-  // "Light leads" = não pedem idade/período. Newsletter, exit-intent e lead magnets
+  // "Light leads" = não pedem data de nascimento/período. Newsletter, exit-intent e lead magnets
   // capturam só nome+WhatsApp pra não friccionar conversão.
   const isLight = origem.startsWith('lead-magnet')
     || origem === 'newsletter' || origem === 'newsletter-bg'
@@ -82,11 +130,22 @@ function validate(body) {
   } else {
     if (phoneDigits.length < 10 || phoneDigits.length > 13) errs.push('telefone inválido');
     if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) errs.push('email inválido');
-    if (!idade) errs.push('idade obrigatória');
+    if (!dataNasc && !body.crianca_idade) errs.push('data de nascimento obrigatória');
+    if (dataNasc && months == null) errs.push('data de nascimento inválida');
   }
   if (mensagem.length > 2000) errs.push('mensagem muito longa');
 
-  return { ok: errs.length === 0, errs, data: { nome, telefone, email, idade, periodo, mensagem, origem } };
+  return {
+    ok: errs.length === 0,
+    errs,
+    data: {
+      nome, telefone, email,
+      dataNascimento: dataNasc,
+      idade: idadeDescricao,        // texto pra humano: "3 anos e 4 meses"
+      idadeBracket: idadeBracket,   // pra Lumied: "3 anos (Nursery)"
+      periodo, mensagem, origem
+    }
+  };
 }
 
 async function sendEmail({ to, subject, html, replyTo }) {
@@ -134,9 +193,10 @@ async function createLumiedLead(lead) {
       nome_responsavel: lead.nome,
       telefone: lead.telefone,
       email: lead.email || undefined,
-      serie_interesse: lead.idade || undefined,
+      serie_interesse: lead.idadeBracket || lead.idade || undefined,
       origem: lead.origem,
       observacoes: [
+        lead.dataNascimento ? `Data de nascimento: ${formatBrDate(lead.dataNascimento)} (${lead.idade})` : null,
         lead.periodo ? `Período preferido: ${lead.periodo}` : null,
         lead.mensagem ? `Mensagem:\n${lead.mensagem}` : null
       ].filter(Boolean).join('\n\n') || undefined
@@ -188,7 +248,7 @@ export default async function handler(req) {
           <tr><td style="padding: 8px 0; color: #7a7268; width: 130px;">Nome</td><td style="padding: 8px 0; font-weight: 600;">${escapeHtml(data.nome)}</td></tr>
           <tr><td style="padding: 8px 0; color: #7a7268;">WhatsApp</td><td style="padding: 8px 0;"><a href="https://wa.me/55${data.telefone.replace(/\D/g, '')}" style="color: #b8112e;">${escapeHtml(data.telefone)}</a></td></tr>
           ${data.email ? `<tr><td style="padding: 8px 0; color: #7a7268;">E-mail</td><td style="padding: 8px 0;"><a href="mailto:${escapeHtml(data.email)}" style="color: #b8112e;">${escapeHtml(data.email)}</a></td></tr>` : ''}
-          <tr><td style="padding: 8px 0; color: #7a7268;">Filho(a)</td><td style="padding: 8px 0;">${escapeHtml(data.idade)}</td></tr>
+          ${data.dataNascimento ? `<tr><td style="padding: 8px 0; color: #7a7268;">Nascimento</td><td style="padding: 8px 0;"><strong>${escapeHtml(formatBrDate(data.dataNascimento))}</strong> · ${escapeHtml(data.idade)}</td></tr>` : (data.idade ? `<tr><td style="padding: 8px 0; color: #7a7268;">Filho(a)</td><td style="padding: 8px 0;">${escapeHtml(data.idade)}</td></tr>` : '')}
           ${data.periodo ? `<tr><td style="padding: 8px 0; color: #7a7268;">Período</td><td style="padding: 8px 0;">${escapeHtml(data.periodo)}</td></tr>` : ''}
           <tr><td style="padding: 8px 0; color: #7a7268;">Origem</td><td style="padding: 8px 0; font-size: 13px; color: #b8112e;">${escapeHtml(data.origem)}</td></tr>
         </table>

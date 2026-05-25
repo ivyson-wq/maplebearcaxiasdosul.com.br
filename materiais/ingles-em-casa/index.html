@@ -68,18 +68,11 @@
                   <span class="hint" style="font-size: 0.8rem; color: var(--ink-faint);">Vamos enviar o PDF aqui pra você</span>
                 </div>
                 <div class="field">
-                  <label for="crianca_idade">Idade do(a) seu(sua) filho(a)</label>
-                  <select name="crianca_idade" id="crianca_idade">
-                    <option value="">Selecione (opcional)</option>
-                    <option>Ainda planejando ter filhos</option>
-                    <option>0 a 1 ano</option>
-                    <option>1 a 2 anos</option>
-                    <option>3 anos</option>
-                    <option>4 anos</option>
-                    <option>5 anos</option>
-                    <option>6 a 10 anos</option>
-                    <option>11 a 14 anos</option>
-                  </select>
+                  <label for="data_nascimento">Data de nascimento do(a) seu(sua) filho(a)</label>
+                  <input type="date" name="data_nascimento" id="data_nascimento"
+                    min="2008-01-01" max="2026-12-31"
+                    autocomplete="off">
+                  <span class="hint" style="font-size: 0.8rem; color: var(--ink-faint);">Opcional — ajuda a personalizar materiais.</span>
                 </div>
                 <div style="position: absolute; left: -9999px;" aria-hidden="true"><label>Empresa <input type="text" name="company" tabindex="-1" autocomplete="off"></label></div>
 

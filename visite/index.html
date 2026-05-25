@@ -65,17 +65,11 @@
 
               <div class="field-row">
                 <div class="field">
-                  <label for="crianca_idade">Idade do(a) filho(a) <span class="req">*</span></label>
-                  <select name="crianca_idade" id="crianca_idade" required>
-                    <option value="">Selecione</option>
-                    <option>1 a 2 anos (Bear Care / Toddler)</option>
-                    <option>3 anos (Nursery)</option>
-                    <option>4 anos (Junior Kindergarten)</option>
-                    <option>5 anos (Senior Kindergarten)</option>
-                    <option>6 a 10 anos (Fundamental I)</option>
-                    <option>11 a 14 anos (Fundamental II)</option>
-                    <option>Vou trazer mais de um(a) filho(a)</option>
-                  </select>
+                  <label for="data_nascimento">Data de nascimento do(a) filho(a) <span class="req">*</span></label>
+                  <input type="date" name="data_nascimento" id="data_nascimento" required
+                    min="2010-01-01" max="2026-12-31"
+                    autocomplete="off">
+                  <span class="hint" style="font-size: 0.8rem; color: var(--ink-faint);">Se vai trazer mais de uma criança, informe a do(a) mais novo(a) e detalhe na mensagem.</span>
                 </div>
                 <div class="field">
                   <label for="melhor_periodo">Melhor período</label>
@@ -155,7 +149,7 @@
                         <a href="/blog/" style="color: inherit; text-decoration: underline;">explorar nosso blog</a>
                         ou nos chamar diretamente no <a href="https://wa.me/5554997021634" style="color: inherit; text-decoration: underline;">WhatsApp</a>.
                       `);
-                      if (window.gtag) gtag('event', 'visit_request', { event_category: 'lead', event_label: data.crianca_idade });
+                      if (window.gtag) gtag('event', 'visit_request', { event_category: 'lead', event_label: data.data_nascimento || data.crianca_idade });
                     } else {
                       throw new Error((json.errors && json.errors.join(', ')) || json.error || 'erro desconhecido');
                     }
