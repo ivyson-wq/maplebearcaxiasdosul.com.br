@@ -265,7 +265,7 @@ export default async function handler(req) {
     return jsonResponse({ ok: false, errors: errs }, { status: 400 }, origin);
   }
 
-  const to = (process.env.LEAD_NOTIFY_TO || 'contato@maplebearcaxiasdosul.com.br')
+  const to = (process.env.LEAD_NOTIFY_TO || 'comercial@maplebearcaxias.com.br')
     .split(',').map(s => s.trim()).filter(Boolean);
 
   const html = `
