@@ -102,6 +102,7 @@ function validate(body) {
   const nome = String(body.nome || '').trim();
   const telefone = String(body.telefone || '').trim();
   const email = String(body.email || '').trim();
+  const criancaNome = String(body.crianca_nome || '').trim();
   // Backward compat: aceita data_nascimento (novo) ou crianca_idade (legado)
   const dataNasc = String(body.data_nascimento || '').trim();
   const months = dataNasc ? monthsSince(dataNasc) : null;
@@ -140,6 +141,7 @@ function validate(body) {
     errs,
     data: {
       nome, telefone, email,
+      criancaNome,
       dataNascimento: dataNasc,
       idade: idadeDescricao,        // texto pra humano: "3 anos e 4 meses"
       idadeBracket: idadeBracket,   // pra Lumied: "3 anos (Nursery)"
@@ -224,6 +226,7 @@ async function createLumiedLead(lead) {
       serie_interesse: lead.idadeBracket || lead.idade || undefined,
       origem: lead.origem,
       observacoes: [
+        lead.criancaNome ? `Filho(a): ${lead.criancaNome}` : null,
         lead.dataNascimento ? `Data de nascimento: ${formatBrDate(lead.dataNascimento)} (${lead.idade})` : null,
         lead.periodo ? `Período preferido: ${lead.periodo}` : null,
         lead.mensagem ? `Mensagem:\n${lead.mensagem}` : null
@@ -276,7 +279,8 @@ export default async function handler(req) {
           <tr><td style="padding: 8px 0; color: #7a7268; width: 130px;">Nome</td><td style="padding: 8px 0; font-weight: 600;">${escapeHtml(data.nome)}</td></tr>
           <tr><td style="padding: 8px 0; color: #7a7268;">WhatsApp</td><td style="padding: 8px 0;"><a href="https://wa.me/55${data.telefone.replace(/\D/g, '')}" style="color: #b8112e;">${escapeHtml(data.telefone)}</a></td></tr>
           ${data.email ? `<tr><td style="padding: 8px 0; color: #7a7268;">E-mail</td><td style="padding: 8px 0;"><a href="mailto:${escapeHtml(data.email)}" style="color: #b8112e;">${escapeHtml(data.email)}</a></td></tr>` : ''}
-          ${data.dataNascimento ? `<tr><td style="padding: 8px 0; color: #7a7268;">Nascimento</td><td style="padding: 8px 0;"><strong>${escapeHtml(formatBrDate(data.dataNascimento))}</strong> · ${escapeHtml(data.idade)}</td></tr>` : (data.idade ? `<tr><td style="padding: 8px 0; color: #7a7268;">Filho(a)</td><td style="padding: 8px 0;">${escapeHtml(data.idade)}</td></tr>` : '')}
+          ${data.criancaNome ? `<tr><td style="padding: 8px 0; color: #7a7268;">Filho(a)</td><td style="padding: 8px 0; font-weight: 600;">${escapeHtml(data.criancaNome)}</td></tr>` : ''}
+          ${data.dataNascimento ? `<tr><td style="padding: 8px 0; color: #7a7268;">Nascimento</td><td style="padding: 8px 0;"><strong>${escapeHtml(formatBrDate(data.dataNascimento))}</strong> · ${escapeHtml(data.idade)}</td></tr>` : (data.idade ? `<tr><td style="padding: 8px 0; color: #7a7268;">Idade</td><td style="padding: 8px 0;">${escapeHtml(data.idade)}</td></tr>` : '')}
           ${data.periodo ? `<tr><td style="padding: 8px 0; color: #7a7268;">Período</td><td style="padding: 8px 0;">${escapeHtml(data.periodo)}</td></tr>` : ''}
           <tr><td style="padding: 8px 0; color: #7a7268;">Origem</td><td style="padding: 8px 0; font-size: 13px; color: #b8112e;">${escapeHtml(data.origem)}</td></tr>
         </table>

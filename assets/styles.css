@@ -2203,6 +2203,86 @@ strong, b { font-weight: 580; }
 .exit-popup-form button:disabled { opacity: 0.6; cursor: wait; }
 .exit-popup-fb { margin: 0.75rem 0 0; font-size: 0.9rem; }
 
+/* ────────── Visit modal (extensão do exit-popup) ────────── */
+.visit-modal { max-width: 480px; text-align: left; padding: 1.75rem 1.5rem 1.5rem; }
+.visit-modal h3 { text-align: center; margin-bottom: 0.4rem; }
+.visit-modal > p { text-align: center; margin-bottom: 1.25rem; font-size: 0.93rem; }
+.visit-modal-form { gap: 0.75rem; }
+.vm-field { display: grid; gap: 0.3rem; }
+.vm-field > span {
+  font-family: var(--font-ui);
+  font-size: 0.78rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  font-weight: 600;
+}
+.vm-field input {
+  padding: 0.75rem 0.9rem;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  font-family: var(--font-ui);
+  font-size: 0.97rem;
+  background: #FFFFFF;
+  color: var(--ink);
+  width: 100%;
+  box-sizing: border-box;
+}
+.vm-field input:focus { outline: none; border-color: var(--red); box-shadow: 0 0 0 3px rgba(184,17,46,0.12); }
+.visit-modal-form button[type="submit"] {
+  margin-top: 0.5rem;
+  padding: 0.95rem 1rem;
+  background: var(--red);
+  color: var(--paper);
+  border: none;
+  border-radius: 14px;
+  font-family: var(--font-ui);
+  font-weight: 600;
+  font-size: 1rem;
+  cursor: pointer;
+}
+.visit-modal-form button[type="submit"]:hover { background: var(--red-deep); }
+.visit-modal-form button[type="submit"]:disabled { opacity: 0.6; cursor: wait; }
+.visit-modal-note {
+  margin: 0.3rem 0 0;
+  font-size: 0.8rem;
+  color: var(--ink-faint, #7a7268);
+  text-align: center;
+}
+.visit-modal-success {
+  text-align: center;
+  padding: 1rem 0 0.25rem;
+}
+.visit-modal-success strong {
+  display: block;
+  font-family: var(--font-display);
+  font-size: 1.45rem;
+  color: var(--red);
+  margin-bottom: 0.5rem;
+}
+.visit-modal-success p {
+  font-size: 0.96rem;
+  color: var(--ink-soft);
+  line-height: 1.5;
+  margin: 0 0 1.25rem;
+}
+.visit-modal-success .visit-modal-ok {
+  padding: 0.7rem 1.5rem;
+  background: transparent;
+  color: var(--red);
+  border: 1.5px solid var(--red);
+  border-radius: 12px;
+  font-family: var(--font-ui);
+  font-weight: 600;
+  font-size: 0.95rem;
+  cursor: pointer;
+}
+.visit-modal-success .visit-modal-ok:hover { background: var(--red); color: var(--paper); }
+@media (max-width: 480px) {
+  .visit-modal { padding: 1.5rem 1.1rem 1.25rem; border-radius: 22px; }
+  .visit-modal h3 { font-size: 1.4rem; }
+}
+
 /* ════════════════════════════════════════════════════════════════════
    GALLERY — "Vida na Maple Bear" (masonry-like grid)
    ════════════════════════════════════════════════════════════════════ */
