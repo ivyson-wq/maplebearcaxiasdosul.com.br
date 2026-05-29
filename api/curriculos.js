@@ -198,7 +198,7 @@ export default async function handler(req) {
   if (to.length) {
     try {
       emailRes = await sendEmail({
-        from: unidade.from,
+        from: process.env.RESEND_FROM || unidade.from,
         to,
         subject: `[Talentos] ${nome} — ${cargo}`,
         html,
