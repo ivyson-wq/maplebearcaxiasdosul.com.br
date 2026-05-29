@@ -20,6 +20,20 @@
   <link rel="icon" type="image/x-icon" href="/assets/brand/favicon.ico?v=3">
   <link rel="icon" type="image/png" sizes="32x32" href="/assets/brand/favicon-32.png?v=3">
   <link rel="apple-touch-icon" sizes="180x180" href="/assets/brand/apple-touch-icon.png?v=3">
+  <style>
+    /* Trabalhe Conosco — realce do formulário */
+    .cv-card { background:#fff; border:1px solid #e4dac3; border-radius:16px; box-shadow:0 22px 50px -28px rgba(42,37,34,.32); padding:clamp(1.5rem,4vw,2.5rem); }
+    .cv-card .form { gap:1.15rem; }
+    .cv-legend { color:var(--ink-soft); font-size:.95rem; margin:0 0 1.6rem; }
+    .cv-legend b { color:#b8112e; }
+    .opt { font-weight:400; color:var(--ink-faint); font-size:.85em; }
+    .cv-card label { font-weight:600; }
+    #cv { padding:.75rem; background:var(--paper-warm); border:1px dashed #c9b896; border-radius:10px; cursor:pointer; }
+    #cv-submit { width:100%; justify-content:center; font-size:1.02rem; padding:1rem; margin-top:.25rem; }
+    .cv-perks { display:grid; grid-template-columns:repeat(auto-fit,minmax(190px,1fr)); gap:1.25rem; margin-top:1.25rem; }
+    .cv-perks h3 { font-size:1rem; font-weight:600; margin:0 0 .25rem; }
+    .cv-perks p { color:var(--ink-soft); font-size:.9rem; margin:0; line-height:1.5; }
+  </style>
   <script src="/assets/analytics.js" defer></script><script src="/assets/components.js" defer></script>
 </head>
 <body>
@@ -30,221 +44,199 @@
       <div class="container">
         <nav class="breadcrumb"><a href="/">Início</a><span class="sep">/</span><span>Trabalhe Conosco</span></nav>
         <p class="eyebrow" data-reveal>Faça parte da equipe</p>
-        <h1 data-reveal data-delay="1">Ensinar aqui é<br><em>transformar</em>.</h1>
+        <h1 data-reveal data-delay="1">Trabalhe na <em>Maple Bear</em>.</h1>
         <p class="lede" data-reveal data-delay="2">
-          A Maple Bear Caxias do Sul está sempre de olho em pessoas boas — educadores apaixonados,
-          profissionais cuidadosos, gente que acredita em educação bilíngue de verdade.
-          Cadastre seu currículo no nosso banco de talentos: quando abrir uma vaga para o seu perfil,
-          você é uma das primeiras pessoas que a gente procura.
+          Cadastre seu currículo no nosso banco de talentos. Quando abrir uma vaga para o seu perfil,
+          você é uma das primeiras pessoas que a gente chama.
         </p>
       </div>
     </section>
 
     <section class="section">
-      <div class="container">
-        <div class="two-col">
-          <div data-reveal>
-            <p class="eyebrow mb-m">Cadastro de currículo</p>
-            <h2 class="mb-l" style="font-size: var(--step-3);">Conte um pouco<br>sobre você.</h2>
+      <div class="container" style="max-width: 680px;">
+        <div class="cv-card" data-reveal>
+          <h2 style="font-size: var(--step-2); margin: 0 0 .4rem;">Cadastre seu currículo</h2>
+          <p class="cv-legend">Leva 2 minutos. Os campos com <b>*</b> são obrigatórios — os demais são opcionais.</p>
 
-            <form class="form" id="cv-form" novalidate>
-              <div class="field-row">
-                <div class="field">
-                  <label for="nome">Seu nome completo <span class="req">*</span></label>
-                  <input type="text" name="nome" id="nome" required autocomplete="name" maxlength="120">
-                </div>
-                <div class="field">
-                  <label for="cargo">Cargo de interesse <span class="req">*</span></label>
-                  <select name="cargo" id="cargo" required>
-                    <option value="">Selecione…</option>
-                    <option>Professor(a) Bilíngue</option>
-                    <option>Auxiliar de Classe</option>
-                    <option>Coordenação / Pedagógico</option>
-                    <option>Administrativo</option>
-                    <option>Secretaria / Recepção</option>
-                    <option>Serviços Gerais / Limpeza</option>
-                    <option>Cozinha / Nutrição</option>
-                    <option>Estágio</option>
-                    <option>Outro</option>
-                  </select>
-                </div>
-              </div>
-
-              <div class="field-row">
-                <div class="field">
-                  <label for="telefone">WhatsApp <span class="req">*</span></label>
-                  <input type="tel" name="telefone" id="telefone" required autocomplete="tel" placeholder="(54) 99999-9999">
-                </div>
-                <div class="field">
-                  <label for="email">E-mail</label>
-                  <input type="email" name="email" id="email" autocomplete="email">
-                </div>
-              </div>
-
+          <form class="form" id="cv-form" novalidate>
+            <div class="field-row">
               <div class="field">
-                <label for="linkedin">LinkedIn ou portfólio (opcional)</label>
-                <input type="url" name="linkedin" id="linkedin" placeholder="https://linkedin.com/in/...">
+                <label for="nome">Nome completo <span class="req">*</span></label>
+                <input type="text" name="nome" id="nome" required autocomplete="name" maxlength="120" placeholder="Seu nome">
               </div>
-
               <div class="field">
-                <label for="cv">Currículo (PDF, DOC, DOCX, JPG ou PNG — até 3 MB)</label>
-                <input type="file" name="cv" id="cv" accept=".pdf,.doc,.docx,.jpg,.jpeg,.png,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,image/jpeg,image/png">
-                <span class="hint" style="font-size: 0.8rem; color: var(--ink-faint);">Não tem o arquivo agora? Pode enviar só seus dados e a mensagem — a gente entra em contato.</span>
+                <label for="cargo">Cargo de interesse <span class="req">*</span></label>
+                <select name="cargo" id="cargo" required>
+                  <option value="">Selecione…</option>
+                  <option>Professor(a) Bilíngue</option>
+                  <option>Auxiliar de Classe</option>
+                  <option>Coordenação / Pedagógico</option>
+                  <option>Administrativo</option>
+                  <option>Secretaria / Recepção</option>
+                  <option>Serviços Gerais / Limpeza</option>
+                  <option>Cozinha / Nutrição</option>
+                  <option>Estágio</option>
+                  <option>Outro</option>
+                </select>
               </div>
+            </div>
 
+            <div class="field-row">
               <div class="field">
-                <label for="mensagem">Carta de apresentação / experiência</label>
-                <textarea name="mensagem" id="mensagem" rows="4" maxlength="2000" placeholder="Conte sua formação, experiência com educação/idiomas e por que quer fazer parte da Maple Bear."></textarea>
+                <label for="telefone">WhatsApp <span class="req">*</span></label>
+                <input type="tel" name="telefone" id="telefone" required autocomplete="tel" placeholder="(54) 99999-9999">
               </div>
-
-              <div class="field" style="flex-direction: row; align-items: flex-start; gap: 0.6rem;">
-                <input type="checkbox" name="consentimento_lgpd" id="consentimento_lgpd" required style="width: auto; margin-top: 0.25rem;">
-                <label for="consentimento_lgpd" style="font-weight: 400; font-size: 0.9rem; line-height: 1.45;">
-                  Autorizo a Maple Bear Caxias do Sul a guardar meus dados e currículo no banco de talentos
-                  por até 24 meses, para fins de recrutamento, conforme a
-                  <a href="/privacidade/" style="color: inherit; text-decoration: underline;">Política de Privacidade</a> (LGPD). <span class="req">*</span>
-                </label>
+              <div class="field">
+                <label for="email">E-mail <span class="opt">(recomendado)</span></label>
+                <input type="email" name="email" id="email" autocomplete="email" placeholder="voce@email.com">
               </div>
-
-              <!-- Honeypot anti-bot — não preencher -->
-              <div style="position: absolute; left: -9999px; opacity: 0;" aria-hidden="true">
-                <label>Empresa <input type="text" name="company" tabindex="-1" autocomplete="off"></label>
-              </div>
-
-              <button type="submit" class="btn btn-primary" id="cv-submit" style="justify-self: start;">
-                <span class="label">Enviar currículo</span>
-                <span class="arrow" aria-hidden="true">→</span>
-              </button>
-
-              <div id="cv-feedback" role="status" aria-live="polite"></div>
-
-              <p class="hint" style="margin-top: var(--space-s);">
-                Seu cadastro não é uma candidatura a uma vaga específica — é uma porta de entrada.
-                Entramos em contato quando surgir uma oportunidade compatível com o seu perfil.
-              </p>
-            </form>
-
-            <script>
-              (function () {
-                const form = document.getElementById('cv-form');
-                const submit = document.getElementById('cv-submit');
-                const fb = document.getElementById('cv-feedback');
-                const submitLabel = submit.querySelector('.label');
-                const fileInput = document.getElementById('cv');
-                const MAX_BYTES = 3 * 1024 * 1024;
-
-                function showFeedback(kind, html) {
-                  const bg = kind === 'success' ? 'rgba(90, 109, 77, 0.1)' : kind === 'error' ? 'rgba(184, 17, 46, 0.08)' : 'transparent';
-                  const border = kind === 'success' ? '#5a6d4d' : kind === 'error' ? '#b8112e' : 'transparent';
-                  const color = kind === 'success' ? '#3f4d36' : kind === 'error' ? '#8a0d22' : '#1a1814';
-                  fb.style.cssText = `margin-top: 1rem; padding: 1rem 1.25rem; border-left: 3px solid ${border}; background: ${bg}; color: ${color}; border-radius: 4px; font-family: 'Spectral', Georgia, serif; line-height: 1.5;`;
-                  fb.innerHTML = html;
-                }
-
-                function readFileBase64(file) {
-                  return new Promise((resolve, reject) => {
-                    const reader = new FileReader();
-                    reader.onload = () => resolve(reader.result);
-                    reader.onerror = () => reject(new Error('Não foi possível ler o arquivo.'));
-                    reader.readAsDataURL(file);
-                  });
-                }
-
-                form.addEventListener('submit', async (e) => {
-                  e.preventDefault();
-                  fb.innerHTML = '';
-
-                  const fd = new FormData(form);
-                  const data = { unidade: 'caxias' };
-                  fd.forEach((v, k) => { if (k !== 'cv') data[k] = v; });
-                  data.consentimento_lgpd = form.consentimento_lgpd.checked;
-
-                  if (!form.consentimento_lgpd.checked) {
-                    showFeedback('error', 'Você precisa autorizar o uso dos seus dados (LGPD) para enviar.');
-                    return;
-                  }
-
-                  const file = fileInput.files && fileInput.files[0];
-                  if (file) {
-                    if (file.size > MAX_BYTES) {
-                      showFeedback('error', 'Seu currículo tem mais de 3 MB. Reduza o arquivo ou envie sem anexo.');
-                      return;
-                    }
-                  }
-
-                  submit.disabled = true;
-                  submitLabel.textContent = 'Enviando...';
-
-                  try {
-                    if (file) {
-                      data.cv_base64 = await readFileBase64(file);
-                      data.cv_tipo = file.type;
-                      data.cv_nome = file.name;
-                    }
-
-                    const r = await fetch('/api/curriculos', {
-                      method: 'POST',
-                      headers: { 'Content-Type': 'application/json' },
-                      body: JSON.stringify(data)
-                    });
-                    const json = await r.json();
-
-                    if (r.ok && json.ok) {
-                      form.style.display = 'none';
-                      const avisoEmail = data.email
-                        ? `Enviamos uma confirmação para <strong>${data.email}</strong> — confira sua caixa de entrada (e o spam, por garantia).`
-                        : 'Guardamos seu cadastro no nosso banco de talentos.';
-                      showFeedback('success', `
-                        <strong style="display: block; font-family: 'Fraunces', Georgia, serif; font-size: 1.4rem; font-weight: 400; margin-bottom: 0.5rem;">Currículo enviado com sucesso! ✦</strong>
-                        Obrigado pelo interesse em fazer parte da Maple Bear Caxias do Sul.
-                        ${avisoEmail} Vamos te procurar quando abrir uma vaga compatível com o seu perfil.
-                        <br><br>
-                        Enquanto isso, conheça mais a escola no <a href="/sobre/" style="color: inherit; text-decoration: underline;">Sobre</a>
-                        ou no <a href="/blog/" style="color: inherit; text-decoration: underline;">blog</a>.
-                      `);
-                      if (window.gtag) gtag('event', 'curriculo_enviado', { event_category: 'rh', event_label: data.cargo || '' });
-                    } else {
-                      throw new Error((json.errors && json.errors.join(', ')) || json.error || 'erro desconhecido');
-                    }
-                  } catch (err) {
-                    showFeedback('error', `
-                      <strong>Não conseguimos enviar seu currículo agora.</strong><br>
-                      ${err.message || 'Tente novamente em instantes'} — ou nos chame no
-                      <a href="https://wa.me/5554997021634" style="color: inherit;">WhatsApp</a>.
-                    `);
-                    submit.disabled = false;
-                    submitLabel.textContent = 'Enviar currículo';
-                  }
-                });
-              })();
-            </script>
-          </div>
-
-          <div class="stack-l">
-            <p class="eyebrow" data-reveal data-delay="1">Por que trabalhar aqui</p>
-            <div data-reveal data-delay="2">
-              <h3 style="font-size: var(--step-1); font-weight: 450; margin-bottom: 0.5rem;">Método canadense</h3>
-              <p style="color: var(--ink-soft);">Você ensina dentro de uma metodologia consolidada mundialmente, com formação e material de apoio da rede Maple Bear.</p>
-            </div>
-            <div data-reveal data-delay="3">
-              <h3 style="font-size: var(--step-1); font-weight: 450; margin-bottom: 0.5rem;">Desenvolvimento contínuo</h3>
-              <p style="color: var(--ink-soft);">Trilhas de formação, acompanhamento pedagógico e um plano de crescimento anual para a equipe.</p>
-            </div>
-            <div data-reveal data-delay="4">
-              <h3 style="font-size: var(--step-1); font-weight: 450; margin-bottom: 0.5rem;">Ambiente que cuida</h3>
-              <p style="color: var(--ink-soft);">Time pequeno, próximo e colaborativo. Aqui as pessoas se conhecem pelo nome — colegas, famílias e crianças.</p>
             </div>
 
-            <div class="side-note" data-reveal data-delay="5" style="margin-top: var(--space-l);">
-              <strong style="color: var(--ink); display: block; margin-bottom: 0.4rem;">Não tem vaga aberta agora?</strong>
-              Tudo bem — é exatamente para isso que existe o banco de talentos. Deixe seu cadastro
-              e seja lembrado(a) assim que abrir uma oportunidade.
+            <div class="field">
+              <label for="cv">Currículo <span class="opt">(recomendado)</span></label>
+              <input type="file" name="cv" id="cv" accept=".pdf,.doc,.docx,.jpg,.jpeg,.png,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,image/jpeg,image/png">
+              <span class="hint" style="font-size: 0.82rem; color: var(--ink-faint);">PDF, DOC, DOCX, JPG ou PNG · até 3 MB. Não tem o arquivo agora? Pode enviar só os dados.</span>
             </div>
-          </div>
+
+            <div class="field">
+              <label for="linkedin">LinkedIn ou portfólio <span class="opt">(opcional)</span></label>
+              <input type="url" name="linkedin" id="linkedin" placeholder="https://linkedin.com/in/...">
+            </div>
+
+            <div class="field">
+              <label for="mensagem">Mensagem <span class="opt">(opcional)</span></label>
+              <textarea name="mensagem" id="mensagem" rows="3" maxlength="2000" placeholder="Conte rapidamente sua formação, experiência com educação/idiomas e por que quer fazer parte da Maple Bear."></textarea>
+            </div>
+
+            <div class="field" style="flex-direction: row; align-items: flex-start; gap: 0.6rem;">
+              <input type="checkbox" name="consentimento_lgpd" id="consentimento_lgpd" required style="width: auto; margin-top: 0.25rem;">
+              <label for="consentimento_lgpd" style="font-weight: 400; font-size: 0.88rem; line-height: 1.45;">
+                Autorizo a Maple Bear Caxias do Sul a guardar meus dados e currículo no banco de talentos por até 24 meses, para fins de recrutamento, conforme a
+                <a href="/privacidade/" style="color: inherit; text-decoration: underline;">Política de Privacidade</a> (LGPD). <span class="req">*</span>
+              </label>
+            </div>
+
+            <!-- Honeypot anti-bot — não preencher -->
+            <div style="position: absolute; left: -9999px; opacity: 0;" aria-hidden="true">
+              <label>Empresa <input type="text" name="company" tabindex="-1" autocomplete="off"></label>
+            </div>
+
+            <button type="submit" class="btn btn-primary" id="cv-submit">
+              <span class="label">Enviar currículo</span>
+              <span class="arrow" aria-hidden="true">→</span>
+            </button>
+
+            <div id="cv-feedback" role="status" aria-live="polite"></div>
+          </form>
+        </div>
+
+        <!-- Secundário: por que + reforço -->
+        <div class="cv-perks">
+          <div data-reveal><h3>Método canadense</h3><p>Metodologia consolidada mundialmente, com formação e material da rede Maple Bear.</p></div>
+          <div data-reveal data-delay="1"><h3>Desenvolvimento contínuo</h3><p>Trilhas de formação, acompanhamento pedagógico e plano de crescimento anual.</p></div>
+          <div data-reveal data-delay="2"><h3>Ambiente que cuida</h3><p>Time próximo e colaborativo, onde as pessoas se conhecem pelo nome.</p></div>
+        </div>
+
+        <div class="side-note" data-reveal style="margin-top: var(--space-l); text-align: center;">
+          <strong style="color: var(--ink); display: block; margin-bottom: 0.3rem;">Não tem vaga aberta agora?</strong>
+          É exatamente para isso que existe o banco de talentos — deixe seu cadastro e a gente te procura quando abrir uma oportunidade.
         </div>
       </div>
     </section>
   </main>
+
+  <script>
+    (function () {
+      const form = document.getElementById('cv-form');
+      const submit = document.getElementById('cv-submit');
+      const fb = document.getElementById('cv-feedback');
+      const submitLabel = submit.querySelector('.label');
+      const fileInput = document.getElementById('cv');
+      const MAX_BYTES = 3 * 1024 * 1024;
+
+      function showFeedback(kind, html) {
+        const bg = kind === 'success' ? 'rgba(90, 109, 77, 0.1)' : kind === 'error' ? 'rgba(184, 17, 46, 0.08)' : 'transparent';
+        const border = kind === 'success' ? '#5a6d4d' : kind === 'error' ? '#b8112e' : 'transparent';
+        const color = kind === 'success' ? '#3f4d36' : kind === 'error' ? '#8a0d22' : '#1a1814';
+        fb.style.cssText = `margin-top: 1rem; padding: 1rem 1.25rem; border-left: 3px solid ${border}; background: ${bg}; color: ${color}; border-radius: 4px; font-family: 'Spectral', Georgia, serif; line-height: 1.5;`;
+        fb.innerHTML = html;
+      }
+
+      function readFileBase64(file) {
+        return new Promise((resolve, reject) => {
+          const reader = new FileReader();
+          reader.onload = () => resolve(reader.result);
+          reader.onerror = () => reject(new Error('Não foi possível ler o arquivo.'));
+          reader.readAsDataURL(file);
+        });
+      }
+
+      form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        fb.innerHTML = '';
+
+        const fd = new FormData(form);
+        const data = { unidade: 'caxias' };
+        fd.forEach((v, k) => { if (k !== 'cv') data[k] = v; });
+        data.consentimento_lgpd = form.consentimento_lgpd.checked;
+
+        if (!form.consentimento_lgpd.checked) {
+          showFeedback('error', 'Você precisa autorizar o uso dos seus dados (LGPD) para enviar.');
+          return;
+        }
+
+        const file = fileInput.files && fileInput.files[0];
+        if (file && file.size > MAX_BYTES) {
+          showFeedback('error', 'Seu currículo tem mais de 3 MB. Reduza o arquivo ou envie sem anexo.');
+          return;
+        }
+
+        submit.disabled = true;
+        submitLabel.textContent = 'Enviando...';
+
+        try {
+          if (file) {
+            data.cv_base64 = await readFileBase64(file);
+            data.cv_tipo = file.type;
+            data.cv_nome = file.name;
+          }
+
+          const r = await fetch('/api/curriculos', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data)
+          });
+          const json = await r.json();
+
+          if (r.ok && json.ok) {
+            form.style.display = 'none';
+            const avisoEmail = data.email
+              ? `Enviamos uma confirmação para <strong>${data.email}</strong> — confira sua caixa de entrada (e o spam, por garantia).`
+              : 'Guardamos seu cadastro no nosso banco de talentos.';
+            showFeedback('success', `
+              <strong style="display: block; font-family: 'Fraunces', Georgia, serif; font-size: 1.4rem; font-weight: 400; margin-bottom: 0.5rem;">Currículo enviado com sucesso! ✦</strong>
+              Obrigado pelo interesse em fazer parte da Maple Bear Caxias do Sul.
+              ${avisoEmail} Vamos te procurar quando abrir uma vaga compatível com o seu perfil.
+              <br><br>
+              Enquanto isso, conheça mais a escola no <a href="/sobre/" style="color: inherit; text-decoration: underline;">Sobre</a>
+              ou no <a href="/blog/" style="color: inherit; text-decoration: underline;">blog</a>.
+            `);
+            if (window.gtag) gtag('event', 'curriculo_enviado', { event_category: 'rh', event_label: data.cargo || '' });
+          } else {
+            throw new Error((json.errors && json.errors.join(', ')) || json.error || 'erro desconhecido');
+          }
+        } catch (err) {
+          showFeedback('error', `
+            <strong>Não conseguimos enviar seu currículo agora.</strong><br>
+            ${err.message || 'Tente novamente em instantes'} — ou nos chame no
+            <a href="https://wa.me/5554997021634" style="color: inherit;">WhatsApp</a>.
+          `);
+          submit.disabled = false;
+          submitLabel.textContent = 'Enviar currículo';
+        }
+      });
+    })();
+  </script>
 
   <footer class="site-footer"><div class="container"><p class="footer-headline">Muito além<br>do <em>bilíngue.</em></p><div class="footer-grid"><div><h4>Maple Bear Caxias do Sul</h4><p>Escola bilíngue canadense em Caxias do Sul, RS.</p></div><div><h4>Navegar</h4><a href="/sobre/">Sobre</a><a href="/metodologia/">Metodologia</a><a href="/niveis/">Níveis</a><a href="/estrutura/">Estrutura</a><a href="/equipe/">Equipe</a></div><div><h4>Conversar</h4><a href="/matriculas/">Matrículas 2027</a><a href="/visite/">Agendar visita</a><a href="/trabalhe-conosco/">Trabalhe conosco</a><a href="/faq/">FAQ</a><a href="/contato/">Contato</a></div><div><h4>Contato</h4><a href="https://wa.me/5554997021634" target="_blank" rel="noopener">WhatsApp</a><a href="mailto:contato@maplebearcaxiasdosul.com.br">E-mail</a></div></div><div class="footer-bottom"><span>© <span id="year"></span> Maple Bear Caxias do Sul</span><span>Parte da rede Maple Bear Canadian Schools</span></div></div><script>document.getElementById('year').textContent = new Date().getFullYear();</script></footer>
   <a href="https://wa.me/5554997021634" class="wa-float" aria-label="WhatsApp" target="_blank" rel="noopener"><svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg></a>
