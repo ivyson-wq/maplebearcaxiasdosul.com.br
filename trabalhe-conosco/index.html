@@ -87,8 +87,8 @@
               </div>
 
               <div class="field">
-                <label for="cv">Currículo (PDF, DOC ou DOCX — até 3 MB)</label>
-                <input type="file" name="cv" id="cv" accept=".pdf,.doc,.docx,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document">
+                <label for="cv">Currículo (PDF, DOC, DOCX, JPG ou PNG — até 3 MB)</label>
+                <input type="file" name="cv" id="cv" accept=".pdf,.doc,.docx,.jpg,.jpeg,.png,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,image/jpeg,image/png">
                 <span class="hint" style="font-size: 0.8rem; color: var(--ink-faint);">Não tem o arquivo agora? Pode enviar só seus dados e a mensagem — a gente entra em contato.</span>
               </div>
 
@@ -191,11 +191,13 @@
 
                     if (r.ok && json.ok) {
                       form.style.display = 'none';
+                      const avisoEmail = data.email
+                        ? `Enviamos uma confirmação para <strong>${data.email}</strong> — confira sua caixa de entrada (e o spam, por garantia).`
+                        : 'Guardamos seu cadastro no nosso banco de talentos.';
                       showFeedback('success', `
-                        <strong style="display: block; font-family: 'Fraunces', Georgia, serif; font-size: 1.4rem; font-weight: 400; margin-bottom: 0.5rem;">Currículo recebido. ✦</strong>
+                        <strong style="display: block; font-family: 'Fraunces', Georgia, serif; font-size: 1.4rem; font-weight: 400; margin-bottom: 0.5rem;">Currículo enviado com sucesso! ✦</strong>
                         Obrigado pelo interesse em fazer parte da Maple Bear Caxias do Sul.
-                        Guardamos seu cadastro no nosso banco de talentos e vamos te procurar
-                        quando abrir uma vaga compatível com o seu perfil.
+                        ${avisoEmail} Vamos te procurar quando abrir uma vaga compatível com o seu perfil.
                         <br><br>
                         Enquanto isso, conheça mais a escola no <a href="/sobre/" style="color: inherit; text-decoration: underline;">Sobre</a>
                         ou no <a href="/blog/" style="color: inherit; text-decoration: underline;">blog</a>.

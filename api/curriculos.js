@@ -22,6 +22,8 @@ const ALLOWED_MIME = {
   'application/pdf': 'PDF',
   'application/msword': 'DOC',
   'application/vnd.openxmlformats-officedocument.wordprocessingml.document': 'DOCX',
+  'image/jpeg': 'JPG',
+  'image/png': 'PNG',
 };
 
 // Mapa unidade → escola + notificação
@@ -134,7 +136,7 @@ export default async function handler(req) {
   let cv_base64 = null, cv_tipo = null, cv_nome = null;
   if (body.cv_base64 && body.cv_tipo) {
     cv_tipo = String(body.cv_tipo);
-    if (!ALLOWED_MIME[cv_tipo]) errs.push('Currículo deve ser PDF, DOC ou DOCX.');
+    if (!ALLOWED_MIME[cv_tipo]) errs.push('Currículo deve ser PDF, DOC, DOCX, JPG ou PNG.');
     else {
       const bytes = base64Bytes(body.cv_base64);
       if (bytes > MAX_BYTES) errs.push('Currículo acima de 3 MB.');
@@ -210,12 +212,52 @@ export default async function handler(req) {
     }
   }
 
+  // 3) E-mail de confirmação para o candidato (se informou e-mail) — fire-and-forget
+  let confirmRes = { skipped: true };
+  if (email) {
+    const primeiroNome = escapeHtml(nome.split(' ')[0] || nome);
+    const confHtml = `
+    <div style="font-family: Georgia, serif; max-width: 560px; margin: 0 auto; color: #1a1814;">
+      <div style="background: ${unidade.cor}; color: #faf6ee; padding: 24px; border-radius: 8px 8px 0 0;">
+        <p style="font-family: -apple-system, BlinkMacSystemFont, sans-serif; font-size: 12px; letter-spacing: 0.18em; text-transform: uppercase; margin: 0 0 8px; opacity: 0.85;">${escapeHtml(unidade.nome)}</p>
+        <h1 style="margin: 0; font-size: 24px; font-weight: 400;">Recebemos seu currículo ✦</h1>
+      </div>
+      <div style="background: #faf6ee; padding: 24px 26px; border: 1px solid #d4c7ad; border-top: 0; border-radius: 0 0 8px 8px; line-height: 1.6; font-size: 15px;">
+        <p style="margin: 0 0 14px;">Olá, ${primeiroNome}!</p>
+        <p style="margin: 0 0 14px;">
+          Seu cadastro para <strong>${escapeHtml(cargoLabel)}</strong> foi recebido com sucesso e já está no nosso
+          <strong>banco de talentos</strong>. Obrigado pelo interesse em fazer parte da ${escapeHtml(unidade.nome)}.
+        </p>
+        <p style="margin: 0 0 14px;">
+          Este cadastro não é uma candidatura a uma vaga específica — é uma porta de entrada.
+          Quando surgir uma oportunidade compatível com o seu perfil, nossa equipe entra em contato pelos dados que você informou.
+        </p>
+        <p style="margin: 18px 0 0; padding-top: 14px; border-top: 1px solid #e4dac3; font-size: 13px; color: #7a7268;">
+          Esta é uma mensagem automática de confirmação — não é necessário responder.<br>
+          ${escapeHtml(unidade.nome)} · ${escapeHtml(unidade.site)}
+        </p>
+      </div>
+    </div>`;
+    try {
+      confirmRes = await sendEmail({
+        from: process.env.RESEND_FROM || unidade.from,
+        to: [email],
+        subject: `Recebemos seu currículo — ${unidade.nome}`,
+        html: confHtml,
+      });
+    } catch (err) {
+      console.warn('curriculos: email de confirmação falhou', err);
+      confirmRes = { ok: false, error: String(err) };
+    }
+  }
+
   return jsonResponse({
     ok: true,
     id: lumiedRes.data.id,
     channels: {
       lumied: 'created',
       email: emailRes.ok ? 'sent' : emailRes.skipped ? 'skipped' : 'failed',
+      confirmacao: confirmRes.ok ? 'sent' : confirmRes.skipped ? 'skipped' : 'failed',
     },
   }, { status: 200 }, origin);
 }
