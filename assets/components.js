@@ -293,18 +293,24 @@
       + ';border-radius:6px;font-size:0.92rem;text-align:left;';
   }
 
+  // CTAs de "Agendar visita" abrem o WhatsApp já com mensagem pronta —
+  // conversa direta converte melhor que formulário. O formulário continua
+  // disponível em /visite/ (orgânico/SEO) e o lead é capturado pela ponte CRM↔WhatsApp.
+  const WA_VISITA = 'https://wa.me/5554997021634?text='
+    + encodeURIComponent('Olá! Quero agendar uma visita guiada na Maple Bear Caxias do Sul. 🍁');
+
   if (!isVisitePage) {
     document.addEventListener('click', (e) => {
       const link = e.target.closest('a[href]');
       if (!link) return;
       const href = link.getAttribute('href') || '';
       if (!/^\/visite\/?(\?|#|$)/.test(href)) return;
-      // Respeita modificadores e target=_blank
+      // Respeita atalhos pra abrir em nova aba/janela
       if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
-      if (link.target === '_blank') return;
       e.preventDefault();
-      buildVisitModal();
-      if (window.gtag) window.gtag('event', 'visit_modal_open', { event_category: 'engagement', event_label: link.textContent.trim().slice(0, 60) });
+      if (window.trackLead) window.trackLead({ canal: 'whatsapp', origem: 'agendar-visita-cta' });
+      if (window.gtag) window.gtag('event', 'visit_whatsapp_click', { event_category: 'lead', event_label: link.textContent.trim().slice(0, 60) });
+      window.open(WA_VISITA, '_blank', 'noopener');
     });
   }
 })();
