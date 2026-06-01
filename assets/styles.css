@@ -2528,3 +2528,44 @@ strong, b { font-weight: 580; }
   .reels-grid { gap: 0.85rem; }
   .reel { height: auto; width: 100%; max-width: 460px; border-radius: 14px; }
 }
+
+/* ============================================================
+   Barra de CTA fixa no rodapé (mobile)
+   ============================================================ */
+.mobile-cta-bar { display: none; }
+@media (max-width: 768px) {
+  .mobile-cta-bar {
+    display: flex;
+    gap: 0.5rem;
+    position: fixed;
+    left: 0; right: 0; bottom: 0;
+    z-index: 60;
+    padding: 0.6rem 0.75rem calc(0.6rem + env(safe-area-inset-bottom));
+    background: rgba(250, 246, 238, 0.94);
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
+    border-top: 1px solid var(--line);
+    box-shadow: 0 -6px 24px rgba(0, 0, 0, 0.08);
+  }
+  .mcta-primary {
+    flex: 1;
+    display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem;
+    background: var(--red); color: var(--paper);
+    font-family: var(--font-ui); font-weight: 600; font-size: 0.98rem;
+    padding: 0.9rem 1rem; border-radius: 999px;
+    min-height: 48px;
+  }
+  .mcta-primary:hover, .mcta-primary:focus { background: var(--red-deep); color: var(--paper); }
+  .mcta-arrow { transition: transform 0.2s; }
+  .mcta-primary:active .mcta-arrow { transform: translateX(3px); }
+  .mcta-wa {
+    flex-shrink: 0;
+    width: 48px; height: 48px; border-radius: 50%;
+    background: #25D366; color: #fff;
+    display: inline-flex; align-items: center; justify-content: center;
+  }
+  .mcta-wa svg { width: 26px; height: 26px; fill: currentColor; }
+  /* evita botão flutuante duplicado e dá respiro pro conteúdo */
+  .wa-float { display: none !important; }
+  body { padding-bottom: 5rem; }
+}
