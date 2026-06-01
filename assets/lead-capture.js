@@ -7,7 +7,7 @@
 (function () {
   'use strict';
   var API_ENDPOINT = '/api/visit-lead';
-  var WA_URL = 'https://wa.me/5554996243857';
+  var WA_URL = 'https://wa.me/5554996243857?text=' + encodeURIComponent('Olá! Vim do site da Maple Bear Caxias do Sul e gostaria de agendar uma visita.');
 
   function el(tag, attrs, children) {
     var node = document.createElement(tag);
