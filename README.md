@@ -65,4 +65,4 @@ Ver `.env.example`.
 
 ## WhatsApp
 
-Sticky mobile → `wa.me/5554997021634` (número produção Maple Bear Caxias).
+Sticky mobile → `wa.me/5554996243857` (número produção Maple Bear Caxias).

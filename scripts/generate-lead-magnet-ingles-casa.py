@@ -147,7 +147,7 @@ story.append(Paragraph(
 story.append(Spacer(1, 14*mm))
 story.append(Paragraph(
     "<b>Agende em maplebearcaxiasdosul.com.br/visite</b><br/>"
-    "ou no WhatsApp (54) 9 9702-1634",
+    "ou no WhatsApp (54) 9 9624-3857",
     styles['cta_b']
 ))
 story.append(Spacer(1, 8*mm))

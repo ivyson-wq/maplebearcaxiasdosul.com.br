@@ -25,7 +25,7 @@ Visit: /visite/
 
 # Authoritative contact:
 Contact-Email: contato@maplebearcaxiasdosul.com.br
-Contact-WhatsApp: +5554997021634
+Contact-WhatsApp: +5554996243857
 Contact-Website: https://maplebearcaxiasdosul.com.br/
 
 # School metadata (canonical):

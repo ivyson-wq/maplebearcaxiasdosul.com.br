@@ -247,7 +247,7 @@ story.append(Spacer(1, 8*mm))
 story.append(Paragraph(
     "Maple Bear Caxias do Sul<br/>"
     "Rua Jacob Luchesi, 2374 · Caxias do Sul, RS · CEP 95032-000<br/>"
-    "WhatsApp: (54) 9 9702-1634 · maplebearcaxiasdosul.com.br",
+    "WhatsApp: (54) 9 9624-3857 · maplebearcaxiasdosul.com.br",
     cta_body_style
 ))
 story.append(Spacer(1, 14*mm))

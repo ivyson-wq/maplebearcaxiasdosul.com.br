@@ -26,7 +26,7 @@ const PRECACHE = [
   '/assets/brand/favicon-256.png',
 ];
 
-const OFFLINE_HTML = `<!DOCTYPE html><html lang="pt-BR"><head><meta charset="UTF-8"><title>Sem conexão — Maple Bear Caxias do Sul</title><meta name="viewport" content="width=device-width, initial-scale=1"><style>body{font-family:system-ui,sans-serif;max-width:520px;margin:80px auto;padding:24px;color:#1a1814;text-align:center}h1{font-size:1.6rem;margin:0 0 12px}p{line-height:1.6;color:#5a5a5a}a{color:#b8112e;text-decoration:underline}</style></head><body><h1>Você está sem conexão</h1><p>Não foi possível carregar esta página. Verifique sua internet e tente novamente.</p><p><a href="javascript:location.reload()">Tentar de novo</a> · <a href="https://wa.me/5554997021634">WhatsApp</a></p></body></html>`;
+const OFFLINE_HTML = `<!DOCTYPE html><html lang="pt-BR"><head><meta charset="UTF-8"><title>Sem conexão — Maple Bear Caxias do Sul</title><meta name="viewport" content="width=device-width, initial-scale=1"><style>body{font-family:system-ui,sans-serif;max-width:520px;margin:80px auto;padding:24px;color:#1a1814;text-align:center}h1{font-size:1.6rem;margin:0 0 12px}p{line-height:1.6;color:#5a5a5a}a{color:#b8112e;text-decoration:underline}</style></head><body><h1>Você está sem conexão</h1><p>Não foi possível carregar esta página. Verifique sua internet e tente novamente.</p><p><a href="javascript:location.reload()">Tentar de novo</a> · <a href="https://wa.me/5554996243857">WhatsApp</a></p></body></html>`;
 
 self.addEventListener('install', (e) => {
   e.waitUntil(

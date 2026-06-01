@@ -7,7 +7,7 @@
 ## 1. Dados institucionais (CRÍTICO — vai no JSON-LD/SEO)
 
 - [ ] **Endereço completo** da unidade (rua, número, bairro, CEP)
-- [ ] **Telefone fixo** (se diferente do WhatsApp 54 99702-1634)
+- [ ] **Telefone fixo** (se diferente do WhatsApp 54 99624-3857)
 - [ ] **E-mail institucional** (provável: `contato@maplebearcaxiasdosul.com.br`)
 - [ ] **Horário de funcionamento** (entrada, saída, contraturno)
 - [ ] **Ano de fundação** da unidade Caxias

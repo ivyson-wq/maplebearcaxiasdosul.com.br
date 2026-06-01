@@ -7,7 +7,7 @@
 (function () {
   'use strict';
   var API_ENDPOINT = '/api/visit-lead';
-  var WA_URL = 'https://wa.me/5554997021634';
+  var WA_URL = 'https://wa.me/5554996243857';
 
   function el(tag, attrs, children) {
     var node = document.createElement(tag);
