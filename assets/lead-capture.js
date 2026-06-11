@@ -110,6 +110,11 @@
 
     var data = { origem: origem, canal: 'whatsapp' };
     new FormData(form).forEach(function (v, k) { data[k] = v; });
+    // Atribuição de campanha (utm_*/gclid) — helper definido em components.js
+    if (window.mbUtm) {
+      var utm = window.mbUtm();
+      Object.keys(utm).forEach(function (k) { if (!data[k]) data[k] = utm[k]; });
+    }
     if (data.company) { btn.disabled = true; return; }
 
     btn.disabled = true;

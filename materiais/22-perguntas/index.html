@@ -150,6 +150,7 @@
         fd.forEach((v, k) => data[k] = v);
         data.origem = 'lead-magnet-22-perguntas';
         data.canal = 'whatsapp';
+        if (window.mbUtm) { const utm = window.mbUtm(); Object.keys(utm).forEach((k) => { if (!data[k]) data[k] = utm[k]; }); }
 
         submit.disabled = true;
         submitLabel.textContent = 'Enviando...';

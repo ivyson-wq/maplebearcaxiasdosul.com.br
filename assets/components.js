@@ -1,6 +1,33 @@
 (function () {
   'use strict';
 
+  /* UTM/gclid — persiste atribuição de campanha em sessionStorage para o
+     lead chegar com utm_* mesmo quando o form é enviado em outra página.
+     window.mbUtm() é consumido pelos forms que POSTam /api/visit-lead. */
+  const UTM_KEYS = ['utm_source', 'utm_medium', 'utm_campaign', 'gclid'];
+  try {
+    const params = new URLSearchParams(location.search);
+    const found = {};
+    UTM_KEYS.forEach((k) => {
+      const v = params.get(k);
+      if (v) found[k] = String(v).slice(0, 120);
+    });
+    if (Object.keys(found).length) sessionStorage.setItem('mb_utm', JSON.stringify(found));
+  } catch (e) { /* sessionStorage indisponível — segue sem atribuição */ }
+
+  window.mbUtm = function () {
+    let out = {};
+    try { out = JSON.parse(sessionStorage.getItem('mb_utm') || '{}') || {}; } catch (e) { out = {}; }
+    try {
+      const params = new URLSearchParams(location.search);
+      UTM_KEYS.forEach((k) => {
+        const v = params.get(k);
+        if (v) out[k] = String(v).slice(0, 120);
+      });
+    } catch (e) { /* noop */ }
+    return out;
+  };
+
   /* Service Worker registration (PWA) */
   if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
@@ -251,6 +278,7 @@
       const fb = form.querySelector('.visit-modal-fb');
       const data = { origem: 'site-visite', canal: 'whatsapp' };
       new FormData(form).forEach((v, k) => { data[k] = v; });
+      if (window.mbUtm) { const utm = window.mbUtm(); Object.keys(utm).forEach((k) => { if (!data[k]) data[k] = utm[k]; }); }
       if (data.company) { btn.disabled = true; return; }
 
       // Validação client-side leve

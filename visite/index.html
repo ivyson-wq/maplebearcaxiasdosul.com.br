@@ -136,6 +136,7 @@
                   const fd = new FormData(form);
                   const data = {};
                   fd.forEach((v, k) => data[k] = v);
+                  if (window.mbUtm) { const utm = window.mbUtm(); Object.keys(utm).forEach((k) => { if (!data[k]) data[k] = utm[k]; }); }
 
                   submit.disabled = true;
                   submitLabel.textContent = 'Enviando...';

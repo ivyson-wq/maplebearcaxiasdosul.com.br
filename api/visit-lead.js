@@ -136,6 +136,14 @@ function validate(body) {
   }
   if (mensagem.length > 2000) errs.push('mensagem muito longa');
 
+  // Atribuição de campanha: utm_* + gclid lidos do form (o front persiste
+  // via sessionStorage entre páginas). Sanitizados e truncados.
+  const utm = {};
+  for (const k of ['utm_source', 'utm_medium', 'utm_campaign', 'gclid']) {
+    const v = String(body[k] || '').trim().replace(/[\r\n]+/g, ' ').slice(0, 120);
+    if (v) utm[k] = v;
+  }
+
   return {
     ok: errs.length === 0,
     errs,
@@ -145,9 +153,17 @@ function validate(body) {
       dataNascimento: dataNasc,
       idade: idadeDescricao,        // texto pra humano: "3 anos e 4 meses"
       idadeBracket: idadeBracket,   // pra Lumied: "3 anos (Nursery)"
-      periodo, mensagem, origem
+      periodo, mensagem, origem, utm
     }
   };
+}
+
+// Linha de atribuição gravada em observacoes do lead (não mexe na coluna
+// origem: o drip comercial casa cadência pelos valores canônicos de origem).
+function utmLine(utm) {
+  const entries = Object.entries(utm || {});
+  if (!entries.length) return null;
+  return ('Tráfego: site:visit-lead | ' + entries.map(([k, v]) => `${k}=${v}`).join(' | ')).slice(0, 400);
 }
 
 async function sendEmail({ from, to, subject, html, replyTo }) {
@@ -229,6 +245,7 @@ async function createLumiedLead(lead) {
         lead.criancaNome ? `Filho(a): ${lead.criancaNome}` : null,
         lead.dataNascimento ? `Data de nascimento: ${formatBrDate(lead.dataNascimento)} (${lead.idade})` : null,
         lead.periodo ? `Período preferido: ${lead.periodo}` : null,
+        utmLine(lead.utm),
         lead.mensagem ? `Mensagem:\n${lead.mensagem}` : null
       ].filter(Boolean).join('\n\n') || undefined
     })
@@ -283,6 +300,7 @@ export default async function handler(req) {
           ${data.dataNascimento ? `<tr><td style="padding: 8px 0; color: #7a7268;">Nascimento</td><td style="padding: 8px 0;"><strong>${escapeHtml(formatBrDate(data.dataNascimento))}</strong> · ${escapeHtml(data.idade)}</td></tr>` : (data.idade ? `<tr><td style="padding: 8px 0; color: #7a7268;">Idade</td><td style="padding: 8px 0;">${escapeHtml(data.idade)}</td></tr>` : '')}
           ${data.periodo ? `<tr><td style="padding: 8px 0; color: #7a7268;">Período</td><td style="padding: 8px 0;">${escapeHtml(data.periodo)}</td></tr>` : ''}
           <tr><td style="padding: 8px 0; color: #7a7268;">Origem</td><td style="padding: 8px 0; font-size: 13px; color: #b8112e;">${escapeHtml(data.origem)}</td></tr>
+          ${Object.keys(data.utm || {}).length ? `<tr><td style="padding: 8px 0; color: #7a7268;">Campanha</td><td style="padding: 8px 0; font-size: 12px; color: #7a7268;">${escapeHtml(Object.entries(data.utm).map(([k, v]) => `${k}=${v}`).join(' · '))}</td></tr>` : ''}
         </table>
         ${data.mensagem ? `
         <div style="margin-top: 16px; padding-top: 16px; border-top: 1px solid #e4dac3;">
