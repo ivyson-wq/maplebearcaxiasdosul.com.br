@@ -57,6 +57,10 @@ const BUCKET = {
   // artigos publicados pela automação diária do blog:
   'curriculo-canadense-escola-bilingue': 'metodologia',
   'licao-de-casa-escola-bilingue': 'familia',
+  'educacao-infantil-em-caxias-do-sul': 'educacao-bilingue',
+  'preparacao-cambridge-criancas': 'metodologia',
+  'professor-bilingue-o-que-avaliar': 'metodologia',
+  'rotina-escola-bilingue-dia-a-dia': 'familia',
 };
 const BUCKET_LABEL = {
   'educacao-bilingue': 'EDUCAÇÃO BILÍNGUE',
