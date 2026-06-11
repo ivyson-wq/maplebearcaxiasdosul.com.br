@@ -293,7 +293,23 @@ body { font-family: 'Inter', system-ui, -apple-system, sans-serif; color: var(--
   <script src="/assets/components.js" defer></script>
   <style>
     /* Blog post — coexiste com /assets/styles.css (header/footer do design system).
-       O conteúdo do <article> mantém sua tipografia/cores próprias inline. */
+       O conteúdo do <article class="blog-card" data-category="desenvolvimento">
+  <a href="/blog/neurociencia-bilinguismo-cerebro/" class="blog-card-link">
+    <div class="blog-card-img"><img src="https://images.unsplash.com/photo-1559757148-5c350d0d3c56?w=800&auto=format&fit=crop" alt="Neurociência do Bilinguismo: O Que Acontece no Cérebro da Criança Bilíngue" loading="lazy"></div>
+    <div class="blog-card-body">
+      <span class="blog-card-cat" data-cat="desenvolvimento">DESENVOLVIMENTO INFANTIL</span>
+      <h2 class="blog-card-title">Neurociência do Bilinguismo: O Que Acontece no Cérebro da Criança Bilíngue</h2>
+      <p class="blog-card-excerpt">Descubra o que a neurociência do bilinguismo revela sobre o cérebro bilíngue: plasticidade, funções executivas e por que começar cedo faz toda a diferença.</p>
+      <div class="blog-card-meta">
+        <span>Maple Bear Caxias do Sul</span>
+        <span>·</span>
+        <time>22 de maio de 2026</time>
+        <span class="reading-time">⏱ 12 min</span>
+      </div>
+    </div>
+  </a>
+</article>
+<article> mantém sua tipografia/cores próprias inline. */
     body { background: var(--paper, #faf6ee) !important; padding-top: 0 !important; }
     .progress-bar { top: 0 !important; background: var(--red, #b8112e) !important; }
     .float-wa, .sticky-cta { display: none !important; } /* substituídos pelo .wa-float novo */
@@ -432,22 +448,7 @@ body { font-family: 'Inter', system-ui, -apple-system, sans-serif; color: var(--
     </div>
   </a>
 </article>
-<article class="blog-card" data-category="desenvolvimento">
-  <a href="/blog/neurociencia-bilinguismo-cerebro/" class="blog-card-link">
-    <div class="blog-card-img"><img src="https://images.unsplash.com/photo-1559757148-5c350d0d3c56?w=800&auto=format&fit=crop" alt="Neurociência do Bilinguismo: O Que Acontece no Cérebro da Criança Bilíngue" loading="lazy"></div>
-    <div class="blog-card-body">
-      <span class="blog-card-cat" data-cat="desenvolvimento">DESENVOLVIMENTO INFANTIL</span>
-      <h2 class="blog-card-title">Neurociência do Bilinguismo: O Que Acontece no Cérebro da Criança Bilíngue</h2>
-      <p class="blog-card-excerpt">Descubra o que a neurociência do bilinguismo revela sobre o cérebro bilíngue: plasticidade, funções executivas e por que começar cedo faz toda a diferença.</p>
-      <div class="blog-card-meta">
-        <span>Maple Bear Caxias do Sul</span>
-        <span>·</span>
-        <time>22 de maio de 2026</time>
-        <span class="reading-time">⏱ 12 min</span>
-      </div>
-    </div>
-  </a>
-</article>
+
 <article class="blog-card" data-category="desenvolvimento">
   <a href="/blog/vocabulario-ingles-por-idade/" class="blog-card-link">
     <div class="blog-card-img"><img src="https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=800&auto=format&fit=crop" alt="Vocabulário em Inglês por Idade: O Que Esperar de 3, 6, 10 e 14 Anos" loading="lazy"></div>
