@@ -105,6 +105,10 @@
       try { localStorage.setItem(COOKIE_KEY, value); } catch {}
       banner.classList.remove('is-visible');
       setTimeout(() => banner.remove(), 350);
+      if (value === 'accepted' && window.mbLoadTags) {
+        // Consentimento dado nesta sessão → carrega GA4 + Meta Pixel agora
+        window.mbLoadTags();
+      }
       if (value === 'rejected' && window.gtag) {
         // Anonymize further — remover cookies GA
         document.cookie.split(';').forEach(c => {
@@ -301,6 +305,7 @@
         });
         const json = await r.json();
         if (r.ok && json.ok) {
+          if (window.mbSetUserData) window.mbSetUserData(form); // Enhanced Conversions
           if (window.trackLead) window.trackLead({ canal: 'form', origem: 'site-visite' });
           if (window.gtag) window.gtag('event', 'visit_modal_submit', { event_category: 'lead', event_label: 'agendar_visita_modal' });
           form.style.display = 'none';
