@@ -122,6 +122,8 @@
     btn.textContent = 'Enviando...';
 
     try {
+      // sessão do pixel Lumied → liga o comportamento no site a este lead
+      try { data.sessao = sessionStorage.getItem('lumied_sessao') || undefined; } catch (e) {}
       var r = await fetch(API_ENDPOINT, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },

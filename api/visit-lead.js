@@ -218,36 +218,32 @@ async function triggerImmediateDrip() {
 }
 
 async function createLumiedLead(lead) {
-  const url = process.env.LUMIED_API_URL;
-  const slug = process.env.LUMIED_ESCOLA_SLUG || 'maplebearcaxias';
-  const anonKey = process.env.LUMIED_ANON_KEY;
-  if (!url) return { skipped: true, reason: 'LUMIED_API_URL ausente' };
-
-  // crm_captura_publica é a action pública existente no Lumied
-  // (api/handlers/public.ts:1942): rate-limit por IP, honeypot, valida campos
-  const headers = {
-    'Content-Type': 'application/json'
-  };
-  if (anonKey) headers['Authorization'] = `Bearer ${anonKey}`;
-
+  // Cutover V1→V2: o crm_captura_publica do Supabase V1 foi descontinuado.
+  // Este é o /api/leads público do Lumied V2 (captura dos sites MB): cria o
+  // lead E faz o backfill de lp_evento pela sessão — o comportamento anônimo
+  // do site (pixel lumied-track) passa a alimentar o score do lead.
+  const url = 'https://maplebearcaxias.lumied.com.br/api/leads';
+  // roteia por escola do lead (default Caxias). BG posta neste endpoint via
+  // CORS; enviar escola:'maplebearbg' direciona ao tenant certo (o /api/leads
+  // resolve o tenant pelo slug do body, não pelo domínio).
+  const slug = lead.escola || 'maplebearcaxias';
+  const utm = lead.utm || {};
   const r = await fetch(url, {
     method: 'POST',
-    headers,
+    headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
-      action: 'crm_captura_publica',
-      escola_slug: slug,
-      nome_responsavel: lead.nome,
+      escola: slug,
+      nome: lead.nome,
       telefone: lead.telefone,
       email: lead.email || undefined,
-      serie_interesse: lead.idadeBracket || lead.idade || undefined,
-      origem: lead.origem,
-      observacoes: [
-        lead.criancaNome ? `Filho(a): ${lead.criancaNome}` : null,
-        lead.dataNascimento ? `Data de nascimento: ${formatBrDate(lead.dataNascimento)} (${lead.idade})` : null,
-        lead.periodo ? `Período preferido: ${lead.periodo}` : null,
-        utmLine(lead.utm),
-        lead.mensagem ? `Mensagem:\n${lead.mensagem}` : null
-      ].filter(Boolean).join('\n\n') || undefined
+      crianca: lead.criancaNome || undefined,
+      serie: lead.idadeBracket || lead.idade || undefined,
+      origem: lead.origem || 'site',
+      sessao: lead.sessao || undefined,
+      gclid: utm.gclid || undefined,
+      utm_source: utm.utm_source || undefined,
+      utm_medium: utm.utm_medium || undefined,
+      utm_campaign: utm.utm_campaign || undefined
     })
   });
   const text = await r.text();
@@ -281,6 +277,10 @@ export default async function handler(req) {
   if (!ok) {
     return jsonResponse({ ok: false, errors: errs }, { status: 400 }, origin);
   }
+  // sessão do pixel do site (enviada pelo cliente) → liga comportamento ao lead
+  data.sessao = String(body.sessao || '').trim().slice(0, 60);
+  // escola do lead (BG posta cross-origin; default Caxias) p/ rotear o tenant
+  data.escola = String(body.escola || '').trim().slice(0, 60);
 
   const to = (process.env.LEAD_NOTIFY_TO || 'comercial@maplebearcaxiasdosul.com.br')
     .split(',').map(s => s.trim()).filter(Boolean);

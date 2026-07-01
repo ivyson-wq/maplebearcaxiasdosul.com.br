@@ -298,6 +298,8 @@
       fb.textContent = '';
 
       try {
+        // sessão do pixel Lumied → liga o comportamento no site a este lead
+        try { data.sessao = sessionStorage.getItem('lumied_sessao') || undefined; } catch (e) {}
         const r = await fetch('/api/visit-lead', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
