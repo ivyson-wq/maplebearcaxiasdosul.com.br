@@ -48,6 +48,37 @@
       fbq('init', PIXEL_ID);
       fbq('track', 'PageView');
     }
+
+    // ── Lumied: pageview do site → CRM (alimenta o score do lead pela mesma
+    // sessão). Dentro de loadTags = só APÓS consentimento, como GA/Meta.
+    // Anônimo (só caminho + sessão), sem PII, até a família se identificar.
+    try {
+      var LK = 'lumied_sessao';
+      var sid = sessionStorage.getItem(LK);
+      if (!sid) {
+        sid = (
+          (window.crypto && crypto.randomUUID && crypto.randomUUID()) ||
+          (String(Date.now()) + Math.random().toString(36).slice(2))
+        ).slice(0, 36);
+        sessionStorage.setItem(LK, sid);
+      }
+      var lutm = {};
+      var lq = new URLSearchParams(location.search);
+      ['source', 'medium', 'campaign', 'term', 'content'].forEach(function (p) {
+        var v = lq.get('utm_' + p);
+        if (v) lutm[p] = v.slice(0, 200);
+      });
+      var lpayload = JSON.stringify({
+        escola: 'maplebearcaxias',
+        path: (location.pathname || '/').slice(0, 300),
+        sessao: sid,
+        utm: lutm
+      });
+      var lurl = 'https://maplebearcaxias.lumied.com.br/api/track/pageview';
+      var lblob = new Blob([lpayload], { type: 'text/plain' });
+      if (navigator.sendBeacon) navigator.sendBeacon(lurl, lblob);
+      else fetch(lurl, { method: 'POST', body: lpayload, keepalive: true, mode: 'no-cors' });
+    } catch (e) { /* nunca quebra a página */ }
   }
 
   // Exposto pra components.js disparar assim que o usuário aceitar.
