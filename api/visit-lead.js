@@ -282,8 +282,14 @@ export default async function handler(req) {
   // escola do lead (BG posta cross-origin; default Caxias) p/ rotear o tenant
   data.escola = String(body.escola || '').trim().slice(0, 60);
 
-  const to = (process.env.LEAD_NOTIFY_TO || 'comercial@maplebearcaxiasdosul.com.br')
-    .split(',').map(s => s.trim()).filter(Boolean);
+  // Notificação vai pro time da escola do lead: BG posta cross-origin neste
+  // endpoint, então leads BG (escola:'maplebearbg') avisam o time do BG.
+  const isBg = String(body.escola || '').trim() === 'maplebearbg';
+  const to = (
+    isBg
+      ? (process.env.LEAD_NOTIFY_TO_BG || 'contato@maplebearbg.com.br')
+      : (process.env.LEAD_NOTIFY_TO || 'comercial@maplebearcaxiasdosul.com.br')
+  ).split(',').map(s => s.trim()).filter(Boolean);
 
   const html = `
     <div style="font-family: Georgia, serif; max-width: 580px; margin: 0 auto; color: #1a1814;">
