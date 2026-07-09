@@ -50,9 +50,15 @@
   </url>
   <url>
     <loc>https://www.maplebearcaxiasdosul.com.br/blog</loc>
-    <lastmod>2026-07-06</lastmod>
+    <lastmod>2026-07-09</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
+  </url>
+  <url>
+    <loc>https://www.maplebearcaxiasdosul.com.br/blog/sono-criancas-aprendizado</loc>
+    <lastmod>2026-07-09</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
   </url>
   <url>
     <loc>https://www.maplebearcaxiasdosul.com.br/blog/tecnologia-na-educacao-infantil</loc>
