@@ -363,9 +363,13 @@
       // Respeita atalhos pra abrir em nova aba/janela
       if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
       e.preventDefault();
-      if (window.trackLead) window.trackLead({ canal: 'whatsapp', origem: 'agendar-visita-cta' });
+      // mbWhatsApp (analytics.js) registra a conversão e devolve a URL com o
+      // marcador de sessão — mesmo caminho dos links <a> de WhatsApp.
       if (window.gtag) window.gtag('event', 'visit_whatsapp_click', { event_category: 'lead', event_label: link.textContent.trim().slice(0, 60) });
-      window.open(WA_VISITA, '_blank', 'noopener');
+      const destino = window.mbWhatsApp
+        ? window.mbWhatsApp(WA_VISITA, 'agendar-visita-cta')
+        : WA_VISITA;
+      window.open(destino, '_blank', 'noopener');
     });
   }
 })();
