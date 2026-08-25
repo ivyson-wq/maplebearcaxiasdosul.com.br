@@ -131,7 +131,10 @@
       });
       var json = await r.json();
       if (r.ok && json.ok) {
-        if (window.trackLead) window.trackLead({ canal: 'form', origem: origem });
+        // mbFormLead = conversão do Ads + Enhanced Conversions + generate_lead.
+        // Antes daqui só saía o generate_lead do GA4, sem `send_to`.
+        if (window.mbFormLead) window.mbFormLead(form, origem);
+        else if (window.trackLead) window.trackLead({ canal: 'form', origem: origem });
         form.style.display = 'none';
         var ok = el('strong', { text: 'Recebemos seu pedido. 🍁' });
         ok.style.color = 'var(--red, #b8112e)';

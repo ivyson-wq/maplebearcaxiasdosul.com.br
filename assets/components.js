@@ -105,8 +105,12 @@
       try { localStorage.setItem(COOKIE_KEY, value); } catch {}
       banner.classList.remove('is-visible');
       setTimeout(() => banner.remove(), 350);
+      // Consent Mode v2 primeiro, nos DOIS caminhos: o gtag já está no ar
+      // e precisa saber da decisão (aceitar libera cookie; rejeitar confirma
+      // o denied e encerra o wait_for_update em vez de deixá-lo expirar).
+      if (window.mbConsentUpdate) window.mbConsentUpdate(value === 'accepted');
       if (value === 'accepted' && window.mbLoadTags) {
-        // Consentimento dado nesta sessão → carrega GA4 + Meta Pixel agora
+        // Consentimento dado nesta sessão → carrega Meta Pixel + beacon agora
         window.mbLoadTags();
       }
       if (value === 'rejected' && window.gtag) {

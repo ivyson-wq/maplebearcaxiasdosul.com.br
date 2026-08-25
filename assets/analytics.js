@@ -2,9 +2,14 @@
 // Maple Bear Caxias do Sul — Tracking unificado (LGPD compliant)
 // GA4 + Meta Pixel + dataLayer helpers
 // ────────────────────────────────────────────────────────────────────
-// As tags só carregam APÓS consentimento ('accepted'). O banner vive em
-// components.js (chave mb_cookie_consent_v1) e chama window.mbLoadTags()
-// ao aceitar. Quem rejeita / ainda não escolheu NÃO é rastreado.
+// Duas camadas, de propósito:
+//   • GA4 + Google Ads carregam SEMPRE, sob Consent Mode v2. O default é
+//     tudo 'denied': sem cookie, sem identificador — pings sem estado, que
+//     é o que alimenta a conversão modelada. O banner manda o 'update'.
+//   • Meta Pixel + beacon do Lumied continuam atrás do "Aceitar": o Pixel
+//     não entende Consent Mode e o beacon cria sessão.
+// O banner vive em components.js (chave mb_cookie_consent_v1) e chama
+// window.mbConsentUpdate() + window.mbLoadTags().
 // ════════════════════════════════════════════════════════════════════
 
 (function () {
@@ -19,34 +24,82 @@
   // mbSetUserData() habilita Enhanced Conversions no mesmo clique.
   var AW_ID = 'AW-11302044142';
   var AW_WHATSAPP = 'AW-11302044142/hCf_CIyx1tocEO6Dno0q';
+  // Agendamento de visita (/visite/) e lead magnets. Até 25/08/2026 o
+  // formulário — a ação de MAIOR intenção do site — disparava só um evento
+  // GA4 ('visit_request'), sem `send_to`: não existia conversão nativa do
+  // Ads nesse caminho, e o mbSetUserData() ficava pendurado em nada.
+  // PREENCHER com o rótulo de Metas › Conversões › (ação do formulário) ›
+  // "Configurar tag" → o valor de send_to, formato 'AW-11302044142/XXXX'.
+  // Vazio = comportamento antigo (só GA4), sem quebrar nada.
+  var AW_FORMULARIO = '';
   var WA_NUMERO = '5554996243857'; // número da escola (≠ botões de compartilhar)
 
-  // ── Carrega GA4 + Meta Pixel (idempotente) ─────────────────────────
+  // ── Consent Mode v2 ───────────────────────────────────────────────
+  // Roda ANTES de qualquer tag. Sem isto, quem não clica "Aceitar" não
+  // gera nem conversão modelada — é perda seca de sinal, não estimada.
+  // O gtag passa a carregar SEMPRE; o que o consentimento controla é o
+  // armazenamento (cookies), não a existência da tag.
+  window.dataLayer = window.dataLayer || [];
+  function gtag() { window.dataLayer.push(arguments); }
+  window.gtag = gtag;
+
+  var jaAceito = (function () {
+    try { return localStorage.getItem(CONSENT_KEY) === 'accepted'; } catch (e) { return false; }
+  })();
+
+  gtag('consent', 'default', {
+    ad_storage: 'denied',
+    ad_user_data: 'denied',
+    ad_personalization: 'denied',
+    analytics_storage: 'denied',
+    wait_for_update: 500
+  });
+  // Quem já aceitou numa visita anterior não espera o banner: concede agora,
+  // ainda dentro da janela do wait_for_update.
+  if (jaAceito) concederConsentimento();
+
+  function concederConsentimento() {
+    gtag('consent', 'update', {
+      ad_storage: 'granted',
+      ad_user_data: 'granted',
+      ad_personalization: 'granted',
+      analytics_storage: 'granted'
+    });
+  }
+
+  // Chamado pelo banner (components.js) na decisão do usuário.
+  window.mbConsentUpdate = function (aceito) {
+    if (aceito) concederConsentimento();
+    else gtag('consent', 'update', {
+      ad_storage: 'denied', ad_user_data: 'denied',
+      ad_personalization: 'denied', analytics_storage: 'denied'
+    });
+  };
+
+  // ── GA4 + Google Ads: carregam SEMPRE (o consentimento já os governa) ──
+  if (GA_ID) {
+    var gs = document.createElement('script');
+    gs.async = true;
+    gs.src = 'https://www.googletagmanager.com/gtag/js?id=' + GA_ID;
+    document.head.appendChild(gs);
+
+    gtag('js', new Date());
+    gtag('config', GA_ID, {
+      anonymize_ip: true,
+      send_page_view: true,
+      transport_type: 'beacon'
+    });
+    // Conversões do Google Ads na MESMA carga do gtag (o script já é o do
+    // googletagmanager; AW só precisa do config próprio).
+    gtag('config', AW_ID);
+  }
+
+  // ── Carrega o que NÃO tem consent mode (idempotente) ───────────────
+  // Meta Pixel não respeita o Consent Mode do Google e o beacon do Lumied
+  // cria sessão: os dois seguem atrás do "Aceitar", como antes.
   function loadTags() {
     if (window.__mbTagsLoaded) return;
     window.__mbTagsLoaded = true;
-
-    // Google Analytics 4
-    if (GA_ID) {
-      var s = document.createElement('script');
-      s.async = true;
-      s.src = 'https://www.googletagmanager.com/gtag/js?id=' + GA_ID;
-      document.head.appendChild(s);
-
-      window.dataLayer = window.dataLayer || [];
-      function gtag() { window.dataLayer.push(arguments); }
-      window.gtag = gtag;
-
-      gtag('js', new Date());
-      gtag('config', GA_ID, {
-        anonymize_ip: true,
-        send_page_view: true,
-        transport_type: 'beacon'
-      });
-      // Conversões do Google Ads na MESMA carga do gtag (o script já é o do
-      // googletagmanager; AW só precisa do config próprio).
-      gtag('config', AW_ID);
-    }
 
     // Meta Pixel
     if (PIXEL_ID) {
@@ -105,7 +158,9 @@
   // Exposto pra components.js disparar assim que o usuário aceitar.
   window.mbLoadTags = loadTags;
 
-  // ── Helper público pra trackear conversões (no-op sem consentimento) ──
+  // ── Helper público pra trackear conversões ─────────────────────────
+  // GA4/Ads sempre emitem (cookieless enquanto o consentimento é denied);
+  // o fbq só existe depois do "Aceitar".
   window.trackLead = function (params) {
     var data = params || {};
     if (window.gtag) {
@@ -120,8 +175,8 @@
   };
 
   // ── Enhanced Conversions: anexa dados do usuário (email/telefone) ──
-  // Chamado no submit de formulário de lead, ANTES do evento de conversão.
-  // O gtag faz o hash client-side; só roda se as tags já carregaram (consentimento).
+  // Chamado no sucesso do formulário, ANTES do evento de conversão — o
+  // mbFormLead abaixo garante essa ordem. O gtag faz o hash client-side.
   window.mbSetUserData = function (form) {
     if (!window.gtag || !form) return;
     var val = function (sel) { var el = form.querySelector(sel); return el && el.value ? el.value.trim() : ''; };
@@ -137,6 +192,20 @@
       }
     }
     if (ud.email || ud.phone_number) gtag('set', 'user_data', ud);
+  };
+
+  // ── Ponto ÚNICO de conversão de FORMULÁRIO ─────────────────────────
+  // Chamar SÓ depois de a API confirmar (r.ok && json.ok): conversão
+  // disparada no submit conta tentativa que falhou, e o Smart Bidding
+  // passa a perseguir formulário quebrado.
+  // Ordem importa: user_data ANTES do evento, senão o Enhanced
+  // Conversions não anexa nada.
+  window.mbFormLead = function (form, origem) {
+    if (form && window.mbSetUserData) window.mbSetUserData(form);
+    if (window.gtag && AW_FORMULARIO) {
+      gtag('event', 'conversion', { send_to: AW_FORMULARIO, transport_type: 'beacon' });
+    }
+    window.trackLead({ canal: 'form', origem: origem || 'formulario' });
   };
 
   // ── Marcador que SOBREVIVE ao pulo navegador→WhatsApp ──────────────
@@ -178,7 +247,7 @@
   };
 
   // ── Track de cliques em WhatsApp automaticamente ───────────────────
-  // (listener sempre ativo; trackLead só emite se as tags já carregaram)
+  // (listener sempre ativo; sob Consent Mode o evento sai mesmo sem aceite)
   // SÓ o número da escola: os botões "compartilhar no WhatsApp" do blog
   // usam wa.me/?text=... e não são lead nenhum — contá-los inflava o
   // generate_lead que o Google Ads importa e usa pra dar lance.
@@ -189,11 +258,8 @@
     link.href = window.mbWhatsApp(link.href, link.getAttribute('data-origem'));
   }, { passive: true });
 
-  // ── Gate de consentimento: só carrega se já aceito anteriormente ───
-  try {
-    if (localStorage.getItem(CONSENT_KEY) === 'accepted') loadTags();
-  } catch (e) {
-    // localStorage indisponível (modo privado) — não carrega tags
-  }
+  // ── Gate: Pixel + beacon só se já aceito anteriormente ─────────────
+  // (GA4/Ads já subiram acima sob Consent Mode; aqui é só o resto.)
+  if (jaAceito) loadTags();
 
 })();

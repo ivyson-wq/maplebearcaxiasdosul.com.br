@@ -182,7 +182,11 @@
                         <a href="/blog/" style="color: inherit; text-decoration: underline;">explorar nosso blog</a>
                         ou nos chamar diretamente no <a href="https://wa.me/5554996243857?text=Ol%C3%A1!%20Vim%20do%20site%20da%20Maple%20Bear%20Caxias%20do%20Sul%20e%20gostaria%20de%20agendar%20uma%20visita." style="color: inherit; text-decoration: underline;">WhatsApp</a>.
                       `);
-                      if (window.mbSetUserData) window.mbSetUserData(form); // Enhanced Conversions
+                      // Conversão do Ads + Enhanced Conversions + generate_lead,
+                      // já com a API confirmada. mbFormLead cuida da ordem
+                      // (user_data antes do evento).
+                      if (window.mbFormLead) window.mbFormLead(form, 'site-visite');
+                      else if (window.mbSetUserData) window.mbSetUserData(form);
                       if (window.gtag) gtag('event', 'visit_request', { event_category: 'lead', event_label: data.data_nascimento || data.crianca_idade });
                     } else {
                       throw new Error((json.errors && json.errors.join(', ')) || json.error || 'erro desconhecido');
