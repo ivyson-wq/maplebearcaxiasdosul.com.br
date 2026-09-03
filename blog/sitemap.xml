@@ -116,9 +116,15 @@
   </url>
   <url>
     <loc>https://www.maplebearcaxiasdosul.com.br/blog</loc>
-    <lastmod>2026-08-31</lastmod>
+    <lastmod>2026-09-03</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
+  </url>
+  <url>
+    <loc>https://www.maplebearcaxiasdosul.com.br/blog/protagonismo-infantil-como-desenvolver</loc>
+    <lastmod>2026-09-03</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
   </url>
   <url>
     <loc>https://www.maplebearcaxiasdosul.com.br/blog/como-fortalecer-ingles-nas-ferias</loc>
