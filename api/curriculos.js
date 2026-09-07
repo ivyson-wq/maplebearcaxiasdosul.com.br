@@ -1,7 +1,18 @@
 // POST /api/curriculos
 // Banco de Talentos — recebe currículo do formulário /trabalhe-conosco/
-// (Caxias + BG), valida, encaminha pro Lumied (action rh_curriculo_publico,
-// que sobe o CV no Storage + grava o candidato) e notifica o RH via Resend.
+// (Caxias + BG), valida, encaminha pro Lumied v2 (POST /api/talentos, que
+// sobe o CV no bucket privado + grava o candidato) e notifica o RH via Resend.
+//
+// POR QUE MUDOU (07/09/2026). Até aqui o encaminhamento ia para a edge function
+// `api` do projeto Supabase do v1 (brgorknbrjlfwvrrlwxj), que foi DELETADO:
+// todo currículo enviado pelo site morria num 502 e o RH nunca recebia o
+// e-mail. O destino agora é a rota v2 `https://app.lumied.com.br/api/talentos`.
+// Contrato: `escola` (slug), `nome`, `email`, `telefone`, `cargo`, `area`,
+// `linkedin`, `mensagem`, `origem`, `consentimento: true`, `cv_base64/cv_tipo/
+// cv_nome`, honeypot `website`; sucesso = `ok: true`, `cv_signed_url` (7 dias).
+// Autenticação: header `x-talentos-key` = env `TALENTOS_PROXY_KEY` (a MESMA
+// env precisa existir no app). Enquanto o app não tiver a env, a rota aceita
+// sem chave (só rate limit). `LUMIED_ANON_KEY` deixou de ser usada.
 //
 // O front-end envia JSON com o arquivo em base64 (cap 3 MB — o limite de
 // body do Vercel Edge é ~4 MB e o base64 infla ~33%).
@@ -92,15 +103,27 @@ async function sendEmail({ from, to, subject, html, replyTo }) {
   return { ok: r.ok, status: r.status, body: text };
 }
 
+const LUMIED_TALENTOS_URL = 'https://app.lumied.com.br/api/talentos';
+
+// Destino v2. `LUMIED_API_URL` na Vercel pode ainda apontar para a edge
+// function do projeto v1 (deletado) — quem editou a env não tem mais acesso ao
+// painel na hora deste conserto, então um valor que cite o projeto morto ou
+// `/functions/v1/` é IGNORADO e cai no padrão v2. Só um valor que não pareça
+// v1 (ex.: um preview do app) é respeitado.
+function urlLumiedTalentos() {
+  const env = String(process.env.LUMIED_API_URL || '').trim();
+  if (!env || env.includes('brgorknbrjlfwvrrlwxj') || env.includes('/functions/v1/')) return LUMIED_TALENTOS_URL;
+  return env;
+}
+
 async function criarCandidatoLumied(payload) {
-  const url = process.env.LUMIED_API_URL || 'https://brgorknbrjlfwvrrlwxj.supabase.co/functions/v1/api';
-  const anonKey = process.env.LUMIED_ANON_KEY;
   const headers = { 'Content-Type': 'application/json' };
-  if (anonKey) headers['Authorization'] = `Bearer ${anonKey}`;
-  const r = await fetch(url, { method: 'POST', headers, body: JSON.stringify(payload) });
+  const chave = process.env.TALENTOS_PROXY_KEY;
+  if (chave) headers['x-talentos-key'] = chave;
+  const r = await fetch(urlLumiedTalentos(), { method: 'POST', headers, body: JSON.stringify(payload) });
   let data = {};
   try { data = await r.json(); } catch { /* ignore */ }
-  return { ok: r.ok && data && data.success === true, status: r.status, data };
+  return { ok: r.ok && data && data.ok === true, status: r.status, data };
 }
 
 export default async function handler(req) {
@@ -145,17 +168,19 @@ export default async function handler(req) {
   }
   if (errs.length) return jsonResponse({ ok: false, errors: errs }, { status: 400 }, origin);
 
-  // 1) Cria o candidato no Lumied (sobe o CV + grava registro)
+  // 1) Cria o candidato no Lumied v2 (sobe o CV + grava registro).
+  // `website` é o honeypot da rota v2: repassa o `company` daqui, então um bot
+  // que passe pelo primeiro ainda cai no segundo (e a rota responde ok sem gravar).
   const lumiedRes = await criarCandidatoLumied({
-    action: 'rh_curriculo_publico',
-    escola_slug: unidade.slug,
+    escola: unidade.slug,
     nome, email: email || undefined, telefone: telefone || undefined,
     cargo,
     area: String(body.area || '').trim() || undefined,
     linkedin: String(body.linkedin || '').trim() || undefined,
     mensagem: String(body.mensagem || '').trim() || undefined,
     origem: unidade.origem,
-    consentimento_lgpd: true,
+    consentimento: true,
+    website: body.company ? String(body.company) : undefined,
     cv_base64: cv_base64 || undefined,
     cv_tipo: cv_base64 ? cv_tipo : undefined,
     cv_nome: cv_base64 ? cv_nome : undefined,
@@ -163,7 +188,7 @@ export default async function handler(req) {
 
   if (!lumiedRes.ok) {
     console.error('curriculos: Lumied falhou', { status: lumiedRes.status, data: lumiedRes.data });
-    const motivo = (lumiedRes.data && lumiedRes.data.error) ? lumiedRes.data.error : 'Falha ao registrar o currículo.';
+    const motivo = (lumiedRes.data && (lumiedRes.data.erro || lumiedRes.data.error)) || 'Falha ao registrar o currículo.';
     return jsonResponse({ ok: false, error: motivo }, { status: 502 }, origin);
   }
 
