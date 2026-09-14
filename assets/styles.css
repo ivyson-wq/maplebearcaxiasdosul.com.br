@@ -1734,13 +1734,39 @@ strong, b { font-weight: 580; }
 }
 .cookie-btn-secondary:hover { border-color: var(--paper); background: rgba(246, 233, 225, 0.08); }
 @media (max-width: 640px) {
+  /* No celular o banner vai para o TOPO: embaixo ele cobria o botão
+     flutuante do WhatsApp (.wa-float), que é o principal CTA das campanhas. */
   .cookie-banner {
     grid-template-columns: 1fr;
-    bottom: 0.5rem; left: 0.5rem; right: 0.5rem;
+    top: 0.5rem; bottom: auto; left: 0.5rem; right: 0.5rem;
     padding: var(--space-s) var(--space-m);
+    gap: var(--space-s);
+    z-index: 120;
+    transform: translateY(-20px);
   }
+  .cookie-text { font-size: 0.85rem; line-height: 1.4; }
   .cookie-actions { justify-content: stretch; }
-  .cookie-btn { flex: 1; text-align: center; }
+  .cookie-btn { flex: 1; text-align: center; padding: 0.5rem 0.8rem; font-size: 0.84rem; }
+}
+
+/* Hero das landing pages de anúncio aparece sem esperar o JS de reveal:
+   em celular lento o visitante pago via a primeira tela vazia por ~1s. */
+.page-header--lp [data-reveal] { opacity: 1; transform: none; transition: none; }
+
+/* CTA das landing pages: botões lado a lado com gap em CSS (sem &nbsp;) */
+.page-header--lp .lp-cta { display: flex; flex-wrap: wrap; gap: 0.75rem; }
+
+/* Landing pages de anúncio (.page-header--lp): no celular o CTA de WhatsApp
+   sobe para logo abaixo do H1 — antes ficava depois do lede, fora da
+   primeira tela. */
+@media (max-width: 640px) {
+  .page-header--lp { padding-block: var(--space-l) var(--space-xl); }
+  .page-header--lp .breadcrumb { display: none; }
+  .page-header--lp .container { display: flex; flex-direction: column; }
+  .page-header--lp h1 { font-size: var(--step-5); max-width: none; }
+  .page-header--lp .lede { order: 10; margin-top: var(--space-m); }
+  .page-header--lp .lp-cta { margin-top: var(--space-m); display: flex; flex-direction: column; gap: 0.6rem; }
+  .page-header--lp .lp-cta .btn { width: 100%; justify-content: center; }
 }
 
 /* ============================================================
