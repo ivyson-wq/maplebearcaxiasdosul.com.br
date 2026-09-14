@@ -14,7 +14,7 @@
 //  3. Bump de CACHE força invalidação completa do v1.
 //  4. skipWaiting + claim → atualização imediata sem reload.
 
-const CACHE = 'mb-caxias-v6';
+const CACHE = 'mb-caxias-v7';
 const PRECACHE = [
   '/',
   '/assets/styles.css',

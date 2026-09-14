@@ -6,8 +6,9 @@
 //   • GA4 + Google Ads carregam SEMPRE, sob Consent Mode v2. O default é
 //     tudo 'denied': sem cookie, sem identificador — pings sem estado, que
 //     é o que alimenta a conversão modelada. O banner manda o 'update'.
-//   • Meta Pixel + beacon do Lumied continuam atrás do "Aceitar": o Pixel
-//     não entende Consent Mode e o beacon cria sessão.
+//   • Meta Pixel continua atrás do "Aceitar" (não entende Consent Mode).
+//   • Sessão/pageview do Lumied (anônimos, first-party) saem no load —
+//     ver lumiedSessao(): sem isso a matrícula nunca volta pro Google.
 // O banner vive em components.js (chave mb_cookie_consent_v1) e chama
 // window.mbConsentUpdate() + window.mbLoadTags().
 // ════════════════════════════════════════════════════════════════════
@@ -95,8 +96,8 @@
   }
 
   // ── Carrega o que NÃO tem consent mode (idempotente) ───────────────
-  // Meta Pixel não respeita o Consent Mode do Google e o beacon do Lumied
-  // cria sessão: os dois seguem atrás do "Aceitar", como antes.
+  // Meta Pixel não respeita o Consent Mode do Google: segue atrás do
+  // "Aceitar", como antes. (A sessão do Lumied saiu daqui — ver abaixo.)
   function loadTags() {
     if (window.__mbTagsLoaded) return;
     window.__mbTagsLoaded = true;
@@ -111,10 +112,20 @@
       fbq('init', PIXEL_ID);
       fbq('track', 'PageView');
     }
+  }
 
-    // ── Lumied: pageview do site → CRM (alimenta o score do lead pela mesma
-    // sessão). Dentro de loadTags = só APÓS consentimento, como GA/Meta.
-    // Anônimo (só caminho + sessão), sem PII, até a família se identificar.
+  // ── Lumied: sessão + pageview do site → CRM ────────────────────────
+  // Roda no CARREGAMENTO, antes do banner de cookies. Até 14/09/2026 vivia
+  // dentro de loadTags (só após "Aceitar"): 461 cliques pagos em 30 dias
+  // viraram 155 sessões no Lumied, e a matrícula nunca voltava pro Google.
+  // O que sai daqui é anônimo e first-party — caminho da página, um id de
+  // sessão aleatório (sessionStorage, morre com a aba) e os parâmetros da
+  // própria URL (utm/gclid) — finalidade funcional: atribuir o contato que
+  // a família mesma inicia no WhatsApp ("(ref: XXXX)"). Sem PII até ela se
+  // identificar. GA4 (cookies) e Meta Pixel seguem atrás do consentimento.
+  function lumiedSessao() {
+    if (window.__mbLumiedSessao) return;
+    window.__mbLumiedSessao = true;
     try {
       var LK = 'lumied_sessao';
       var sid = sessionStorage.getItem(LK);
@@ -154,6 +165,7 @@
       else fetch(lurl, { method: 'POST', body: lpayload, keepalive: true, mode: 'no-cors' });
     } catch (e) { /* nunca quebra a página */ }
   }
+  lumiedSessao();
 
   // Exposto pra components.js disparar assim que o usuário aceitar.
   window.mbLoadTags = loadTags;
