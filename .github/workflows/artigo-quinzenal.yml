@@ -46,4 +46,11 @@ jobs:
           git add -A
           git commit -m "Artigo: $TITULO" -m "Tema da pauta: $TEMA" -m "Gerado automaticamente; publica no merge."
           git push -u origin "artigo/$SLUG"
+          # A pauta vai para a main AGORA (só ela): senão, enquanto o PR espera
+          # aprovação, a main ainda lista o tema e a rodada seguinte o repete.
+          git checkout main
+          git checkout "artigo/$SLUG" -- editorial/pauta.md
+          git commit -m "Pauta: '$TEMA' em andamento (PR artigo/$SLUG)" || true
+          git push origin main
+          git checkout "artigo/$SLUG"
           gh pr create --title "Artigo para aprovar: $TITULO" --assignee ivyson-wq --body "$(printf '**Tema da pauta:** %s\n\n**Vai ao ar em:** %s\n\nEscrito automaticamente a partir de editorial/fatos.md e editorial/pauta.md. Leia o HTML gerado (ou o JSON em editorial/rascunhos/) e, se estiver bom, faça o merge — o site publica sozinho. Se precisar mudar algo, edite o JSON e rode `python3 editorial/gerar-artigo.py editorial/rascunhos/%s.json`.\n\nRegras aplicadas: sem valores, só fatos do fatos.md, FAQ com dados estruturados, links para as páginas de matrícula.' "$TEMA" "$URL" "$SLUG")"
