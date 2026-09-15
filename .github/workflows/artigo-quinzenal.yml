@@ -67,4 +67,26 @@ jobs:
           git commit -m "Pauta: '$TEMA' em andamento (PR artigo/$SLUG)" || true
           git push origin main
           git checkout "artigo/$SLUG"
-          gh pr create --title "Artigo para aprovar: $TITULO" --assignee ivyson-wq --body "$(printf '**Tema da pauta:** %s\n\n**Vai ao ar em:** %s\n\nEscrito automaticamente a partir de editorial/fatos.md e editorial/pauta.md. Leia o HTML gerado (ou o JSON em editorial/rascunhos/) e, se estiver bom, faça o merge — o site publica sozinho. Se precisar mudar algo, edite o JSON e rode `python3 editorial/gerar-artigo.py editorial/rascunhos/%s.json`.\n\nRegras aplicadas: sem valores, só fatos do fatos.md, FAQ com dados estruturados, links para as páginas de matrícula.' "$TEMA" "$URL" "$SLUG")"
+          PR_URL=$(gh pr create --title "Artigo para aprovar: $TITULO" --assignee ivyson-wq --body "$(printf '**Tema da pauta:** %s\n\n**Vai ao ar em:** %s\n\nEscrito automaticamente a partir de editorial/fatos.md e editorial/pauta.md. Leia o HTML gerado (ou o JSON em editorial/rascunhos/) e, se estiver bom, faça o merge — o site publica sozinho. Se precisar mudar algo, edite o JSON e rode `python3 editorial/gerar-artigo.py editorial/rascunhos/%s.json`.\n\nRegras aplicadas: sem valores, só fatos do fatos.md, FAQ com dados estruturados, links para as páginas de matrícula.' "$TEMA" "$URL" "$SLUG")")
+          echo "PR_URL=$PR_URL" >> "$GITHUB_ENV"
+          echo "TITULO=$TITULO" >> "$GITHUB_ENV"
+          echo "TEMA=$TEMA" >> "$GITHUB_ENV"
+      - name: Avisar por e-mail (Resend, o mesmo do Lumied)
+        if: env.PR_URL != ''
+        env:
+          RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
+        run: |
+          python3 - <<'PY'
+          import json, os, urllib.request
+          titulo, tema, url = os.environ["TITULO"], os.environ["TEMA"], os.environ["PR_URL"]
+          site = os.path.basename(os.getcwd())
+          html = (f"<p>Novo artigo para o site <b>{site}</b> esperando sua aprovação.</p>"
+                  f"<p><b>{titulo}</b><br>Tema da pauta: {tema}</p>"
+                  f"<p><a href=\"{url}\">Abrir o PR e aprovar (merge = publicado)</a></p>"
+                  f"<p style=\"color:#666;font-size:13px\">Escrito automaticamente a partir de editorial/fatos.md e pauta.md. Sem valores. Se não estiver bom, feche o PR ou edite o JSON em editorial/rascunhos/.</p>")
+          body = {"from": "Lumied Editorial <editorial@lumied.com.br>", "to": ["ivyson@gmail.com", "ivyson@construfare.com"],
+                  "subject": f"Artigo para aprovar ({site}): {titulo}", "html": html}
+          req = urllib.request.Request("https://api.resend.com/emails", data=json.dumps(body).encode(),
+                                       headers={"Authorization": "Bearer " + os.environ["RESEND_API_KEY"], "Content-Type": "application/json"})
+          print(urllib.request.urlopen(req).read().decode())
+          PY
