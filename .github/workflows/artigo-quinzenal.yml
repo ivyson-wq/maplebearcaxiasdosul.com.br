@@ -1,0 +1,44 @@
+# Artigo quinzenal: escreve o próximo tema da pauta e abre um PR para aprovação.
+# Nada vai ao ar sem merge — quem aprova é a escola (o PR chega por e-mail).
+name: Artigo quinzenal
+
+on:
+  schedule:
+    - cron: "0 11 1,15 * *"   # dias 1 e 15, 08:00 em Brasília
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  escrever:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install --quiet anthropic pillow
+      - name: Escrever o artigo
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: python3 editorial/escrever.py
+      - name: Abrir o PR
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -e
+          test -f editorial/ultimo.json || { echo "nada escrito"; exit 0; }
+          SLUG=$(python3 -c "import json;print(json.load(open('editorial/ultimo.json'))['slug'])")
+          TITULO=$(python3 -c "import json;print(json.load(open('editorial/ultimo.json'))['titulo'])")
+          TEMA=$(python3 -c "import json;print(json.load(open('editorial/ultimo.json'))['tema'])")
+          URL=$(python3 -c "import json;print(json.load(open('editorial/ultimo.json'))['url'])")
+          rm editorial/ultimo.json
+          git config user.name "Editorial (automático)"
+          git config user.email "editorial@users.noreply.github.com"
+          git checkout -b "artigo/$SLUG"
+          git add -A
+          git commit -m "Artigo: $TITULO" -m "Tema da pauta: $TEMA" -m "Gerado automaticamente; publica no merge."
+          git push -u origin "artigo/$SLUG"
+          gh pr create --title "Artigo para aprovar: $TITULO" --assignee ivyson-wq --body "$(printf '**Tema da pauta:** %s\n\n**Vai ao ar em:** %s\n\nEscrito automaticamente a partir de editorial/fatos.md e editorial/pauta.md. Leia o HTML gerado (ou o JSON em editorial/rascunhos/) e, se estiver bom, faça o merge — o site publica sozinho. Se precisar mudar algo, edite o JSON e rode `python3 editorial/gerar-artigo.py editorial/rascunhos/%s.json`.\n\nRegras aplicadas: sem valores, só fatos do fatos.md, FAQ com dados estruturados, links para as páginas de matrícula.' "$TEMA" "$URL" "$SLUG")"

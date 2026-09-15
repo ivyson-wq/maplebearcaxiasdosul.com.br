@@ -1,0 +1,15 @@
+{
+  "base_url": "https://maplebearcaxiasdosul.com.br",
+  "pasta": "blog",
+  "fotos": "assets/photos",
+  "campos_extras": ["toc", "lead_titulo", "lead_texto", "cta1_p", "cta2_p", "keywords"],
+  "schema_extras": {
+    "toc": {"type": "array", "description": "sumário: [[id da seção, nome curto], ...] na ordem do corpo, incluindo ['faq', 'Perguntas frequentes'] por último", "items": {"type": "array", "items": {"type": "string"}}},
+    "lead_titulo": {"type": "string", "description": "título do formulário 'Receba ... no seu WhatsApp'"},
+    "lead_texto": {"type": "string", "description": "1 frase do que a família recebe"},
+    "cta1_p": {"type": "string", "description": "1 frase para o botão 'Agendar uma visita'"},
+    "cta2_p": {"type": "string", "description": "1 frase para o botão de WhatsApp no fim"},
+    "keywords": {"type": "string", "description": "5 termos separados por vírgula, com a cidade"}
+  },
+  "instrucao_extra": "O título vai como h1 e como titulo (iguais). A marca curta do title_tag é 'Maple Bear'. A capa começa com barra: /assets/photos/<arquivo>."
+}
