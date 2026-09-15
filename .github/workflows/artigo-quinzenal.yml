@@ -6,6 +6,11 @@ on:
   schedule:
     - cron: "0 11 1,15 * *"   # dias 1 e 15, 08:00 em Brasília
   workflow_dispatch:
+    inputs:
+      apenas_pauta:
+        description: "Só atualizar a pauta com o Search Console (não escreve artigo)"
+        type: boolean
+        default: false
 
 permissions:
   contents: write
@@ -25,11 +30,20 @@ jobs:
           GSC_SERVICE_ACCOUNT_JSON: ${{ secrets.GSC_SERVICE_ACCOUNT_JSON }}
           GSC_OAUTH_JSON: ${{ secrets.GSC_OAUTH_JSON }}
         run: python3 editorial/search-console.py
+      - name: Só a pauta — grava na main e para
+        if: ${{ inputs.apenas_pauta }}
+        run: |
+          git config user.name "Editorial (automático)"
+          git config user.email "editorial@users.noreply.github.com"
+          git diff --quiet editorial/pauta.md && { echo "pauta sem novidade"; exit 0; }
+          git add editorial/pauta.md && git commit -m "Pauta: temas novos do Search Console" && git push
       - name: Escrever o artigo
+        if: ${{ !inputs.apenas_pauta }}
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
         run: python3 editorial/escrever.py
       - name: Abrir o PR
+        if: ${{ !inputs.apenas_pauta }}
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
