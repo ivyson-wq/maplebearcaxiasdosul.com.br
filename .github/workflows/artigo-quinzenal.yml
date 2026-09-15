@@ -23,6 +23,7 @@ jobs:
       - name: Pauta do Search Console (se houver acesso)
         env:
           GSC_SERVICE_ACCOUNT_JSON: ${{ secrets.GSC_SERVICE_ACCOUNT_JSON }}
+          GSC_OAUTH_JSON: ${{ secrets.GSC_OAUTH_JSON }}
         run: python3 editorial/search-console.py
       - name: Escrever o artigo
         env:

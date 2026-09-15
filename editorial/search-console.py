@@ -1,10 +1,11 @@
 #!/usr/bin/env python3
 """Lê o Search Console e acrescenta à pauta as buscas que já mostram o site e ninguém clica.
 
-Precisa de uma conta de serviço do Google com acesso (Completo ou Restrito) à propriedade
-do site no Search Console. A chave JSON entra pela variável GSC_SERVICE_ACCOUNT_JSON
-(na Action, o secret de mesmo nome). Sem a variável, o script sai sem fazer nada —
-é o que permite ligar a Action antes de o acesso existir.
+Credencial, uma das duas (secrets da Action):
+  · GSC_OAUTH_JSON — {client_id, client_secret, refresh_token} de uma pessoa com acesso à
+    propriedade (o login Google do Lumied/Ads, que desde o PR #1902 pede webmasters.readonly);
+  · GSC_SERVICE_ACCOUNT_JSON — chave de conta de serviço adicionada como usuário na propriedade.
+Sem nenhuma das duas, o script sai sem fazer nada — a Action roda antes de o acesso existir.
 
 Regra da pauta: consulta com >= 20 impressões nos últimos 90 dias, posição média entre
 4 e 30 (o Google já acha o site relevante, mas não o bastante), CTR abaixo de 2%, e que
@@ -37,11 +38,20 @@ def consultas(token):
     return json.loads(urllib.request.urlopen(req).read()).get("rows", [])
 
 
+def token_oauth(info):
+    # refresh token de uma pessoa (o mesmo login Google do Lumied/Ads, com o escopo webmasters.readonly)
+    import urllib.parse
+    d = urllib.parse.urlencode({"client_id": info["client_id"], "client_secret": info["client_secret"],
+                                "refresh_token": info["refresh_token"], "grant_type": "refresh_token"}).encode()
+    return json.loads(urllib.request.urlopen(urllib.request.Request("https://oauth2.googleapis.com/token", data=d)).read())["access_token"]
+
+
 def main():
-    raw = os.environ.get("GSC_SERVICE_ACCOUNT_JSON", "").strip()
-    if not raw:
-        print("sem GSC_SERVICE_ACCOUNT_JSON — pauta segue a mão"); return 0
-    token = token_da_conta_de_servico(json.loads(raw))
+    sa = os.environ.get("GSC_SERVICE_ACCOUNT_JSON", "").strip()
+    oa = os.environ.get("GSC_OAUTH_JSON", "").strip()
+    if not sa and not oa:
+        print("sem GSC_SERVICE_ACCOUNT_JSON nem GSC_OAUTH_JSON — pauta segue a mão"); return 0
+    token = token_da_conta_de_servico(json.loads(sa)) if sa else token_oauth(json.loads(oa))
     rows = consultas(token)
     pauta_path = os.path.join(ED, "pauta.md")
     pauta = open(pauta_path, encoding="utf-8").read()
