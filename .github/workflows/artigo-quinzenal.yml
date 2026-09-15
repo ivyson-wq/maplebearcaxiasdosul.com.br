@@ -87,6 +87,6 @@ jobs:
           body = {"from": "Lumied Editorial <editorial@lumied.com.br>", "to": ["ivyson@gmail.com", "ivyson@construfare.com"],
                   "subject": f"Artigo para aprovar ({site}): {titulo}", "html": html}
           req = urllib.request.Request("https://api.resend.com/emails", data=json.dumps(body).encode(),
-                                       headers={"Authorization": "Bearer " + os.environ["RESEND_API_KEY"], "Content-Type": "application/json"})
+                                       headers={"Authorization": "Bearer " + os.environ["RESEND_API_KEY"], "Content-Type": "application/json", "User-Agent": "lumied-editorial/1.0"})
           print(urllib.request.urlopen(req).read().decode())
           PY
