@@ -13,9 +13,7 @@ Regras: um tema por artigo; antes de escrever, conferir em /blog/ que não exist
 4. Colégio em Caxias do Sul: o que observar no Fundamental I quando a criança sai da educação infantil (busca: "colégio caxias do sul", "colégio particular")
 5. Educação infantil perto de mim: como pesar distância, trânsito e rotina na escolha (busca: "escola infantil perto de mim")
 6. Escola infantil em Caxias para quem trabalha na Serra/Farroupilha: rotina de quem se desloca (busca: "escola infantil farroupilha")
-7. Escola bilingue caxias do sul: o que a família quer saber quando busca isso (busca: "escola bilingue caxias do sul" — 69 impressões, posição 5, do Search Console)
-8. Bilingue: o que a família quer saber quando busca isso (busca: "bilingue" — 66 impressões, posição 7, do Search Console)
-9. Escola bilingue: o que a família quer saber quando busca isso (busca: "escola bilingue" — 58 impressões, posição 11, do Search Console)
+7. Escola bilíngue: o que é, como funciona no dia a dia e o que muda para a criança — para quem está começando a pesquisar (busca: "escola bilingue" — 58 impressões, posição 11, do Search Console)
 
 ## Feitos
 - 2026-09-15 — /blog/escolinha-infantil-caxias-do-sul-como-escolher/ (escolinha infantil caxias do sul)

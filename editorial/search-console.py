@@ -55,13 +55,21 @@ def main():
     rows = consultas(token)
     pauta_path = os.path.join(ED, "pauta.md")
     pauta = open(pauta_path, encoding="utf-8").read()
-    ja = pauta.lower()
+    import unicodedata
+    def chave(t):  # sem acento, minúsculas — "bilíngue" e "bilingue" são a mesma busca
+        return unicodedata.normalize("NFKD", t.lower()).encode("ascii", "ignore").decode()
+    ja = chave(pauta)
     candidatos = []
     for r in rows:
         q = r["keys"][0].lower()
         if "maple" in q or "bear" in q:
             continue
-        if r["impressions"] >= 20 and 4 <= r["position"] <= 30 and r["ctr"] < 0.02 and q not in ja:
+        palavras = [w for w in chave(q).split() if len(w) > 2]
+        # uma palavra só ("bilingue") não é tema; e se todas as palavras da busca já
+        # aparecem juntas num tema da pauta, é o mesmo assunto com outra grafia
+        if len(palavras) < 2 or all(w in ja for w in palavras) and any(" ".join(palavras[i:i+2]) in ja for i in range(len(palavras) - 1)):
+            continue
+        if r["impressions"] >= 20 and 4 <= r["position"] <= 30 and r["ctr"] < 0.02:
             candidatos.append((r["impressions"], q, r["position"]))
     candidatos.sort(reverse=True)
     novos = candidatos[:3]
