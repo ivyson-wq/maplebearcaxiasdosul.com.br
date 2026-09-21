@@ -39,8 +39,10 @@
   const DISMISS_KEY = 'mb_topbar_dismissed_v1';
   const wasDismissed = (() => { try { return sessionStorage.getItem(DISMISS_KEY); } catch { return null; } })();
 
-  if (!wasDismissed && document.body && !document.querySelector('.top-bar')) {
-    const bar = document.createElement('div');
+  let bar = document.querySelector('.top-bar');
+  if (wasDismissed && bar) { bar.remove(); bar = null; }
+  if (!wasDismissed && document.body && !bar) {
+    bar = document.createElement('div');
     bar.className = 'top-bar';
     bar.setAttribute('role', 'region');
     bar.setAttribute('aria-label', 'Matrículas 2027');
@@ -58,7 +60,9 @@
       </div>
     `;
     document.body.insertBefore(bar, document.body.firstChild);
+  }
 
+  if (bar) {
     bar.querySelector('.top-bar-dismiss').addEventListener('click', () => {
       try { sessionStorage.setItem(DISMISS_KEY, '1'); } catch {}
       bar.style.maxHeight = bar.offsetHeight + 'px';
