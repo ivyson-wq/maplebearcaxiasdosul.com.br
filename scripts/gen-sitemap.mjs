@@ -2,7 +2,7 @@
 // Gera sitemap.xml a partir das páginas reais no disco (todo index.html público).
 // Root cause do drift anterior: o sitemap era mantido à mão e ficava desatualizado.
 // Uso: node scripts/gen-sitemap.mjs   (rode antes de cada deploy; ou no CI)
-import { readdirSync, statSync, writeFileSync } from 'node:fs';
+import { readdirSync, readFileSync, statSync, writeFileSync } from 'node:fs';
 import { execFileSync } from 'node:child_process';
 import { join, relative, sep } from 'node:path';
 
@@ -29,6 +29,15 @@ function collect(dir, out = []) {
 }
 
 /** caminho/index.html -> URL com cleanUrls (barra final, raiz = /). */
+/** Página com canonical para OUTRA URL é cópia: fica fora do sitemap. */
+function canonicalDiferente(relPath, url) {
+  try {
+    const m = readFileSync(join(ROOT, relPath), 'utf8').match(/<link rel="canonical" href="([^"]+)"/);
+    const semBarra = (s) => s.endsWith('/') ? s.slice(0, -1) : s;
+    return !!m && semBarra(m[1]) !== semBarra(url);
+  } catch { return false; }
+}
+
 function toUrl(relPath) {
   const dir = relPath.replace(/index\.html$/, '').split(sep).join('/');
   return dir === '' ? `${ORIGIN}/` : `${ORIGIN}/${dir.replace(/\/$/, '')}/`;
@@ -58,7 +67,7 @@ function meta(url) {
   return { freq: 'monthly', pri: '0.7' };
 }
 
-const urls = [...new Set(collect(ROOT).map(toUrl))].sort((a, b) => {
+const urls = [...new Set(collect(ROOT).filter((rel) => !canonicalDiferente(rel, toUrl(rel))).map(toUrl))].sort((a, b) => {
   // raiz primeiro, depois alfabético
   if (a === `${ORIGIN}/`) return -1;
   if (b === `${ORIGIN}/`) return 1;
