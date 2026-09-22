@@ -2609,3 +2609,186 @@ strong, b { font-weight: 580; }
   .wa-float { display: none !important; }
   body { padding-bottom: 5rem; }
 }
+
+/* ============================================================
+   Landing pages de anúncio — v2 (22/09/2026)
+   Hero com foto real, faixa de confiança, galeria, passos, FAQ
+   visível e formulário de visita embutido (assets/lp-visita.js).
+   ============================================================ */
+.section-alt { background: var(--paper-warm); }
+
+.lp-hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+  gap: var(--space-2xl);
+  align-items: center;
+}
+.lp-hero-media {
+  margin: 0;
+  border-radius: var(--radius-l);
+  overflow: hidden;
+  aspect-ratio: 4 / 3;
+  background: var(--paper-warm);
+}
+.lp-hero-media img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+.lp-trust {
+  list-style: none;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr));
+  gap: 1px;
+  background: var(--line);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-m);
+  overflow: hidden;
+  margin-top: var(--space-xl);
+}
+.lp-trust li {
+  background: var(--paper);
+  padding: var(--space-s) var(--space-m);
+  font-family: var(--font-ui);
+  font-size: 0.92rem;
+  line-height: 1.45;
+  color: var(--ink-soft);
+}
+.lp-trust li strong {
+  display: block;
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+  margin-bottom: 0.2rem;
+}
+.lp-trust a { font-weight: 600; text-decoration: underline; text-underline-offset: 3px; }
+
+.lp-prose { max-width: 68ch; }
+.lp-prose > * + * { margin-top: var(--space-s); }
+.lp-prose h3 { font-size: var(--step-2); margin-top: var(--space-l); color: var(--ink); }
+.lp-list { padding-left: 1.2rem; }
+.lp-list li + li { margin-top: 0.45rem; }
+
+.lp-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
+  gap: var(--space-m);
+  margin-top: var(--space-l);
+}
+.lp-card {
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-m);
+  padding: var(--space-m);
+}
+.lp-card h3 { font-size: var(--step-1); font-weight: 500; color: var(--ink); margin-bottom: 0.4rem; }
+.lp-card p { font-size: 0.97rem; }
+
+.lp-steps {
+  list-style: none;
+  counter-reset: lp-step;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
+  gap: var(--space-m);
+  margin-top: var(--space-l);
+}
+.lp-steps li {
+  counter-increment: lp-step;
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-m);
+  padding: var(--space-m);
+}
+.lp-steps li::before {
+  content: counter(lp-step, decimal-leading-zero);
+  display: block;
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: var(--step-2);
+  color: var(--red);
+  line-height: 1;
+  margin-bottom: 0.5rem;
+}
+.lp-steps h3 { font-size: var(--step-1); font-weight: 500; color: var(--ink); margin-bottom: 0.35rem; }
+.lp-steps p { font-size: 0.97rem; }
+
+.lp-gallery {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--space-s);
+  margin-top: var(--space-l);
+}
+.lp-gallery figure { margin: 0; }
+.lp-gallery img {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  border-radius: var(--radius-m);
+  background: var(--paper);
+  display: block;
+}
+.lp-gallery figcaption {
+  font-family: var(--font-ui);
+  font-size: 0.82rem;
+  line-height: 1.4;
+  color: var(--ink-soft);
+  margin-top: 0.4rem;
+}
+
+.lp-links { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: var(--space-m); }
+.lp-links a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  padding: 0.5rem 1rem;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--paper);
+  font-family: var(--font-ui);
+  font-size: 0.9rem;
+  color: var(--ink);
+}
+.lp-links a:hover { border-color: var(--red); color: var(--red); }
+
+.lp-form-note { font-family: var(--font-ui); font-size: 0.85rem; color: var(--ink-soft); }
+.lp-feedback:empty { display: none; }
+.lp-feedback {
+  margin-top: 1rem;
+  padding: 1rem 1.25rem;
+  border-left: 3px solid var(--sage);
+  background: rgba(90, 109, 77, 0.1);
+  color: var(--sage-deep);
+  border-radius: var(--radius-s);
+  line-height: 1.5;
+}
+.lp-feedback.is-error { border-left-color: var(--red-deep); background: rgba(184, 17, 46, 0.08); color: var(--red-darker); }
+.lp-feedback a { color: inherit; text-decoration: underline; }
+
+@media (max-width: 760px) {
+  .lp-hero { grid-template-columns: 1fr; gap: var(--space-l); }
+  .lp-gallery { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 640px) {
+  .page-header--lp .lp-hero-text { display: flex; flex-direction: column; }
+  .page-header--lp .lp-trust { margin-top: var(--space-l); }
+}
+
+/* Contraste AA nas landing pages: vermelho institucional sobre o creme
+   escuro (--paper-warm) dá 4,35:1; o bordô passa. Link no meio do texto
+   ganha sublinhado (não depende só da cor). */
+.page-header--lp ~ .section-alt .eyebrow,
+.page-header--lp ~ .section-alt a:not(.btn):not(.level) { color: var(--red-deep); }
+.page-header--lp ~ .section-alt .testimonial { background: var(--paper); }
+.page-header--lp ~ .section .testimonial .who small,
+.page-header--lp ~ .section .field .hint { color: var(--ink-soft); }
+.page-header--lp ~ .section p a:not(.btn),
+.page-header--lp ~ .section li a:not(.btn) { text-decoration: underline; text-underline-offset: 3px; }
+
+/* Fallback métrico do hero das landing pages: Georgia é ~20% mais larga que
+   a Fraunces, então o H1 ganhava uma linha até a webfont chegar e empurrava
+   CTA e lede (CLS). size-adjust aproxima a largura — sem baixar fonte nova. */
+@font-face { font-family: 'MB Fraunces Fallback'; src: local('Georgia'), local('Noto Serif'); size-adjust: 80.6%; }
+@font-face { font-family: 'MB Fraunces Fallback'; font-style: italic; src: local('Georgia Italic'), local('Georgia'), local('Noto Serif Italic'); size-adjust: 73.5%; }
+@font-face { font-family: 'MB Spectral Fallback'; src: local('Georgia'), local('Noto Serif'); size-adjust: 92.7%; }
+.page-header--lp h1 { font-family: 'Fraunces', 'MB Fraunces Fallback', Georgia, serif; }
+.page-header--lp .lede { font-family: 'Spectral', 'MB Spectral Fallback', Georgia, serif; }
