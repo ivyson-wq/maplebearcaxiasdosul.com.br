@@ -2792,3 +2792,9 @@ strong, b { font-weight: 580; }
 @font-face { font-family: 'MB Spectral Fallback'; src: local('Georgia'), local('Noto Serif'); size-adjust: 92.7%; }
 .page-header--lp h1 { font-family: 'Fraunces', 'MB Fraunces Fallback', Georgia, serif; }
 .page-header--lp .lede { font-family: 'Spectral', 'MB Spectral Fallback', Georgia, serif; }
+
+/* O trecho em itálico do H1 vai em linha própria: a Fraunces normal e a
+   itálica chegam em arquivos separados, e com uma carregada e a outra ainda
+   no fallback a quebra de linha mudava (CLS 0,27 na creche). Em bloco, cada
+   parte só depende da própria fonte. */
+.page-header--lp h1 em { display: block; }
