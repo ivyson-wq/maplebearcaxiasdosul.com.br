@@ -32,7 +32,7 @@
   // PREENCHER com o rótulo de Metas › Conversões › (ação do formulário) ›
   // "Configurar tag" → o valor de send_to, formato 'AW-11302044142/XXXX'.
   // Vazio = comportamento antigo (só GA4), sem quebrar nada.
-  var AW_FORMULARIO = '';
+  var AW_FORMULARIO = 'AW-11302044142/9KvdCMS2u4EdEO6Dno0q';
   var WA_NUMERO = '5554996243857'; // número da escola (≠ botões de compartilhar)
 
   // ── Consent Mode v2 ───────────────────────────────────────────────
