@@ -240,6 +240,7 @@ async function createLumiedLead(lead) {
       serie: lead.idadeBracket || lead.idade || undefined,
       origem: lead.origem || 'site',
       sessao: lead.sessao || undefined,
+      pagina: lead.pagina || undefined,
       gclid: utm.gclid || undefined,
       utm_source: utm.utm_source || undefined,
       utm_medium: utm.utm_medium || undefined,
@@ -279,6 +280,9 @@ export default async function handler(req) {
   }
   // sessão do pixel do site (enviada pelo cliente) → liga comportamento ao lead
   data.sessao = String(body.sessao || '').trim().slice(0, 60);
+  // página do site onde o formulário foi enviado (landing page do anúncio).
+  // Não entra em `origem` (lista fechada do drip): vai em observacoes no Lumied.
+  data.pagina = String(body.pagina || '').trim().replace(/[^\w\-./~%]/g, '').slice(0, 200);
   // escola do lead (BG posta cross-origin; default Caxias) p/ rotear o tenant
   data.escola = String(body.escola || '').trim().slice(0, 60);
 
@@ -306,6 +310,7 @@ export default async function handler(req) {
           ${data.dataNascimento ? `<tr><td style="padding: 8px 0; color: #7a7268;">Nascimento</td><td style="padding: 8px 0;"><strong>${escapeHtml(formatBrDate(data.dataNascimento))}</strong> · ${escapeHtml(data.idade)}</td></tr>` : (data.idade ? `<tr><td style="padding: 8px 0; color: #7a7268;">Idade</td><td style="padding: 8px 0;">${escapeHtml(data.idade)}</td></tr>` : '')}
           ${data.periodo ? `<tr><td style="padding: 8px 0; color: #7a7268;">Período</td><td style="padding: 8px 0;">${escapeHtml(data.periodo)}</td></tr>` : ''}
           <tr><td style="padding: 8px 0; color: #7a7268;">Origem</td><td style="padding: 8px 0; font-size: 13px; color: #b8112e;">${escapeHtml(data.origem)}</td></tr>
+          ${data.pagina ? `<tr><td style="padding: 8px 0; color: #7a7268;">Página</td><td style="padding: 8px 0; font-size: 13px;">${escapeHtml(data.pagina)}</td></tr>` : ''}
           ${Object.keys(data.utm || {}).length ? `<tr><td style="padding: 8px 0; color: #7a7268;">Campanha</td><td style="padding: 8px 0; font-size: 12px; color: #7a7268;">${escapeHtml(Object.entries(data.utm).map(([k, v]) => `${k}=${v}`).join(' · '))}</td></tr>` : ''}
         </table>
         ${data.mensagem ? `

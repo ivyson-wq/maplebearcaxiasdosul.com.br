@@ -48,6 +48,7 @@
         Object.keys(utm).forEach(function (k) { if (!data[k]) data[k] = utm[k]; });
       }
       try { data.sessao = sessionStorage.getItem('lumied_sessao') || undefined; } catch (err) { /* modo privado */ }
+      data.pagina = location.pathname;
 
       btn.disabled = true;
       rotulo.textContent = 'Enviando...';

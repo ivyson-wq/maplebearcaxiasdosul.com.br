@@ -124,6 +124,7 @@
     try {
       // sessão do pixel Lumied → liga o comportamento no site a este lead
       try { data.sessao = sessionStorage.getItem('lumied_sessao') || undefined; } catch (e) {}
+      if (!data.pagina) data.pagina = location.pathname;
       var r = await fetch(API_ENDPOINT, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
