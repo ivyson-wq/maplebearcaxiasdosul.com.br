@@ -1,5 +1,6 @@
 # Artigo quinzenal: escreve o próximo tema da pauta e abre um PR para aprovação.
-# Nada vai ao ar sem merge — quem aprova é a escola (o PR chega por e-mail).
+# Nada vai ao ar sem merge. O artigo vai inteiro por e-mail (insta-publisher): Aprovar faz o merge,
+# Editar grava o JSON na branch (artigo-regerar.yml refaz o HTML) e Descartar fecha o PR.
 name: Artigo quinzenal
 
 on:
@@ -71,22 +72,37 @@ jobs:
           echo "PR_URL=$PR_URL" >> "$GITHUB_ENV"
           echo "TITULO=$TITULO" >> "$GITHUB_ENV"
           echo "TEMA=$TEMA" >> "$GITHUB_ENV"
-      - name: Avisar por e-mail (Resend, o mesmo do Lumied)
+      - name: Mandar para aprovação por e-mail (insta-publisher)
         if: env.PR_URL != ''
         env:
+          APROVACAO_SITES_SECRET: ${{ secrets.APROVACAO_SITES_SECRET }}
           RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
         run: |
           python3 - <<'PY'
-          import json, os, urllib.request
-          titulo, tema, url = os.environ["TITULO"], os.environ["TEMA"], os.environ["PR_URL"]
+          # O e-mail leva o artigo inteiro, com Aprovar (merge), Editar (commit do JSON nesta branch) e Descartar.
+          # Se o insta-publisher não responder, cai no aviso simples com o link do PR.
+          import glob, json, os, subprocess, urllib.request
+          url_pr, titulo, tema = os.environ["PR_URL"], os.environ["TITULO"], os.environ["TEMA"]
           site = os.path.basename(os.getcwd())
-          html = (f"<p>Novo artigo para o site <b>{site}</b> esperando sua aprovação.</p>"
-                  f"<p><b>{titulo}</b><br>Tema da pauta: {tema}</p>"
-                  f"<p><a href=\"{url}\">Abrir o PR e aprovar (merge = publicado)</a></p>"
-                  f"<p style=\"color:#666;font-size:13px\">Escrito automaticamente a partir de editorial/fatos.md e pauta.md. Sem valores. Se não estiver bom, feche o PR ou edite o JSON em editorial/rascunhos/.</p>")
-          body = {"from": "Lumied Editorial <editorial@lumied.com.br>", "to": ["ivyson@gmail.com", "ivyson@construfare.com"],
-                  "subject": f"Artigo para aprovar ({site}): {titulo}", "html": html}
-          req = urllib.request.Request("https://api.resend.com/emails", data=json.dumps(body).encode(),
-                                       headers={"Authorization": "Bearer " + os.environ["RESEND_API_KEY"], "Content-Type": "application/json", "User-Agent": "lumied-editorial/1.0"})
-          print(urllib.request.urlopen(req).read().decode())
+          branch = subprocess.check_output(["git", "branch", "--show-current"], text=True).strip()
+          slug = branch.split("/", 1)[1]
+          json_path = f"editorial/rascunhos/{slug}.json"
+          cfg = json.load(open("editorial/config.json", encoding="utf-8"))
+          corpo = {"site": site, "pr": int(url_pr.rstrip("/").rsplit("/", 1)[1]), "pr_url": url_pr, "branch": branch,
+                   "json_path": json_path, "url": f"{cfg['base_url']}/{cfg['pasta']}/{slug}/",
+                   "rascunho": json.load(open(json_path, encoding="utf-8"))}
+          try:
+              req = urllib.request.Request("https://insta-publisher.vercel.app/api/aprovacao/site", data=json.dumps(corpo).encode(),
+                                           headers={"Authorization": "Bearer " + os.environ["APROVACAO_SITES_SECRET"], "Content-Type": "application/json"})
+              print(urllib.request.urlopen(req, timeout=110).read().decode())
+          except Exception as e:
+              print("aprovação por e-mail falhou, mandando o aviso simples:", e)
+              html = (f"<p>Novo artigo para o site <b>{site}</b> esperando sua aprovação.</p>"
+                      f"<p><b>{titulo}</b><br>Tema da pauta: {tema}</p>"
+                      f"<p><a href=\"{url_pr}\">Abrir o PR e aprovar (merge = publicado)</a></p>")
+              body = {"from": "Lumied Editorial <editorial@lumied.com.br>", "to": ["ivyson@gmail.com", "ivyson@construfare.com"],
+                      "subject": f"Artigo para aprovar ({site}): {titulo}", "html": html}
+              req = urllib.request.Request("https://api.resend.com/emails", data=json.dumps(body).encode(),
+                                           headers={"Authorization": "Bearer " + os.environ["RESEND_API_KEY"], "Content-Type": "application/json", "User-Agent": "lumied-editorial/1.0"})
+              print(urllib.request.urlopen(req).read().decode())
           PY

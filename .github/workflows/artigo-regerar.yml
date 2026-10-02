@@ -1,0 +1,35 @@
+# Artigo editado na aprovação por e-mail: o insta-publisher grava o JSON do rascunho na branch do PR
+# e este workflow refaz a página (gerar-artigo.py) na mesma branch. O merge espera este commit.
+name: Artigo regerar
+
+on:
+  push:
+    branches: ["artigo/**"]
+    paths: ["editorial/rascunhos/*.json"]
+
+permissions:
+  contents: write
+
+jobs:
+  regerar:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install --quiet pillow
+      - name: Refazer a página dos rascunhos alterados
+        run: |
+          set -e
+          for f in $(git diff --name-only HEAD~1 HEAD -- 'editorial/rascunhos/*.json'); do
+            python3 editorial/gerar-artigo.py "$f"
+          done
+          git config user.name "Editorial (automático)"
+          git config user.email "editorial@users.noreply.github.com"
+          git add -A
+          git diff --cached --quiet && { echo "nada mudou"; exit 0; }
+          git commit -m "Artigo: página refeita depois da edição na aprovação"
+          git push
