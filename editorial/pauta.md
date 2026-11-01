@@ -7,10 +7,10 @@ Regras: um tema por artigo; antes de escrever, conferir em /blog/ que não exist
 (ver a lista em sitemap.xml); marcar aqui como FEITO com a data e o slug.
 
 ## A escrever (ordem de prioridade)
-1. Colégio em Caxias do Sul: o que observar no Fundamental I quando a criança sai da educação infantil (busca: "colégio caxias do sul", "colégio particular")
-2. Educação infantil perto de mim: como pesar distância, trânsito e rotina na escolha (busca: "escola infantil perto de mim")
-3. Escola infantil em Caxias para quem trabalha na Serra/Farroupilha: rotina de quem se desloca (busca: "escola infantil farroupilha")
-4. Escola bilíngue: o que é, como funciona no dia a dia e o que muda para a criança — para quem está começando a pesquisar (busca: "escola bilingue" — 58 impressões, posição 11, do Search Console)
+1. Educação infantil perto de mim: como pesar distância, trânsito e rotina na escolha (busca: "escola infantil perto de mim")
+2. Escola infantil em Caxias para quem trabalha na Serra/Farroupilha: rotina de quem se desloca (busca: "escola infantil farroupilha")
+3. Escola bilíngue: o que é, como funciona no dia a dia e o que muda para a criança — para quem está começando a pesquisar (busca: "escola bilingue" — 58 impressões, posição 11, do Search Console)
+4. Escola canadense: o que a família quer saber quando busca isso (busca: "escola canadense" — 22 impressões, posição 13, do Search Console)
 
 ## Feitos
 - 2026-09-15 — /blog/escolinha-infantil-caxias-do-sul-como-escolher/ (escolinha infantil caxias do sul)
@@ -18,3 +18,4 @@ Regras: um tema por artigo; antes de escrever, conferir em /blog/ que não exist
 - 2026-09-15 — /blog/escola-bilingue-caxias-imersao-de-verdade/ (Escola bilíngue em Caxias: como saber se é imersão de verdade ou aula )
 - 2026-10-01 — /blog/escola-integral-caxias-do-sul-como-e-a-tarde/ (Escola integral em Caxias do Sul: como é a tarde de verdade (rotina, s)
 - 2026-10-15 — /blog/matricula-2027-caxias-do-sul-calendario-familia/ (Matrícula 2027 em Caxias: calendário de decisão da família, mês a mês,)
+- 2026-11-01 — /blog/colegio-caxias-do-sul-fundamental-1/ (Colégio em Caxias do Sul: o que observar no Fundamental I quando a cri)
