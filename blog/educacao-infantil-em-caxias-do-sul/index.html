@@ -503,15 +503,15 @@
   </div>
 
   <div class="lead-form" id="leadForm">
-    <h3>Receba dicas exclusivas sobre educação infantil</h3>
-    <p>Cadastre-se e receba conteúdo semanal para apoiar o desenvolvimento do seu filho desde pequeno</p>
+    <h3>Quer conversar sobre a escolha da escola?</h3>
+    <p>Deixe seu nome e WhatsApp e a equipe da Maple Bear Caxias do Sul entra em contato.</p>
     <form id="captureForm" onsubmit="return handleLeadCapture(event)">
       <input type="text" name="name" placeholder="Seu nome" required>
       <input type="tel" name="phone" placeholder="WhatsApp (DDD + número)" required>
-      <button type="submit">Quero Receber</button>
+      <button type="submit">Quero conversar</button>
     </form>
     <p class="trust">🔒 Não enviamos spam. Seus dados estão seguros.</p>
-    <p class="success-msg" id="successMsg">✅ Cadastro realizado! Em breve entraremos em contato.</p>
+    <p class="success-msg" id="successMsg">Recebemos seu pedido. A equipe da Maple Bear Caxias do Sul responde no horário comercial.</p>
   </div>
 
   <div class="cta-box">
@@ -573,14 +573,14 @@
 <div class="exit-modal" id="exitModal">
   <div class="exit-modal-content">
     <button class="close-modal" onclick="document.getElementById('exitModal').classList.remove('show')">&times;</button>
-    <h3>Espere! Tem uma surpresa para você 🎁</h3>
-    <p>Receba gratuitamente nosso guia <strong>"Como Escolher a Escola Infantil Certa: 7 Critérios Essenciais"</strong> + dicas semanais no WhatsApp.</p>
+    <h3>Quer conhecer a escola?</h3>
+    <p>Deixe seu nome e WhatsApp e a equipe da Maple Bear Caxias do Sul entra em contato para tirar suas dúvidas e combinar uma visita.</p>
     <form onsubmit="return handleExitCapture(event)">
       <input type="text" name="exit_name" placeholder="Seu nome" required>
       <input type="tel" name="exit_phone" placeholder="WhatsApp (DDD + número)" required>
-      <button type="submit">Quero o Guia Gratuito</button>
+      <button type="submit">Quero conversar</button>
     </form>
-    <p style="color:#94A3B8;font-size:11px;margin-top:10px">🔒 100% gratuito. Sem spam.</p>
+    <p style="color:#94A3B8;font-size:11px;margin-top:10px">🔒 Seus dados ficam só com a escola. Sem spam.</p>
   </div>
 </div>
 
@@ -642,54 +642,8 @@
   setInterval(showProof,45000);
 })();
 
-(function(){
-  var shown=false;
-  var key='exit_shown_educacao-infantil-em-caxias-do-sul';
-  document.addEventListener('mouseleave',function(e){
-    if(e.clientY<0&&!shown&&!localStorage.getItem(key)){
-      shown=true;
-      document.getElementById('exitModal').classList.add('show');
-      localStorage.setItem(key,'1');
-    }
-  });
-  var lastY=0;
-  window.addEventListener('scroll',function(){
-    var y=window.scrollY;
-    if(y<lastY-100&&y>400&&!shown&&!localStorage.getItem(key)){
-      shown=true;
-      document.getElementById('exitModal').classList.add('show');
-      localStorage.setItem(key,'1');
-    }
-    lastY=y;
-  });
-})();
-
-function handleLeadCapture(e){
-  e.preventDefault();
-  var f=e.target;
-  sendLead(f.name.value,f.phone.value,'blog_inline','educacao-infantil-em-caxias-do-sul');
-  f.style.display='none';
-  document.getElementById('successMsg').style.display='block';
-  return false;
-}
-function handleExitCapture(e){
-  e.preventDefault();
-  var f=e.target;
-  sendLead(f.exit_name.value,f.exit_phone.value,'blog_exit_intent','educacao-infantil-em-caxias-do-sul');
-  document.getElementById('exitModal').classList.remove('show');
-  alert('Obrigado! Entraremos em contato pelo WhatsApp.');
-  return false;
-}
-function sendLead(name,phone,source,slug){
-  fetch('https://insta-publisher.vercel.app/api/blog/lead',{
-    method:'POST',
-    headers:{'Content-Type':'application/json'},
-    body:JSON.stringify({name:name,phone:phone,source:source,article_slug:slug})
-  }).catch(function(){});
-  var msg='Olá! Sou '+name+'. Me cadastrei pelo blog (artigo: Educação Infantil em Caxias do Sul) e gostaria de saber mais sobre a escola.';
-  window.open('https://wa.me/5554996243857?text='+encodeURIComponent(msg),'_blank');
-}
 </script>
+<script src="/assets/blog-lead.js" defer></script>
 <a href="https://wa.me/5554996243857?text=Ol%C3%A1!%20Vim%20do%20site%20da%20Maple%20Bear%20Caxias%20do%20Sul%20e%20gostaria%20de%20agendar%20uma%20visita." class="wa-float" aria-label="WhatsApp" target="_blank" rel="noopener"><svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg></a>
 </body>
 </html>

@@ -2,70 +2,42 @@
 // Maple Bear Caxias do Sul — formulário de visita embutido nas landing
 // pages de anúncio (form[data-lp-visita="lp-xxx"]).
 // Mesmo mecanismo do /visite/: POST /api/visit-lead e, SÓ depois de a API
-// confirmar (r.ok && json.ok), window.mbFormLead(form, origem) — conversão
-// do Ads + Enhanced Conversions + generate_lead (ver analytics.js).
-// O corpo não manda `origem`: a API só aceita os valores canônicos (o drip
-// comercial casa cadência por eles) e cairia em 'site-visite' de qualquer
-// jeito. A página de origem vai no evento (mbFormLead / visit_request).
+// confirmar, window.mbFormLead(form, origem) — conversão do Ads +
+// Enhanced Conversions + generate_lead (ver analytics.js).
+// A origem real da landing (lp-escola-bilingue, lp-creche...) vai no corpo:
+// a API aceita `lp-*` e o Lumied recebe cada lead com a sua origem.
+// Núcleo comum (sessão, página, UTM, envio, telas de sucesso/erro): window.mbLead
+// em components.js.
 // ════════════════════════════════════════════════════════════════════
 (function () {
   'use strict';
-  var WA = 'https://wa.me/5554996243857?text=' + encodeURIComponent('Olá! Vim do site da Maple Bear Caxias do Sul e gostaria de agendar uma visita.');
-
-  function mostrar(fb, erro, titulo, texto, comLinkWa) {
-    fb.textContent = '';
-    fb.classList.toggle('is-error', !!erro);
-    var s = document.createElement('strong');
-    s.textContent = titulo;
-    s.style.display = 'block';
-    fb.appendChild(s);
-    fb.appendChild(document.createTextNode(texto));
-    if (comLinkWa) {
-      var a = document.createElement('a');
-      a.href = WA; a.target = '_blank'; a.rel = 'noopener';
-      a.textContent = 'chamar no WhatsApp';
-      fb.appendChild(document.createTextNode(' Se preferir, é só '));
-      fb.appendChild(a);
-      fb.appendChild(document.createTextNode('.'));
-    }
-  }
 
   function ligar(form) {
+    var L = window.mbLead;
     var origem = form.getAttribute('data-lp-visita') || 'lp';
+    if (!/^lp-/.test(origem)) origem = 'lp-' + origem;
     var btn = form.querySelector('button[type="submit"]');
     var rotulo = btn.querySelector('.lp-btn-label') || btn;
     var textoBtn = rotulo.textContent;
     var fb = form.parentNode.querySelector('.lp-feedback');
 
+    if (L) L.ajustarDatas(form);
+
     form.addEventListener('submit', async function (e) {
       e.preventDefault();
+      if (!L) return;
       if (form.checkValidity && !form.checkValidity()) { form.reportValidity(); return; }
 
-      var data = {};
-      new FormData(form).forEach(function (v, k) { data[k] = v; });
-      if (window.mbUtm) {
-        var utm = window.mbUtm();
-        Object.keys(utm).forEach(function (k) { if (!data[k]) data[k] = utm[k]; });
-      }
-      try { data.sessao = sessionStorage.getItem('lumied_sessao') || undefined; } catch (err) { /* modo privado */ }
-      data.pagina = location.pathname;
+      var data = L.coletar(form, { origem: origem });
 
       btn.disabled = true;
       rotulo.textContent = 'Enviando...';
-      if (fb) fb.textContent = '';
+      if (fb) { fb.textContent = ''; fb.classList.remove('is-error'); }
 
       try {
-        var r = await fetch('/api/visit-lead', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(data)
-        });
-        var json = await r.json();
-        if (!(r.ok && json.ok)) {
-          throw new Error((json.errors && json.errors.join(', ')) || json.error || 'erro desconhecido');
-        }
+        await L.enviar(data);
         form.hidden = true;
-        if (fb) mostrar(fb, false, 'Recebemos seu pedido.', ' Nossa equipe vai te chamar no WhatsApp em até um dia útil para confirmar o melhor horário.', false);
+        if (fb) { fb.classList.remove('is-error'); L.sucesso(fb, data.nome, origem); }
         // Conversão só com a API confirmada — mesma ordem do /visite/.
         if (window.mbFormLead) window.mbFormLead(form, origem);
         else if (window.mbSetUserData) window.mbSetUserData(form);
@@ -73,7 +45,7 @@
       } catch (err) {
         btn.disabled = false;
         rotulo.textContent = textoBtn;
-        if (fb) mostrar(fb, true, 'Não conseguimos enviar agora.', ' ' + (err && err.message ? 'Motivo: ' + err.message + '.' : 'Tente de novo em instantes.'), true);
+        if (fb) { fb.classList.add('is-error'); L.erro(fb, err && err.message); }
       }
     });
   }

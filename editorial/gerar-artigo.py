@@ -5,7 +5,7 @@ Uso:  python3 editorial/gerar-artigo.py editorial/rascunhos/<slug>.json
 
 O JSON tem: slug, titulo, title_tag (<=60), descricao (<=155), h1, data (AAAA-MM-DD), minutos,
 capa (caminho em /assets/photos/), capa_alt, intro (HTML), toc ([[id, nome], ...]), corpo (HTML com <h2 id=...>),
-faq ([[pergunta, resposta], ...]), cta_wa_texto, lead_titulo, lead_texto, cta1_p, cta2_p, keywords.
+faq ([[pergunta, resposta], ...]), cta_wa_texto, cta1_p, cta2_p, keywords. (lead_titulo/lead_texto são ignorados.)
 Nunca inclua valores de mensalidade. Só fatos de editorial/fatos.md.
 """
 import re, json, os, sys
@@ -94,8 +94,10 @@ def gerar(c):
   """
     t = t[:ini] + art + t[fim:]
     t = re.sub(r'(<div class="cta-box" data-cta="internal-links">\s*<h3>[^<]*</h3>\s*<p>)[^<]*(</p>)', rf'\g<1>{c.get("cta1_p", "Veja a metodologia canadense de perto e tire suas dúvidas com a nossa equipe.")}\g<2>', t, count=1, flags=re.S)
-    t = re.sub(r'(<div class="lead-form" id="leadForm">\s*<h3>)[^<]*(</h3>\s*<p>)[^<]*(</p>)',
-               rf'\g<1>{c.get("lead_titulo", "Receba mais conteúdo no seu WhatsApp")}\g<2>{c.get("lead_texto", "Cadastre-se e receba conteúdo semanal sobre primeira infância e educação bilíngue")}\g<3>', t, count=1, flags=re.S)
+    # Formulário do artigo: texto fixo (nada de promessa de material). O JSON pode trazer
+    # lead_titulo/lead_texto, mas são ignorados: o site só promete contato da equipe.
+    t = re.sub(r'(<div class="lead-form" id="leadForm"[^>]*>\s*<h3>)[^<]*(</h3>\s*<p>)[^<]*(</p>)',
+               rf'\g<1>Quer conversar sobre a escolha da escola?\g<2>Deixe seu nome e WhatsApp e a equipe da {ESCOLA} entra em contato.\g<3>', t, count=1, flags=re.S)
     wa_txt = c.get("cta_wa_texto", f"Olá! Li o artigo {c['h1']} e quero agendar uma visita.")
     t = re.sub(r'(<div class="cta-box">\s*<h3>[^<]*</h3>\s*<p>)[^<]*(</p>\s*<a href=")https://wa\.me/[^"]*(")',
                lambda m: m.group(1) + c.get("cta2_p", "Conheça a escola num dia comum de aula.") + m.group(2) + f"https://wa.me/{WA}?text=" + quote(wa_txt) + m.group(3), t, count=1, flags=re.S)

@@ -173,11 +173,30 @@
   // ── Helper público pra trackear conversões ─────────────────────────
   // GA4/Ads sempre emitem (cookieless enquanto o consentimento é denied);
   // o fbq só existe depois do "Aceitar".
+  // Dois eventos distintos, de propósito (nunca misturar):
+  //   • clique no WhatsApp -> `whatsapp_click` (GA4); a conversão do Ads é a
+  //     AW_WHATSAPP, disparada por mbWhatsApp. NÃO é lead.
+  //   • envio de formulário confirmado pela API -> `generate_lead` (GA4); a
+  //     conversão do Ads é a AW_FORMULARIO, disparada por mbFormLead.
   window.trackLead = function (params) {
     var data = params || {};
+    if (data.canal === 'whatsapp') {
+      if (window.gtag) {
+        gtag('event', 'whatsapp_click', { origem: data.origem || 'wa-click' });
+      }
+      if (window.fbq) fbq('track', 'Contact', { content_name: data.origem || 'site' });
+      return;
+    }
+    if (data.material) {
+      // Material/newsletter: interesse, não pedido de visita. Evento próprio,
+      // fora do generate_lead que o Ads importa como conversão.
+      if (window.gtag) gtag('event', 'lead_material', { origem: data.origem || 'material' });
+      if (window.fbq) fbq('trackCustom', 'LeadMaterial', { content_name: data.origem || 'material' });
+      return;
+    }
     if (window.gtag) {
       gtag('event', 'generate_lead', {
-        method: data.canal || 'whatsapp',
+        method: data.canal || 'form',
         origem: data.origem || 'unknown'
       });
     }
@@ -185,6 +204,11 @@
       fbq('track', 'Lead', { content_name: data.origem || 'site' });
     }
   };
+
+  // Material (PDF), newsletter e exit-intent não são pedido de visita/contato.
+  function ehMaterial(origem) {
+    return /^(lead-magnet|newsletter|exit-intent)/.test(String(origem || ''));
+  }
 
   // ── Enhanced Conversions: anexa dados do usuário (email/telefone) ──
   // Chamado no sucesso do formulário, ANTES do evento de conversão — o
@@ -214,10 +238,13 @@
   // Conversions não anexa nada.
   window.mbFormLead = function (form, origem) {
     if (form && window.mbSetUserData) window.mbSetUserData(form);
-    if (window.gtag && AW_FORMULARIO) {
+    var material = ehMaterial(origem);
+    // AW_FORMULARIO só para pedido de visita/contato; material e newsletter
+    // não contam (senão o lance persegue download de PDF).
+    if (!material && window.gtag && AW_FORMULARIO) {
       gtag('event', 'conversion', { send_to: AW_FORMULARIO, transport_type: 'beacon' });
     }
-    window.trackLead({ canal: 'form', origem: origem || 'formulario' });
+    window.trackLead({ canal: 'form', origem: origem || 'formulario', material: material });
   };
 
   // ── Marcador que SOBREVIVE ao pulo navegador→WhatsApp ──────────────
@@ -262,7 +289,7 @@
   // (listener sempre ativo; sob Consent Mode o evento sai mesmo sem aceite)
   // SÓ o número da escola: os botões "compartilhar no WhatsApp" do blog
   // usam wa.me/?text=... e não são lead nenhum — contá-los inflava o
-  // generate_lead que o Google Ads importa e usa pra dar lance.
+  // conversões que o Google Ads usa pra dar lance.
   document.addEventListener('click', function (e) {
     var link = e.target.closest('a[href*="wa.me/' + WA_NUMERO + '"]');
     if (!link) return;

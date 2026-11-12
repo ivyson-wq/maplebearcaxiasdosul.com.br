@@ -17,8 +17,9 @@ Sequência automatizada de emails enviada quando um lead entra pelo site
 ## Como funciona (arquitetura — Fase 7 ativa)
 
 ```
-[Site] /api/visit-lead → cria lead no Lumied (crm_leads, crm_lead_cadencias)
-                       → chama crm-drip-send NA HORA (D+0 imediato)
+[Site] /api/visit-lead → cria lead no Lumied (/api/leads)
+                       (o disparo imediato do D+0 pelo site foi removido: a cadência
+                        roda pelo motor do Lumied, ver crm-cadencias)
 
 [Lumied] pg_cron "crm-cadencias-process"  (0 11,20 UTC = 8h e 17h BRT, todo dia)
         → encontra leads cujo próximo passo "venceu"
@@ -74,14 +75,10 @@ Cada `step-X-*.html` é um email standalone com:
    -- crm-cadencias-process  | 0 11,20 * * *
    -- crm-drip-send-process  | 5 11,20 * * *
    ```
-3. Setar env vars no Vercel da Caxias (visit-lead.js já consome):
-   ```
-   LUMIED_ANON_KEY   = <anon key do Supabase Lumied>
-   DRIP_SEND_KEY     = drip_caxias_5a41cc471600db1901d641dd0f09dd99
-   DRIP_SEND_URL     = https://brgorknbrjlfwvrrlwxj.supabase.co/functions/v1/crm-drip-send
-   ```
-4. Validar end-to-end: cadastrar lead com email em `/visite/` → conferir log
-   do Vercel (`channels.drip:"triggered"`) → confirmar recebimento.
+3. Nada a configurar no Vercel do site: o `visit-lead.js` não dispara mais o drip
+   (as variáveis DRIP_SEND_KEY, DRIP_SEND_URL e LUMIED_ANON_KEY foram aposentadas).
+4. Validar end-to-end: cadastrar lead com e-mail em `/visite/` → conferir no Lumied
+   que o lead entrou na cadência e que o primeiro passo saiu pelo motor do Lumied.
 
 Snoozes ainda aparecem no painel da coordenação (`secretaria.html → CRM →
 Lembretes`) como histórico/visibilidade, mas o envio é 100% automatizado.
