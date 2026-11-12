@@ -149,7 +149,9 @@ function validate(body) {
   const isLight = origem.startsWith('lead-magnet')
     || origem === 'newsletter' || origem === 'newsletter-bg'
     || origem === 'exit-intent' || origem === 'exit-intent-bg'
-    || origem.startsWith('blog-');
+    || origem.startsWith('blog-')
+    // materiais e guia do site de Bento (lp-guia, lp-material-<slug>): só nome + WhatsApp
+    || origem === 'lp-guia' || origem.startsWith('lp-material-');
   // Lead magnets: WhatsApp obrigatório por padrão; email só se explicitamente solicitado
   const canal = isLight ? (body.canal === 'email' ? 'email' : 'whatsapp') : 'whatsapp';
 
