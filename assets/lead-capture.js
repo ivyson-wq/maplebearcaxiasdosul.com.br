@@ -1,13 +1,16 @@
 // ════════════════════════════════════════════════════════════════════
 // Maple Bear Caxias do Sul — Lead capture widgets
-// Exit-intent popup + Newsletter inline form handler
-// POST direto pra /api/visit-lead (mesmo dominio)
+// Exit-intent popup (só desktop) + formulário do guia (newsletter-form).
+// POST direto pra /api/visit-lead (mesmo domínio) via window.mbLead
+// (components.js): sessão, página, UTM, envio verificado e telas de
+// sucesso/erro são do núcleo.
+// O que o site entrega de fato: o PDF do guia, na hora, com link direto.
+// Nada é enviado por WhatsApp ou e-mail pelo site; a equipe entra em contato.
 // ════════════════════════════════════════════════════════════════════
 
 (function () {
   'use strict';
-  var API_ENDPOINT = '/api/visit-lead';
-  var WA_URL = 'https://wa.me/5554996243857?text=' + encodeURIComponent('Olá! Vim do site da Maple Bear Caxias do Sul e gostaria de agendar uma visita.');
+  var PDF_URL = '/assets/materiais/22-perguntas-visita-escola-bilingue.pdf';
 
   function el(tag, attrs, children) {
     var node = document.createElement(tag);
@@ -19,6 +22,9 @@
     if (children) children.forEach(function (c) { if (c) node.appendChild(c); });
     return node;
   }
+
+  function lsGet(k) { try { return localStorage.getItem(k); } catch (e) { return null; } }
+  function lsSet(k, v) { try { localStorage.setItem(k, v); } catch (e) { /* armazenamento bloqueado */ } }
 
   // ── Exit-intent popup ──────────────────────────────────────────────
   function buildExitPopup() {
@@ -36,9 +42,9 @@
     box.appendChild(el('h3', { id: 'exit-popup-title', text: 'Antes de você ir...' }));
 
     var p = el('p');
-    p.appendChild(document.createTextNode('Receba nosso guia '));
+    p.appendChild(document.createTextNode('Baixe nosso guia '));
     p.appendChild(el('strong', { text: '"22 perguntas pra fazer numa escola bilíngue"' }));
-    p.appendChild(document.createTextNode(' direto no seu WhatsApp. Sem custo, sem spam.'));
+    p.appendChild(document.createTextNode('. O PDF abre na hora, sem custo e sem spam.'));
     box.appendChild(p);
 
     var form = el('form', { class: 'exit-popup-form', 'data-origem': 'exit-intent' });
@@ -47,7 +53,7 @@
     var honeypot = el('input', { type: 'text', name: 'company', tabindex: '-1', autocomplete: 'off', 'aria-hidden': 'true' });
     honeypot.style.cssText = 'position:absolute;left:-9999px';
     form.appendChild(honeypot);
-    form.appendChild(el('button', { type: 'submit', class: 'btn btn-primary', text: 'Quero receber o guia' }));
+    form.appendChild(el('button', { type: 'submit', class: 'btn btn-primary', text: 'Quero o guia' }));
     form.appendChild(el('p', { class: 'exit-popup-fb', role: 'status', 'aria-live': 'polite' }));
     form.addEventListener('submit', handleSubmit);
     box.appendChild(form);
@@ -58,14 +64,21 @@
     requestAnimationFrame(function () { overlay.classList.add('is-open'); });
   }
 
-  if (!localStorage.getItem('mb_exit_seen')) {
+  // Exit-intent só em computador: no celular não há "saída do mouse", e o
+  // gatilho de voltar ao topo da página atrapalhava quem estava lendo.
+  function ehCelular() {
+    return window.mbLead ? window.mbLead.celular()
+      : (window.innerWidth < 900 || (window.matchMedia && window.matchMedia('(pointer: coarse)').matches));
+  }
+
+  if (!ehCelular() && !lsGet('mb_exit_seen')) {
     var triggered = false;
-    function showExitPopup() {
-      if (triggered) return;
+    var showExitPopup = function () {
+      if (triggered || ehCelular()) return;
       triggered = true;
-      localStorage.setItem('mb_exit_seen', String(Date.now()));
+      lsSet('mb_exit_seen', String(Date.now()));
       buildExitPopup();
-    }
+    };
     document.addEventListener('mouseleave', function (e) { if (e.clientY < 10) showExitPopup(); });
     var maxScroll = 0;
     window.addEventListener('scroll', function () {
@@ -74,7 +87,7 @@
     }, { passive: true });
   }
 
-  // ── Newsletter inline form ─────────────────────────────────────────
+  // ── Formulário do guia (home) ──────────────────────────────────────
   var anchor = document.getElementById('newsletter-form');
   if (anchor) anchor.addEventListener('submit', handleSubmit);
 
@@ -86,19 +99,12 @@
       || null;
   }
 
-  function showFeedbackBox(fb, kind, lines) {
-    if (!fb) return;
-    fb.textContent = '';
+  function estilo(fb, kind) {
     fb.style.cssText = 'margin-top:1rem;padding:0.9rem 1.1rem;border-left:3px solid '
       + (kind === 'success' ? 'var(--red, #b8112e)' : '#c00')
       + ';background:' + (kind === 'success' ? 'rgba(184,17,46,0.08)' : 'rgba(204,0,0,0.06)')
       + ';color:' + (kind === 'success' ? '#1a1814' : '#8a0d22')
-      + ';border-radius:4px;line-height:1.5;font-size:0.95rem;';
-    lines.forEach(function (line, i) {
-      if (i > 0) fb.appendChild(el('br'));
-      if (typeof line === 'string') fb.appendChild(document.createTextNode(line));
-      else fb.appendChild(line);
-    });
+      + ';border-radius:4px;line-height:1.5;font-size:0.95rem;text-align:left;';
   }
 
   async function handleSubmit(e) {
@@ -107,14 +113,10 @@
     var btn = form.querySelector('button[type="submit"]');
     var fb = findFeedback(form);
     var origem = form.getAttribute('data-origem') || 'newsletter';
+    var L = window.mbLead;
+    if (!L) return;
 
-    var data = { origem: origem, canal: 'whatsapp' };
-    new FormData(form).forEach(function (v, k) { data[k] = v; });
-    // Atribuição de campanha (utm_*/gclid) — helper definido em components.js
-    if (window.mbUtm) {
-      var utm = window.mbUtm();
-      Object.keys(utm).forEach(function (k) { if (!data[k]) data[k] = utm[k]; });
-    }
+    var data = L.coletar(form, { origem: origem, canal: 'whatsapp' });
     if (data.company) { btn.disabled = true; return; }
 
     btn.disabled = true;
@@ -122,34 +124,26 @@
     btn.textContent = 'Enviando...';
 
     try {
-      // sessão do pixel Lumied → liga o comportamento no site a este lead
-      try { data.sessao = sessionStorage.getItem('lumied_sessao') || undefined; } catch (e) {}
-      if (!data.pagina) data.pagina = location.pathname;
-      var r = await fetch(API_ENDPOINT, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(data)
-      });
-      var json = await r.json();
-      if (r.ok && json.ok) {
-        // mbFormLead = conversão do Ads + Enhanced Conversions + generate_lead.
-        // Antes daqui só saía o generate_lead do GA4, sem `send_to`.
-        if (window.mbFormLead) window.mbFormLead(form, origem);
-        else if (window.trackLead) window.trackLead({ canal: 'form', origem: origem });
-        form.style.display = 'none';
-        var ok = el('strong', { text: 'Recebemos seu pedido. 🍁' });
-        ok.style.color = 'var(--red, #b8112e)';
-        showFeedbackBox(fb, 'success', [
-          ok,
-          'Vamos te chamar no WhatsApp em até um dia útil para conversar sem compromisso.'
-        ]);
-      } else { throw new Error(json.error || 'Erro'); }
+      await L.enviar(data);
+      // mbFormLead: para exit-intent/newsletter (material) o Ads NÃO recebe
+      // conversão de formulário; sai só o evento de material (analytics.js).
+      if (window.mbFormLead) window.mbFormLead(form, origem);
+      form.style.display = 'none';
+      if (fb) {
+        estilo(fb, 'success');
+        L.sucesso(fb, data.nome, origem, function (box) {
+          box.appendChild(document.createElement('br'));
+          var a = document.createElement('a');
+          a.href = PDF_URL; a.target = '_blank'; a.rel = 'noopener';
+          a.textContent = 'Baixar o guia em PDF';
+          a.style.cssText = 'color:var(--red, #b8112e);font-weight:700;text-decoration:underline;';
+          box.appendChild(a);
+        });
+      }
     } catch (err) {
       btn.disabled = false;
       btn.textContent = oldText;
-      showFeedbackBox(fb, 'error', [
-        'Não conseguimos enviar agora. Tente novamente ou nos chame direto no WhatsApp.'
-      ]);
+      if (fb) { estilo(fb, 'error'); L.erro(fb, err && err.message); }
     }
   }
 

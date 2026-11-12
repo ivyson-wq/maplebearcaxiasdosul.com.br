@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <meta name="theme-color" content="#CC1216">
   <title>Inglês em casa sem saber inglês — Guia gratuito Maple Bear</title>
-  <meta name="description" content="12 rotinas práticas para apoiar o bilinguismo do seu filho mesmo sem falar inglês. Material gratuito da Maple Bear Caxias do Sul. Receba no WhatsApp.">
+  <meta name="description" content="12 rotinas práticas para apoiar o bilinguismo do seu filho mesmo sem falar inglês. Material gratuito da Maple Bear Caxias do Sul. PDF para baixar na hora.">
   <link rel="canonical" href="https://maplebearcaxiasdosul.com.br/materiais/ingles-em-casa/">
   <!-- OG/Twitter (auto-completado) -->
   <meta property="og:locale" content="pt_BR">
@@ -50,7 +50,7 @@
             <ul style="margin-top: var(--space-m); list-style: none; padding: 0;" data-reveal data-delay="3">
               <li style="padding: 0.4rem 0; display: flex; gap: 0.6rem; align-items: baseline;"><span style="color: var(--red); font-weight: 700;">✓</span> Rotinas que custam zero (música no carro, etiquetas em casa, receitas)</li>
               <li style="padding: 0.4rem 0; display: flex; gap: 0.6rem; align-items: baseline;"><span style="color: var(--red); font-weight: 700;">✓</span> Não precisa estudar para aplicar</li>
-              <li style="padding: 0.4rem 0; display: flex; gap: 0.6rem; align-items: baseline;"><span style="color: var(--red); font-weight: 700;">✓</span> Receba o PDF direto no seu WhatsApp</li>
+              <li style="padding: 0.4rem 0; display: flex; gap: 0.6rem; align-items: baseline;"><span style="color: var(--red); font-weight: 700;">✓</span> PDF liberado para baixar assim que você enviar o formulário</li>
             </ul>
           </div>
 
@@ -59,7 +59,7 @@
               <p class="eyebrow mb-s" style="color: #25D366;">
                 <span style="display: inline-flex; align-items: center; gap: 0.3rem;">
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="#25D366"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
-                  Receba no WhatsApp
+                  Baixe o PDF
                 </span>
               </p>
               <h2 style="font-size: var(--step-2); font-weight: 450; margin-bottom: var(--space-m); line-height: 1.2;">Baixar o PDF agora.</h2>
@@ -72,19 +72,19 @@
                 <div class="field">
                   <label for="telefone">WhatsApp <span class="req">*</span></label>
                   <input type="tel" name="telefone" id="telefone" required autocomplete="tel" placeholder="(54) 99999-9999" inputmode="numeric">
-                  <span class="hint" style="font-size: 0.8rem; color: var(--ink-faint);">Vamos enviar o PDF aqui pra você</span>
+                  <span class="hint" style="font-size: 0.8rem; color: var(--ink-faint);">O PDF abre na hora, depois do envio. A equipe pode entrar em contato pelo WhatsApp.</span>
                 </div>
                 <div class="field">
                   <label for="data_nascimento">Data de nascimento do(a) seu(sua) filho(a)</label>
                   <input type="date" name="data_nascimento" id="data_nascimento"
-                    min="2008-01-01" max="2026-12-31"
+                    min="2008-01-01"
                     autocomplete="off">
                   <span class="hint" style="font-size: 0.8rem; color: var(--ink-faint);">Opcional — ajuda a personalizar materiais.</span>
                 </div>
                 <div style="position: absolute; left: -9999px;" aria-hidden="true"><label>Empresa <input type="text" name="company" tabindex="-1" autocomplete="off"></label></div>
 
                 <button type="submit" class="btn btn-primary" id="magnet-submit" style="background: #25D366; justify-self: stretch; justify-content: center;">
-                  <span class="label">Receber no WhatsApp</span>
+                  <span class="label">Baixar o PDF gratuito</span>
                   <span class="arrow" aria-hidden="true">→</span>
                 </button>
 
@@ -140,63 +140,49 @@
       const fb = document.getElementById('magnet-feedback');
       const submitLabel = submit.querySelector('.label');
       const PDF_URL = '/assets/materiais/ingles-em-casa-sem-saber-ingles.pdf';
+      const ORIGEM = 'lead-magnet-ingles-em-casa';
 
       form.addEventListener('submit', async (e) => {
         e.preventDefault();
-        fb.innerHTML = '';
-        const fd = new FormData(form);
-        const data = {};
-        fd.forEach((v, k) => data[k] = v);
-        data.origem = 'lead-magnet-ingles-em-casa';
-        data.canal = 'whatsapp';
-        if (window.mbUtm) { const utm = window.mbUtm(); Object.keys(utm).forEach((k) => { if (!data[k]) data[k] = utm[k]; }); }
+        fb.textContent = '';
+        const L = window.mbLead;
+        if (!L) return;
+        // sessao + pagina + UTM/gclid/gbraid/wbraid/fbclid entram pelo núcleo.
+        const data = L.coletar(form, { origem: ORIGEM, canal: 'whatsapp' });
 
         submit.disabled = true;
         submitLabel.textContent = 'Enviando...';
 
         try {
-          const r = await fetch('/api/visit-lead', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(data)
+          await L.enviar(data);
+          form.style.display = 'none';
+          fb.style.cssText = 'margin-top: var(--space-s); padding: 1rem 1.25rem; border-left: 3px solid var(--red); background: rgba(204,18,22,0.06); border-radius: 4px; line-height: 1.5;';
+          L.sucesso(fb, data.nome, ORIGEM, (box) => {
+            box.appendChild(document.createElement('br'));
+            const a = document.createElement('a');
+            a.href = PDF_URL; a.setAttribute('download', ''); a.className = 'btn btn-primary';
+            a.style.cssText = 'display: inline-flex; justify-content: center; margin-top: 0.75rem;';
+            a.textContent = 'Baixar o PDF agora ↓';
+            box.appendChild(a);
           });
-          const json = await r.json();
-          if (r.ok && json.ok) {
-            form.style.display = 'none';
-            const cleanPhone = data.telefone.replace(/\D/g, '');
-            const fullPhone = cleanPhone.startsWith('55') ? cleanPhone : '55' + cleanPhone;
-            fb.innerHTML = `
-              <div style="text-align: center; padding: var(--space-m) 0;">
-                <p class="eyebrow" style="justify-content: center; margin-bottom: var(--space-s); color: #25D366;">✦ Recebido</p>
-                <h3 style="font-family: var(--font-display); font-size: var(--step-2); font-weight: 400; margin-bottom: var(--space-s);">Pronto, ${data.nome.split(' ')[0]}!</h3>
-                <p style="color: var(--ink-soft); margin-bottom: var(--space-l); line-height: 1.5;">
-                  Vamos te chamar no WhatsApp em instantes com o link do PDF.<br>
-                  Pode baixar agora também:
-                </p>
-                <a href="${PDF_URL}" download class="btn btn-primary" style="justify-content: center;">
-                  Baixar o PDF agora <span aria-hidden="true">↓</span>
-                </a>
-                <p style="margin-top: var(--space-m); font-size: 0.88rem; color: var(--ink-faint);">
-                  Próximo passo: <a href="/visite/" style="color: var(--red); text-decoration: underline;">agendar uma visita</a>
-                </p>
-              </div>
-            `;
-            setTimeout(() => {
-              const a = document.createElement('a');
-              a.href = PDF_URL;
-              a.download = 'ingles-em-casa-sem-saber-ingles.pdf';
-              document.body.appendChild(a);
-              a.click();
-              a.remove();
-            }, 800);
-            if (window.gtag) gtag('event', 'lead_magnet_download', { event_category: 'lead', event_label: 'ingles-em-casa' });
-          } else {
-            throw new Error((json.errors && json.errors.join(', ')) || json.error || 'erro desconhecido');
-          }
+          // Material não é pedido de visita: mbFormLead não envia conversão do Ads
+          // para lead-magnet-*, só o evento de material (analytics.js).
+          if (window.mbFormLead) window.mbFormLead(form, ORIGEM);
+          if (window.gtag) gtag('event', 'lead_magnet_download', { event_category: 'lead', event_label: 'ingles-em-casa' });
+          // Baixa o PDF automaticamente (o link acima segue disponível).
+          setTimeout(() => {
+            const a = document.createElement('a');
+            a.href = PDF_URL;
+            a.download = 'ingles-em-casa-sem-saber-ingles.pdf';
+            document.body.appendChild(a);
+            a.click();
+            a.remove();
+          }, 800);
         } catch (err) {
-          fb.innerHTML = `<p style="margin-top: var(--space-s); padding: 0.85rem 1rem; background: rgba(204,18,22,0.08); border-left: 3px solid var(--red); border-radius: 4px; color: var(--red-deep);">Não conseguimos enviar agora. Tente em instantes ou nos chame no <a href="https://wa.me/5554996243857?text=Ol%C3%A1!%20Vim%20do%20site%20da%20Maple%20Bear%20Caxias%20do%20Sul%20e%20gostaria%20de%20agendar%20uma%20visita." style="color: inherit;">WhatsApp</a>.</p>`;
+          fb.style.cssText = 'margin-top: var(--space-s); padding: 0.85rem 1rem; background: rgba(204,18,22,0.08); border-left: 3px solid var(--red); border-radius: 4px; color: var(--red-deep);';
+          L.erro(fb, err && err.message);
           submit.disabled = false;
-          submitLabel.textContent = 'Receber no WhatsApp';
+          submitLabel.textContent = 'Baixar o PDF gratuito';
         }
       });
     })();

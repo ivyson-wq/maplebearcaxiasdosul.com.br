@@ -291,6 +291,7 @@ body { font-family: 'Inter', system-ui, -apple-system, sans-serif; color: var(--
   <link rel="apple-touch-icon" sizes="180x180" href="/assets/brand/apple-touch-icon.png?v=3">
   <script src="/assets/analytics.js?v=20260922" defer></script>
   <script src="/assets/components.js" defer></script>
+  <script src="/assets/blog-lead.js" defer></script>
   <style>
     /* Blog post — coexiste com /assets/styles.css (header/footer do design system).
        O conteúdo do <article> mantém sua tipografia/cores próprias inline. */
@@ -2094,12 +2095,13 @@ body { font-family: 'Inter', system-ui, -apple-system, sans-serif; color: var(--
 <section class="newsletter">
   <div class="newsletter-inner">
     <div class="newsletter-text">
-      <h3>Receba nossos artigos</h3>
-      <p>Cadastre-se e receba conteúdo sobre educação bilíngue diretamente no seu e-mail.</p>
+      <h3>Quer conversar sobre a escolha da escola?</h3>
+      <p>Deixe seu nome e WhatsApp e a equipe da Maple Bear Caxias do Sul entra em contato.</p>
     </div>
-    <form class="newsletter-form" onsubmit="return false;">
-      <input type="email" placeholder="Seu melhor e-mail" required>
-      <button type="submit">Inscrever-se</button>
+    <form class="newsletter-form" data-blog-lead="blog-index">
+      <input type="text" name="nome" placeholder="Seu nome" required autocomplete="name" maxlength="120" aria-label="Seu nome">
+      <input type="tel" name="telefone" placeholder="WhatsApp com DDD" required autocomplete="tel" inputmode="tel" aria-label="WhatsApp com DDD">
+      <button type="submit">Quero conversar</button>
     </form>
   </div>
 </section>
@@ -2124,7 +2126,7 @@ body { font-family: 'Inter', system-ui, -apple-system, sans-serif; color: var(--
 // Header scroll effect
 const header = document.getElementById('header');
 window.addEventListener('scroll', () => {
-  header.classList.toggle('scrolled', window.scrollY > 10);
+  if (header) header.classList.toggle('scrolled', window.scrollY > 10);
 });
 
 // Category filter

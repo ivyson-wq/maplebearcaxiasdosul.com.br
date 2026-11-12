@@ -1,6 +1,11 @@
 // POST /api/visit-lead
-// Recebe submissão do formulário de visita em /visite/, valida campos,
-// dispara email pra equipe via Resend e (opcionalmente) cria lead no Lumied.
+// Recebe submissão dos formulários do site (visita, landing pages, blog,
+// materiais, exit-intent), valida campos, cria o lead no Lumied (8 s de
+// timeout, 1 nova tentativa) e avisa a equipe por e-mail via Resend. Se o
+// Lumied falhar, o e-mail sai com "[NÃO ENTROU NO CRM]" e o motivo.
+// Este endpoint também recebe, por CORS, os leads do site de Bento Gonçalves
+// (maplebearbg.com.br): body.escola = 'maplebearbg' roteia para o tenant
+// maplebearbg do Lumied e o aviso vai para LEAD_NOTIFY_TO_BG.
 
 export const config = { runtime: 'edge' };
 
@@ -11,6 +16,10 @@ const ALLOWED_ORIGINS = [
   'https://maplebearbg.com.br',
   'https://www.maplebearbg.com.br'
 ];
+
+// Tenants do Lumied que este endpoint atende (slug enviado em body.escola).
+const TENANT_PADRAO = 'maplebearcaxias';
+const TENANT_BG = 'maplebearbg';
 
 function corsHeaders(origin) {
   const allow = ALLOWED_ORIGINS.includes(origin) ? origin : ALLOWED_ORIGINS[0];
@@ -58,6 +67,30 @@ const ALLOWED_ORIGINS_LEAD = new Set([
   'exit-intent',
   'exit-intent-bg',
 ]);
+
+// Origens detalhadas por prefixo: cada landing (lp-<slug>) e cada artigo
+// (blog-<slug>, blog-exit-<slug>) chega ao CRM com a origem real.
+const ORIGEM_POR_PREFIXO = /^(blog|lp)-[a-z0-9][a-z0-9-]{0,50}$/;
+
+function normalizarOrigem(v) {
+  const o = String(v || '').trim().toLowerCase();
+  if (ALLOWED_ORIGINS_LEAD.has(o) || ORIGEM_POR_PREFIXO.test(o)) return o;
+  return 'site-visite';
+}
+
+// Telefone BR como o Lumied valida: tira zeros à esquerda e o +55, exige 10 ou 11
+// dígitos e DDD existente (11-99, sem final 0). Devolve { digitos } ou { erro }.
+function telefoneBr(bruto) {
+  let d = String(bruto || '').replace(/\D/g, '').replace(/^0+/, '');
+  if (d.length >= 12 && d.startsWith('55')) d = d.slice(2);
+  if (d.length !== 10 && d.length !== 11) return { erro: 'Confira o telefone: DDD + número (ex.: 54 99624-3857).' };
+  const ddd = Number(d.slice(0, 2));
+  if (!(ddd >= 11 && ddd <= 99 && ddd % 10 !== 0)) return { erro: 'Confira o DDD do telefone.' };
+  if (/(\d)\1{6,}/.test(d) || /(\d)\1{3}(\d)\2{3}$/.test(d) || ['123456789', '987654321', '012345678', '876543210'].some((x) => d.includes(x))) {
+    return { erro: 'Confira o telefone: o número parece inválido.' };
+  }
+  return { digitos: d };
+}
 
 // Calcula idade descritiva a partir de data ISO (YYYY-MM-DD).
 // Retorna ex: "3 anos e 4 meses", "18 meses", "9 meses".
@@ -110,37 +143,44 @@ function validate(body) {
   const idadeBracket = dataNasc ? ageToBracket(months) : String(body.crianca_idade || '').trim();
   const periodo = String(body.melhor_periodo || '').trim();
   const mensagem = String(body.mensagem || '').trim();
-  const origem = ALLOWED_ORIGINS_LEAD.has(String(body.origem || '')) ? body.origem : 'site-visite';
-  // "Light leads" = não pedem data de nascimento/período. Newsletter, exit-intent e lead magnets
-  // capturam só nome+WhatsApp pra não friccionar conversão.
+  const origem = normalizarOrigem(body.origem);
+  // "Light leads" = não pedem data de nascimento/período: newsletter, exit-intent,
+  // lead magnets e os formulários do blog capturam só nome + WhatsApp.
   const isLight = origem.startsWith('lead-magnet')
     || origem === 'newsletter' || origem === 'newsletter-bg'
-    || origem === 'exit-intent' || origem === 'exit-intent-bg';
-  const isMagnet = isLight;
+    || origem === 'exit-intent' || origem === 'exit-intent-bg'
+    || origem.startsWith('blog-');
   // Lead magnets: WhatsApp obrigatório por padrão; email só se explicitamente solicitado
-  const canal = isMagnet ? (body.canal === 'email' ? 'email' : 'whatsapp') : 'whatsapp';
-  const phoneDigits = telefone.replace(/\D/g, '');
+  const canal = isLight ? (body.canal === 'email' ? 'email' : 'whatsapp') : 'whatsapp';
 
-  if (nome.length < 2 || nome.length > 120) errs.push('nome inválido');
-  if (isMagnet) {
-    if (canal === 'whatsapp') {
-      if (phoneDigits.length < 10 || phoneDigits.length > 13) errs.push('WhatsApp inválido');
-    } else {
-      if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) errs.push('email inválido');
-    }
-  } else {
-    if (phoneDigits.length < 10 || phoneDigits.length > 13) errs.push('telefone inválido');
-    if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) errs.push('email inválido');
-    if (!dataNasc && !body.crianca_idade) errs.push('data de nascimento obrigatória');
-    if (dataNasc && months == null) errs.push('data de nascimento inválida');
+  // Nome: mínimo 3 caracteres com ao menos 2 letras seguidas (igual ao Lumied);
+  // marcas de código no nome são recusadas.
+  if (nome.length < 3 || nome.length > 120 || !/[A-Za-zÀ-ÿ]{2,}/.test(nome)) {
+    errs.push('Informe seu nome (pelo menos 3 letras).');
+  } else if (/[<>]|\{\{|\$\{|:\/\/|@/.test(nome)) {
+    errs.push('Confira o nome: use apenas letras.');
   }
-  if (mensagem.length > 2000) errs.push('mensagem muito longa');
 
-  // Atribuição de campanha: utm_* + gclid lidos do form (o front persiste
-  // via sessionStorage entre páginas). Sanitizados e truncados.
+  let telefoneDigitos = '';
+  if (isLight && canal === 'email') {
+    if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) errs.push('Confira o e-mail.');
+  } else {
+    const t = telefoneBr(telefone);
+    if (t.erro) errs.push(t.erro); else telefoneDigitos = t.digitos;
+  }
+  if (!isLight) {
+    if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) errs.push('Confira o e-mail.');
+    if (!dataNasc && !body.crianca_idade) errs.push('Informe a data de nascimento do(a) filho(a).');
+    if (dataNasc && months == null) errs.push('Confira a data de nascimento.');
+  }
+  if (mensagem.length > 2000) errs.push('A mensagem ficou muito longa (máximo 2000 caracteres).');
+
+  // Atribuição de campanha: utm_* + ids de clique lidos do form (o front
+  // persiste via sessionStorage entre páginas). Sanitizados e truncados.
   const utm = {};
-  for (const k of ['utm_source', 'utm_medium', 'utm_campaign', 'gclid']) {
-    const v = String(body[k] || '').trim().replace(/[\r\n]+/g, ' ').slice(0, 120);
+  for (const k of ['utm_source', 'utm_medium', 'utm_campaign', 'utm_term', 'utm_content', 'gclid', 'gbraid', 'wbraid', 'fbclid']) {
+    const max = /clid$|braid$/.test(k) ? 512 : 200;
+    const v = String(body[k] || '').trim().replace(/[\r\n]+/g, ' ').slice(0, max);
     if (v) utm[k] = v;
   }
 
@@ -148,22 +188,14 @@ function validate(body) {
     ok: errs.length === 0,
     errs,
     data: {
-      nome, telefone, email,
+      nome, telefone: telefoneDigitos || telefone, email,
       criancaNome,
       dataNascimento: dataNasc,
       idade: idadeDescricao,        // texto pra humano: "3 anos e 4 meses"
       idadeBracket: idadeBracket,   // pra Lumied: "3 anos (Nursery)"
-      periodo, mensagem, origem, utm
+      periodo, mensagem, origem, utm, isLight
     }
   };
-}
-
-// Linha de atribuição gravada em observacoes do lead (não mexe na coluna
-// origem: o drip comercial casa cadência pelos valores canônicos de origem).
-function utmLine(utm) {
-  const entries = Object.entries(utm || {});
-  if (!entries.length) return null;
-  return ('Tráfego: site:visit-lead | ' + entries.map(([k, v]) => `${k}=${v}`).join(' | ')).slice(0, 400);
 }
 
 async function sendEmail({ from, to, subject, html, replyTo }) {
@@ -189,66 +221,71 @@ async function sendEmail({ from, to, subject, html, replyTo }) {
   return { ok: r.ok, status: r.status, body: text };
 }
 
-// Trigger imediato da cadência "Boas-vindas" (D+0) via edge function Lumied
-// crm-drip-send. Sem isso, o lead esperaria até a próxima execução do
-// pg_cron 'crm-drip-send-process' (a cada hora, só 08-19h BRT seg-sáb).
-async function triggerImmediateDrip() {
-  const url = process.env.DRIP_SEND_URL
-    || 'https://brgorknbrjlfwvrrlwxj.supabase.co/functions/v1/crm-drip-send';
-  const anonKey = process.env.LUMIED_ANON_KEY;
-  const dripKey = process.env.DRIP_SEND_KEY;
-  if (!anonKey || !dripKey) {
-    return { skipped: true, reason: 'DRIP_SEND_KEY ou LUMIED_ANON_KEY ausentes' };
-  }
-  try {
-    const r = await fetch(url, {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${anonKey}`,
-        'X-Drip-Key': dripKey,
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({})
-    });
-    const text = await r.text();
-    return { ok: r.ok, status: r.status, body: text.slice(0, 400) };
-  } catch (err) {
-    return { ok: false, error: String(err) };
-  }
-}
+// Chamada ao /api/leads do Lumied V2 (captura pública dos sites MB): cria o
+// lead e liga o comportamento anônimo da sessão (lp_evento) a ele.
+// Timeout de 8 s por tentativa e 1 nova tentativa em falha de rede, timeout,
+// 429 ou 5xx. Erro 4xx de validação não se repete. Nunca lança: devolve
+// { ok, status, motivo, tentativas }.
+const LUMIED_URL = 'https://maplebearcaxias.lumied.com.br/api/leads';
+const LUMIED_TIMEOUT_MS = 8000;
 
 async function createLumiedLead(lead) {
-  // Cutover V1→V2: o crm_captura_publica do Supabase V1 foi descontinuado.
-  // Este é o /api/leads público do Lumied V2 (captura dos sites MB): cria o
-  // lead E faz o backfill de lp_evento pela sessão — o comportamento anônimo
-  // do site (pixel lumied-track) passa a alimentar o score do lead.
-  const url = 'https://maplebearcaxias.lumied.com.br/api/leads';
-  // roteia por escola do lead (default Caxias). BG posta neste endpoint via
-  // CORS; enviar escola:'maplebearbg' direciona ao tenant certo (o /api/leads
-  // resolve o tenant pelo slug do body, não pelo domínio).
-  const slug = lead.escola || 'maplebearcaxias';
+  // Tenant pelo slug do lead: Caxias por padrão; o site de Bento Gonçalves
+  // posta aqui via CORS com escola:'maplebearbg'. Qualquer outro valor cai em Caxias.
   const utm = lead.utm || {};
-  const r = await fetch(url, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      escola: slug,
-      nome: lead.nome,
-      telefone: lead.telefone,
-      email: lead.email || undefined,
-      crianca: lead.criancaNome || undefined,
-      serie: lead.idadeBracket || lead.idade || undefined,
-      origem: lead.origem || 'site',
-      sessao: lead.sessao || undefined,
-      pagina: lead.pagina || undefined,
-      gclid: utm.gclid || undefined,
-      utm_source: utm.utm_source || undefined,
-      utm_medium: utm.utm_medium || undefined,
-      utm_campaign: utm.utm_campaign || undefined
-    })
-  });
-  const text = await r.text();
-  return { ok: r.ok, status: r.status, body: text };
+  const payload = {
+    escola: lead.escola === TENANT_BG ? TENANT_BG : TENANT_PADRAO,
+    nome: lead.nome,
+    telefone: lead.telefone,
+    email: lead.email || undefined,
+    crianca: lead.criancaNome || undefined,
+    serie: lead.idadeBracket || lead.idade || undefined,
+    // O Lumied aceita texto livre (até 60 caracteres) e deriva o canal
+    // (blog -> Site, lp -> Página de captura) a partir do prefixo.
+    origem: String(lead.origem || 'site').slice(0, 60),
+    sessao: lead.sessao || undefined,
+    pagina: lead.pagina || undefined,
+    gclid: utm.gclid || undefined,
+    gbraid: utm.gbraid || undefined,
+    wbraid: utm.wbraid || undefined,
+    fbclid: utm.fbclid || undefined,
+    utm_source: utm.utm_source || undefined,
+    utm_medium: utm.utm_medium || undefined,
+    utm_campaign: utm.utm_campaign || undefined,
+    utm_term: utm.utm_term || undefined,
+    utm_content: utm.utm_content || undefined
+  };
+  const corpo = JSON.stringify(payload);
+  let ultimo = { ok: false, status: 0, motivo: 'sem tentativa' };
+  const MAX = 2;
+  for (let tentativa = 1; tentativa <= MAX; tentativa++) {
+    const ctl = new AbortController();
+    const timer = setTimeout(() => ctl.abort(), LUMIED_TIMEOUT_MS);
+    try {
+      const r = await fetch(LUMIED_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: corpo,
+        signal: ctl.signal
+      });
+      const text = await r.text();
+      if (r.ok) return { ok: true, status: r.status, tentativas: tentativa };
+      ultimo = { ok: false, status: r.status, motivo: `Lumied respondeu HTTP ${r.status}: ${text.slice(0, 200)}`, tentativas: tentativa };
+      const repetivel = r.status === 429 || r.status >= 500;
+      console.error('visit-lead: Lumied recusou o lead', { tentativa, status: r.status, corpo: text.slice(0, 300), origem: lead.origem });
+      if (!repetivel) return ultimo;
+    } catch (err) {
+      const abortou = err && err.name === 'AbortError';
+      ultimo = {
+        ok: false, status: 0, tentativas: tentativa,
+        motivo: abortou ? `Lumied não respondeu em ${LUMIED_TIMEOUT_MS / 1000} s` : `falha de rede ao chamar o Lumied: ${String(err)}`
+      };
+      console.error('visit-lead: falha ao chamar o Lumied', { tentativa, erro: String(err), timeout: abortou, origem: lead.origem });
+    } finally {
+      clearTimeout(timer);
+    }
+  }
+  return ultimo;
 }
 
 export default async function handler(req) {
@@ -276,35 +313,56 @@ export default async function handler(req) {
 
   const { ok, errs, data } = validate(body);
   if (!ok) {
-    return jsonResponse({ ok: false, errors: errs }, { status: 400 }, origin);
+    // `message` é o texto pronto para a família; `errors` segue para quem integra.
+    return jsonResponse({ ok: false, errors: errs, message: errs.join(' ') }, { status: 400 }, origin);
   }
   // sessão do pixel do site (enviada pelo cliente) → liga comportamento ao lead
   data.sessao = String(body.sessao || '').trim().slice(0, 60);
   // página do site onde o formulário foi enviado (landing page do anúncio).
-  // Não entra em `origem` (lista fechada do drip): vai em observacoes no Lumied.
+  // O Lumied guarda em observações ("Página do site: ...").
   data.pagina = String(body.pagina || '').trim().replace(/[^\w\-./~%]/g, '').slice(0, 200);
   // escola do lead (BG posta cross-origin; default Caxias) p/ rotear o tenant
-  data.escola = String(body.escola || '').trim().slice(0, 60);
-
-  // Notificação vai pro time da escola do lead: BG posta cross-origin neste
-  // endpoint, então leads BG (escola:'maplebearbg') avisam o time do BG.
-  const isBg = String(body.escola || '').trim() === 'maplebearbg';
+  data.escola = String(body.escola || '').trim() === TENANT_BG ? TENANT_BG : TENANT_PADRAO;
+  const isBg = data.escola === TENANT_BG;
+  // Notificação vai pro time da escola do lead (lista separada por vírgula).
   const to = (
     isBg
       ? (process.env.LEAD_NOTIFY_TO_BG || 'contato@maplebearbg.com.br')
       : (process.env.LEAD_NOTIFY_TO || 'comercial@maplebearcaxiasdosul.com.br')
   ).split(',').map(s => s.trim()).filter(Boolean);
+  const escolaNome = isBg ? 'Maple Bear Bento Gonçalves' : 'Maple Bear Caxias do Sul';
+  const siteHost = isBg ? 'maplebearbg.com.br' : 'maplebearcaxiasdosul.com.br';
+
+  // 1) Lumied primeiro (8 s + 1 nova tentativa): o e-mail da equipe precisa dizer
+  //    se o lead entrou ou não no CRM.
+  let lumiedRes;
+  try {
+    lumiedRes = await createLumiedLead(data);
+  } catch (err) {
+    lumiedRes = { ok: false, status: 0, motivo: `erro inesperado: ${String(err)}` };
+    console.error('visit-lead: erro inesperado no Lumied', err);
+  }
+  const lumiedOk = lumiedRes.ok === true;
+  const motivoCrm = lumiedOk ? '' : (lumiedRes.motivo || 'motivo desconhecido');
+
+  const ehVisita = !data.isLight;
+  const ehMagnet = data.origem.startsWith('lead-magnet');
+  const tituloEmail = ehVisita ? 'Pedido de visita guiada'
+    : ehMagnet ? 'Baixou um material'
+    : 'Pediu contato pelo site';
+  const wa = `https://wa.me/55${String(data.telefone).replace(/\D/g, '')}`;
 
   const html = `
     <div style="font-family: Georgia, serif; max-width: 580px; margin: 0 auto; color: #1a1814;">
       <div style="background: #b8112e; color: #faf6ee; padding: 24px; border-radius: 8px 8px 0 0;">
-        <p style="font-family: -apple-system, BlinkMacSystemFont, sans-serif; font-size: 12px; letter-spacing: 0.18em; text-transform: uppercase; margin: 0 0 8px; opacity: 0.85;">Maple Bear Caxias do Sul · Novo lead</p>
-        <h1 style="margin: 0; font-size: 26px; font-weight: 400;">Pedido de visita guiada</h1>
+        <p style="font-family: -apple-system, BlinkMacSystemFont, sans-serif; font-size: 12px; letter-spacing: 0.18em; text-transform: uppercase; margin: 0 0 8px; opacity: 0.85;">${escapeHtml(escolaNome)} · Novo lead</p>
+        <h1 style="margin: 0; font-size: 26px; font-weight: 400;">${escapeHtml(tituloEmail)}</h1>
       </div>
+      ${lumiedOk ? '' : `<div style="background: #fff3cd; border: 2px solid #b8112e; color: #5c0a18; padding: 14px 18px; font-family: -apple-system, BlinkMacSystemFont, sans-serif; font-size: 14px; line-height: 1.5;"><strong>NÃO ENTROU NO CRM: cadastrar este lead manualmente no Lumied.</strong><br>Motivo: ${escapeHtml(motivoCrm)}</div>`}
       <div style="background: #faf6ee; padding: 24px; border: 1px solid #d4c7ad; border-top: 0; border-radius: 0 0 8px 8px;">
         <table style="width: 100%; border-collapse: collapse; font-size: 15px;">
           <tr><td style="padding: 8px 0; color: #7a7268; width: 130px;">Nome</td><td style="padding: 8px 0; font-weight: 600;">${escapeHtml(data.nome)}</td></tr>
-          <tr><td style="padding: 8px 0; color: #7a7268;">WhatsApp</td><td style="padding: 8px 0;"><a href="https://wa.me/55${data.telefone.replace(/\D/g, '')}" style="color: #b8112e;">${escapeHtml(data.telefone)}</a></td></tr>
+          <tr><td style="padding: 8px 0; color: #7a7268;">WhatsApp</td><td style="padding: 8px 0;"><a href="${wa}" style="color: #b8112e;">${escapeHtml(data.telefone)}</a></td></tr>
           ${data.email ? `<tr><td style="padding: 8px 0; color: #7a7268;">E-mail</td><td style="padding: 8px 0;"><a href="mailto:${escapeHtml(data.email)}" style="color: #b8112e;">${escapeHtml(data.email)}</a></td></tr>` : ''}
           ${data.criancaNome ? `<tr><td style="padding: 8px 0; color: #7a7268;">Filho(a)</td><td style="padding: 8px 0; font-weight: 600;">${escapeHtml(data.criancaNome)}</td></tr>` : ''}
           ${data.dataNascimento ? `<tr><td style="padding: 8px 0; color: #7a7268;">Nascimento</td><td style="padding: 8px 0;"><strong>${escapeHtml(formatBrDate(data.dataNascimento))}</strong> · ${escapeHtml(data.idade)}</td></tr>` : (data.idade ? `<tr><td style="padding: 8px 0; color: #7a7268;">Idade</td><td style="padding: 8px 0;">${escapeHtml(data.idade)}</td></tr>` : '')}
@@ -319,64 +377,51 @@ export default async function handler(req) {
           <p style="margin: 0; line-height: 1.5;">${escapeHtml(data.mensagem).replace(/\n/g, '<br>')}</p>
         </div>` : ''}
         <p style="margin: 24px 0 0; padding-top: 16px; border-top: 1px solid #e4dac3; font-size: 13px; color: #7a7268;">
-          Recebido em ${new Date().toLocaleString('pt-BR', { timeZone: 'America/Sao_Paulo' })} (Brasília) via maplebearcaxiasdosul.com.br/visite/
+          Recebido em ${new Date().toLocaleString('pt-BR', { timeZone: 'America/Sao_Paulo' })} (Brasília) via ${siteHost}${escapeHtml(data.pagina || '/visite/')}
         </p>
       </div>
     </div>
   `;
 
-  // 2 chamadas paralelas obrigatórias: notifica equipe interna + cria lead no Lumied.
-  const [teamRes, lumiedRes] = await Promise.allSettled([
-    sendEmail({
-      to,
-      subject: data.origem.startsWith('lead-magnet')
-        ? `[Lead magnet] ${data.nome} — ${data.origem}`
-        : `[Visita] ${data.nome} — filho(a) ${data.idade}`,
-      html,
-      replyTo: data.email || undefined
-    }),
-    createLumiedLead(data)
-  ]);
+  const prefixo = lumiedOk ? '' : '[NÃO ENTROU NO CRM] ';
+  const assunto = ehVisita
+    ? `${prefixo}[Visita] ${data.nome} — filho(a) ${data.idade}`
+    : ehMagnet
+      ? `${prefixo}[Lead magnet] ${data.nome} — ${data.origem}`
+      : `${prefixo}[Contato] ${data.nome} — ${data.origem}`;
 
-  const teamOk = teamRes.status === 'fulfilled' && teamRes.value.ok === true;
-  const lumiedOk = lumiedRes.status === 'fulfilled' && lumiedRes.value.ok === true;
-  const teamSkipped = teamRes.status === 'fulfilled' && teamRes.value.skipped === true;
-  const lumiedSkipped = lumiedRes.status === 'fulfilled' && lumiedRes.value.skipped === true;
+  // 2) E-mail para a equipe.
+  let teamRes;
+  try {
+    teamRes = await sendEmail({ to, subject: assunto, html, replyTo: data.email || undefined });
+  } catch (err) {
+    teamRes = { ok: false, error: String(err) };
+  }
+  const teamOk = teamRes.ok === true;
+  const teamSkipped = teamRes.skipped === true;
 
-  // Sucesso se ao menos um canal real recebeu o lead.
-  // Se ambos skipped (sem env) ou ambos falharam: 502.
-  if (!teamOk && !lumiedOk) {
-    console.error('visit-lead: nenhum canal recebeu o lead', {
-      teamRes: teamRes.status === 'fulfilled' ? teamRes.value : { error: String(teamRes.reason) },
-      lumiedRes: lumiedRes.status === 'fulfilled' ? lumiedRes.value : { error: String(lumiedRes.reason) }
+  if (!lumiedOk) {
+    console.error('visit-lead: lead NÃO entrou no CRM', {
+      motivo: motivoCrm, status: lumiedRes.status, tentativas: lumiedRes.tentativas,
+      origem: data.origem, pagina: data.pagina, emailEquipe: teamOk ? 'enviado' : 'FALHOU'
     });
+  }
+
+  // Sucesso se ao menos um canal real recebeu o lead. Nenhum -> 502.
+  if (!teamOk && !lumiedOk) {
+    console.error('visit-lead: nenhum canal recebeu o lead', { team: teamRes, lumied: lumiedRes });
     return jsonResponse({
       ok: false,
       error: 'falha ao notificar equipe',
-      detail: { teamSkipped, lumiedSkipped }
+      detail: { teamSkipped }
     }, { status: 502 }, origin);
-  }
-
-  // Trigger imediato do drip-send após criar o lead. Se o crm_captura_publica
-  // do Lumied atribui a cadência sincronamente, o drip-send vai encontrar
-  // este lead pendente em passo 1 e enviar o D+0 na mesma requisição.
-  // Se falhar, o pg_cron pega no próximo tick (não bloqueia resposta).
-  let dripRes = { skipped: true };
-  if (lumiedOk) {
-    try {
-      dripRes = await triggerImmediateDrip();
-    } catch (err) {
-      console.warn('visit-lead: trigger drip falhou', err);
-      dripRes = { ok: false, error: String(err) };
-    }
   }
 
   return jsonResponse({
     ok: true,
     channels: {
       team: teamOk ? 'sent' : teamSkipped ? 'skipped' : 'failed',
-      lumied: lumiedOk ? 'created' : lumiedSkipped ? 'skipped' : 'failed',
-      drip: dripRes.ok ? 'triggered' : dripRes.skipped ? 'skipped' : 'failed'
+      lumied: lumiedOk ? 'created' : 'failed'
     }
   }, { status: 200 }, origin);
 }

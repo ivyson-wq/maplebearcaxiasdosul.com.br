@@ -79,7 +79,7 @@
             <p class="eyebrow mb-m">Formulário de agendamento</p>
             <h2 class="mb-l" style="font-size: var(--step-3);">Conte um pouco<br>sobre sua família.</h2>
 
-            <form class="form" id="visit-form" novalidate>
+            <form class="form" id="visit-form">
               <div class="field-row">
                 <div class="field">
                   <label for="nome">Seu nome <span class="req">*</span></label>
@@ -100,7 +100,7 @@
                 <div class="field">
                   <label for="data_nascimento">Data de nascimento do(a) filho(a) <span class="req">*</span></label>
                   <input type="date" name="data_nascimento" id="data_nascimento" required
-                    min="2010-01-01" max="2026-12-31"
+                    min="2010-01-01"
                     autocomplete="off">
                   <span class="hint" style="font-size: 0.8rem; color: var(--ink-faint);">Se vai trazer mais de uma criança, informe a do(a) mais novo(a) e detalhe na mensagem.</span>
                 </div>
@@ -133,7 +133,7 @@
               <div id="visit-feedback" role="status" aria-live="polite"></div>
 
               <p class="hint" style="margin-top: var(--space-s);">
-                Vamos responder pelo WhatsApp em até um dia útil para confirmar o melhor horário.
+                A equipe responde no horário comercial, pelo WhatsApp, para confirmar o melhor horário.
                 Seus dados não são compartilhados — usamos apenas para esse contato.
               </p>
             </form>
@@ -144,59 +144,50 @@
                 const submit = document.getElementById('visit-submit');
                 const fb = document.getElementById('visit-feedback');
                 const submitLabel = submit.querySelector('.label');
+                const ORIGEM = 'site-visite';
 
-                function showFeedback(kind, html) {
-                  const bg = kind === 'success' ? 'rgba(90, 109, 77, 0.1)' : kind === 'error' ? 'rgba(184, 17, 46, 0.08)' : 'transparent';
-                  const border = kind === 'success' ? '#5a6d4d' : kind === 'error' ? '#b8112e' : 'transparent';
-                  const color = kind === 'success' ? '#3f4d36' : kind === 'error' ? '#8a0d22' : '#1a1814';
+                // Visual do quadro de aviso; o conteúdo (texto, botão do WhatsApp) vem de window.mbLead.
+                function estilo(kind) {
+                  const bg = kind === 'success' ? 'rgba(90, 109, 77, 0.1)' : 'rgba(184, 17, 46, 0.08)';
+                  const border = kind === 'success' ? '#5a6d4d' : '#b8112e';
+                  const color = kind === 'success' ? '#3f4d36' : '#8a0d22';
                   fb.style.cssText = `margin-top: 1rem; padding: 1rem 1.25rem; border-left: 3px solid ${border}; background: ${bg}; color: ${color}; border-radius: 4px; font-family: 'Spectral', Georgia, serif; line-height: 1.5;`;
-                  fb.innerHTML = html;
                 }
 
                 form.addEventListener('submit', async (e) => {
                   e.preventDefault();
-                  fb.innerHTML = '';
+                  fb.textContent = '';
+                  const L = window.mbLead;
+                  if (!L) { return; }
 
-                  const fd = new FormData(form);
-                  const data = {};
-                  fd.forEach((v, k) => data[k] = v);
-                  if (window.mbUtm) { const utm = window.mbUtm(); Object.keys(utm).forEach((k) => { if (!data[k]) data[k] = utm[k]; }); }
+                  // sessao + pagina + UTM/gclid/gbraid/wbraid/fbclid entram pelo núcleo.
+                  const data = L.coletar(form, { origem: ORIGEM });
 
                   submit.disabled = true;
                   submitLabel.textContent = 'Enviando...';
 
                   try {
-                    const r = await fetch('/api/visit-lead', {
-                      method: 'POST',
-                      headers: { 'Content-Type': 'application/json' },
-                      body: JSON.stringify(data)
+                    await L.enviar(data);
+                    form.style.display = 'none';
+                    estilo('success');
+                    L.sucesso(fb, data.nome, ORIGEM, (box) => {
+                      box.appendChild(document.createElement('br'));
+                      box.appendChild(document.createTextNode('Enquanto isso, que tal '));
+                      const a = document.createElement('a');
+                      a.href = '/blog/'; a.textContent = 'explorar nosso blog';
+                      a.style.cssText = 'color: inherit; text-decoration: underline;';
+                      box.appendChild(a);
+                      box.appendChild(document.createTextNode('?'));
                     });
-                    const json = await r.json();
-
-                    if (r.ok && json.ok) {
-                      form.style.display = 'none';
-                      showFeedback('success', `
-                        <strong style="display: block; font-family: 'Fraunces', Georgia, serif; font-size: 1.4rem; font-weight: 400; margin-bottom: 0.5rem;">Recebemos seu pedido. ✦</strong>
-                        Nossa equipe vai te chamar no WhatsApp em até um dia útil para confirmar o melhor horário.
-                        <br><br>
-                        Enquanto isso, sinta-se à vontade para
-                        <a href="/blog/" style="color: inherit; text-decoration: underline;">explorar nosso blog</a>
-                        ou nos chamar diretamente no <a href="https://wa.me/5554996243857?text=Ol%C3%A1!%20Vim%20do%20site%20da%20Maple%20Bear%20Caxias%20do%20Sul%20e%20gostaria%20de%20agendar%20uma%20visita." style="color: inherit; text-decoration: underline;">WhatsApp</a>.
-                      `);
-                      // Conversão do Ads + Enhanced Conversions + generate_lead,
-                      // já com a API confirmada. mbFormLead cuida da ordem
-                      // (user_data antes do evento).
-                      if (window.mbFormLead) window.mbFormLead(form, 'site-visite');
-                      else if (window.mbSetUserData) window.mbSetUserData(form);
-                      if (window.gtag) gtag('event', 'visit_request', { event_category: 'lead', event_label: data.data_nascimento || data.crianca_idade });
-                    } else {
-                      throw new Error((json.errors && json.errors.join(', ')) || json.error || 'erro desconhecido');
-                    }
+                    // Conversão do Ads + Enhanced Conversions + generate_lead,
+                    // já com a API confirmada. mbFormLead cuida da ordem
+                    // (user_data antes do evento).
+                    if (window.mbFormLead) window.mbFormLead(form, ORIGEM);
+                    else if (window.mbSetUserData) window.mbSetUserData(form);
+                    if (window.gtag) gtag('event', 'visit_request', { event_category: 'lead', event_label: data.data_nascimento || data.crianca_idade });
                   } catch (err) {
-                    showFeedback('error', `
-                      <strong>Não conseguimos enviar seu pedido agora.</strong><br>
-                      ${err.message || 'Tente novamente em instantes, ou nos chame direto no <a href="https://wa.me/5554996243857?text=Ol%C3%A1!%20Vim%20do%20site%20da%20Maple%20Bear%20Caxias%20do%20Sul%20e%20gostaria%20de%20agendar%20uma%20visita." style="color: inherit;">WhatsApp</a>.'}
-                    `);
+                    estilo('error');
+                    L.erro(fb, err && err.message);
                     submit.disabled = false;
                     submitLabel.textContent = 'Enviar pedido de visita';
                   }
