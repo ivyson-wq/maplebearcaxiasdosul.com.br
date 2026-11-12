@@ -2798,3 +2798,26 @@ strong, b { font-weight: 580; }
    no fallback a quebra de linha mudava (CLS 0,27 na creche). Em bloco, cada
    parte só depende da própria fonte. */
 .page-header--lp h1 em { display: block; }
+
+.lp-cta-note { margin-top: 0.7rem; font-family: var(--font-ui); font-size: 0.92rem; color: var(--ink-soft); }
+/* Faixas de chamada no meio das landing pages */
+.lp-cta-band { padding: var(--space-l) 0; }
+.lp-cta-band-inner {
+  display: flex; align-items: center; justify-content: space-between; gap: var(--space-l);
+  background: #fff; border: 1px solid var(--red-mark); border-left: 6px solid var(--red);
+  border-radius: var(--radius-m); padding: clamp(1.25rem, 1rem + 1.5vw, 2.25rem);
+  box-shadow: 0 10px 30px rgba(120, 0, 9, 0.06);
+}
+.lp-cta-band-copy { max-width: 46rem; }
+.lp-cta-band-title { font-family: var(--font-display); font-size: var(--step-3); line-height: 1.15; color: var(--ink); margin: 0; }
+.lp-cta-band-text { margin: 0.6rem 0 0; color: var(--ink-soft); font-size: 1.02rem; line-height: 1.55; }
+.lp-cta-band-actions { display: flex; flex-direction: column; gap: 0.6rem; flex-shrink: 0; }
+.lp-cta-band-actions .btn { justify-content: center; white-space: nowrap; }
+.lp-cta-band--forte .lp-cta-band-inner { background: linear-gradient(135deg, var(--red-deep), var(--red)); border-color: transparent; }
+.lp-cta-band--forte .lp-cta-band-title, .lp-cta-band--forte .lp-cta-band-text { color: #fff; }
+.lp-cta-band--forte .btn-primary { background: #fff; color: var(--red-deep); border-color: #fff; }
+.lp-cta-band--forte .btn-secondary { background: transparent; color: #fff; border-color: rgba(255,255,255,.7); }
+@media (max-width: 760px) {
+  .lp-cta-band-inner { flex-direction: column; align-items: stretch; }
+  .lp-cta-band-actions .btn { width: 100%; white-space: normal; }
+}
