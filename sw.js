@@ -14,7 +14,7 @@
 //  3. Bump de CACHE força invalidação completa do v1.
 //  4. skipWaiting + claim → atualização imediata sem reload.
 
-const CACHE = 'mb-caxias-v9'; // v9: força recarregar os JS de captura de lead (cache-first)
+const CACHE = 'mb-caxias-v10'; // v10: CTAs novos das landing pages e grade do blog
 const PRECACHE = [
   '/',
   '/assets/styles.css',
