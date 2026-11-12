@@ -284,7 +284,13 @@ async function createLumiedLead(lead) {
         signal: ctl.signal
       });
       const text = await r.text();
-      if (r.ok) return { ok: true, status: r.status, tentativas: tentativa };
+      if (r.ok) {
+        let corpoResp = {};
+        try { corpoResp = JSON.parse(text); } catch (e) { /* resposta sem JSON */ }
+        // Regra do dono (12/11/2026): o Lumied manda o e-mail de recebimento para o
+        // comercial cadastrado na escola e avisa com email_comercial: true.
+        return { ok: true, status: r.status, tentativas: tentativa, emailComercial: corpoResp.email_comercial === true };
+      }
       ultimo = { ok: false, status: r.status, motivo: `Lumied respondeu HTTP ${r.status}: ${text.slice(0, 200)}`, tentativas: tentativa };
       const repetivel = r.status === 429 || r.status >= 500;
       console.error('visit-lead: Lumied recusou o lead', { tentativa, status: r.status, corpo: text.slice(0, 300), origem: lead.origem });
@@ -409,11 +415,17 @@ export default async function handler(req) {
       : `${prefixo}[Contato] ${data.nome} — ${data.origem}`;
 
   // 2) E-mail para a equipe.
+  // Só quando o Lumied NÃO confirmou o e-mail ao comercial (falha, resposta antiga
+  // ou escola sem destinatário): aí o site avisa a lista fixa (LEAD_NOTIFY_TO).
   let teamRes;
-  try {
-    teamRes = await sendEmail({ to, subject: assunto, html, replyTo: data.email || undefined });
-  } catch (err) {
-    teamRes = { ok: false, error: String(err) };
+  if (lumiedOk && lumiedRes.emailComercial) {
+    teamRes = { ok: true, skipped: true, motivo: 'e-mail enviado pelo Lumied ao comercial' };
+  } else {
+    try {
+      teamRes = await sendEmail({ to, subject: assunto, html, replyTo: data.email || undefined });
+    } catch (err) {
+      teamRes = { ok: false, error: String(err) };
+    }
   }
   const teamOk = teamRes.ok === true;
   const teamSkipped = teamRes.skipped === true;
@@ -438,7 +450,7 @@ export default async function handler(req) {
   return jsonResponse({
     ok: true,
     channels: {
-      team: teamOk ? 'sent' : teamSkipped ? 'skipped' : 'failed',
+      team: teamSkipped ? 'lumied' : teamOk ? 'sent' : 'failed',
       lumied: lumiedOk ? 'created' : 'failed'
     }
   }, { status: 200 }, origin);
